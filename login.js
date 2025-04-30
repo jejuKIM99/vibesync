@@ -1,4 +1,4 @@
-$(function() {
+$(function() { 
 
     const $loginFormContainer = $('#loginFormContainer');
     const $signupFormContainer = $('#signupFormContainer');
