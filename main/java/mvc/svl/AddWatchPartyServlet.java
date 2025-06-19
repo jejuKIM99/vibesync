@@ -59,6 +59,7 @@ public class AddWatchPartyServlet extends HttpServlet {
         
         Connection conn = null;
         boolean success = false; // 최종 성공 여부 플래그
+        boolean is_chk = true;
         
         try {
         conn = ConnectionProvider.getConnection();
@@ -68,24 +69,35 @@ public class AddWatchPartyServlet extends HttpServlet {
         WatchPartyDAO partyDao = new WatchPartyDAOImpl(conn);
         WaSyncDAO syncDao = new WaSyncDAOImpl(conn);
 
-
-        int inserted = partyDao.insert(wp);
+        int chk = partyDao.checkExit(host);
         
-        if (inserted > 0) {
-        	// 1) 방금 insert 한 watchParty_idx를 조회
-        	//    (WatchPartyDAO.insert 메서드 자체에서 시퀀스를 사용하기 때문에, 
-        	//     selectOne 혹은 별도 DAO 메서드로 마지막 idx를 조회)
-        	// ▶ 간단하게, title + host + videoId 조합으로 최신 행 조회 (예시)
-        	WatchPartyVO insertedWp = partyDao.selectLatestByUniqueFields(title, videoId, host);
-        	if (insertedWp != null) {
-        	WaSyncVO initialSync = new WaSyncVO();
-        	initialSync.setWatchPartyIdx(insertedWp.getWatchPartyIdx());
-        	initialSync.setTimeline(0.0);       // 초기 타임라인 0
-        	initialSync.setPlay("PAUSE");       // 초기 상태는 PAUSE
-        	syncDao.insert(initialSync);
-        	
-        	success= true;
-        	}
+        System.out.println("chk : " + chk);
+        if (chk == 0) {
+           int inserted = partyDao.insert(wp);
+           
+           if (inserted > 0) {
+              // 1) 방금 insert 한 watchParty_idx를 조회
+              //    (WatchPartyDAO.insert 메서드 자체에서 시퀀스를 사용하기 때문에, 
+              //     selectOne 혹은 별도 DAO 메서드로 마지막 idx를 조회)
+              // ▶ 간단하게, title + host + videoId 조합으로 최신 행 조회 (예시)
+              WatchPartyVO insertedWp = partyDao.selectLatestByUniqueFields(title, videoId, host);
+              if (insertedWp != null) {
+                 WaSyncVO initialSync = new WaSyncVO();
+                 initialSync.setWatchPartyIdx(insertedWp.getWatchPartyIdx());
+                 initialSync.setTimeline(0.0);       // 초기 타임라인 0
+                 initialSync.setPlay("PAUSE");       // 초기 상태는 PAUSE
+                 syncDao.insert(initialSync);
+                 
+                 success= true;
+              }
+           }
+           if(success) {
+              conn.commit();
+           } else {
+              conn.rollback();
+           }
+        } else {
+           is_chk = false;
         }
         if(success) {
         	conn.commit();
@@ -117,11 +129,39 @@ public class AddWatchPartyServlet extends HttpServlet {
         }
         
         
+        }catch (NamingException | SQLException e) {
+            e.printStackTrace();
+            // 예외 발생 시 롤백
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            success = false; // 실패 처리
+            
+        } finally {
+           if (conn != null) {
+            try {
+               conn.setAutoCommit(true);
+               JdbcUtil.close(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+         }
+        }
+        
+        
         response.setContentType("application/json; charset=UTF-8");
         JsonObject jsonResp = new JsonObject();
         jsonResp.addProperty("success", success);
         if (!success) {
-            jsonResp.addProperty("error", "DB 삽입 실패");
+           if (!is_chk) {
+              jsonResp.addProperty("error", "현재 Host 중인 영상이 존재합니다.");
+           } else {
+              jsonResp.addProperty("error", "DB 삽입 실패");
+           }
         }
         response.getWriter().write(gson.toJson(jsonResp));
     }

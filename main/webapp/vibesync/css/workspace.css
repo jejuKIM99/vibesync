@@ -727,7 +727,7 @@
     border: 1px solid #f0f0f0; /* 날짜 칸 사이에 옅은 선 */
 }
 .fc .fc-day-other {
-    background-color: #f9f9f9; /* 다른 달의 날짜 배경색 */
+    background-color: var(--workspace-cal-other); /* 다른 달의 날짜 배경색 */
 }
 
 /* .fc-theme-standard .fc-scrollgrid{
@@ -739,7 +739,7 @@
 /* 오늘 날짜 & 사용자가 선택한 날짜에 적용될 하이라이트 스타일 */
 .fc .fc-day-today,
 .fc .fc-day-selected {  
-    background-color: #fffbe6 !important; /* 노란색 계열 하이라이트 */
+    background-color: var(--workspace-cal-back) !important; /* 노란색 계열 하이라이트 */
 }
 
 /* 일정 표시 영역 (오른쪽) - 1의 비율 */
@@ -759,7 +759,7 @@
 
 /* 모든 이벤트 내부의 글자(시간, 제목) 스타일을 일관성 있게 만듭니다. */
 .fc-event-main {
-    color: #1E1E1E !important;      /* 모든 이벤트의 기본 글자색을 어두운 색으로 강제 지정 */
+    color: var(--workspace-cal-font) !important;      /* 모든 이벤트의 기본 글자색을 어두운 색으로 강제 지정 */
     font-weight: 700;              /* 폰트 굵기를 중간(medium) 정도로 설정하여 통일성 부여 */
 }
 
@@ -838,6 +838,7 @@
     padding: 15px 10px;
     border-bottom: 1px solid #e0e0e0;
     gap: 10px;
+    cursor: pointer;
 }
 
 .schedule-list li:last-child {
@@ -864,6 +865,7 @@
 }
 
 .schedule-title {
+	color: #000;
     font-weight: 600;
     margin-bottom: 5px;
 }
@@ -871,6 +873,10 @@
 .schedule-desc {
     font-size: 0.85em;
     color: #666;
+}
+
+.schedule-item-content{
+	width: 100%;
 }
 
 /* 할 일 목록 ul 스타일 */
@@ -889,6 +895,7 @@
     font-size: 15px;
     gap: 12px;
     position: relative;
+    cursor: pointer;
 }
 
 .todo-list li:last-child {

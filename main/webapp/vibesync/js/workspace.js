@@ -570,7 +570,7 @@ $(document).ready(function() {
             // 5. 배경색이 밝아졌으므로, 이벤트 제목(title)의 글자색을 어둡게 하여 가독성을 높입니다.
             const eventTitleEl = info.el.querySelector('.fc-event-title');
             if (eventTitleEl) {
-                eventTitleEl.style.color = '#1E1E1E'; // 진한 회색 계열
+                eventTitleEl.style.color = 'var(--workspace-cal-font)'; // 진한 회색 계열
 	            }
 	        }
 	    },
