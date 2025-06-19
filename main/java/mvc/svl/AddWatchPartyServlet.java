@@ -28,7 +28,7 @@ import java.sql.Timestamp;
 @WebServlet("/AddWatchPartyServlet")
 public class AddWatchPartyServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = 1L;
     private Gson gson = new Gson();
 
     @Override
@@ -99,35 +99,6 @@ public class AddWatchPartyServlet extends HttpServlet {
         } else {
            is_chk = false;
         }
-        if(success) {
-        	conn.commit();
-        } else {
-        	conn.rollback();
-        }
-        
-        }catch (NamingException | SQLException e) {
-            e.printStackTrace();
-            // 예외 발생 시 롤백
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            success = false; // 실패 처리
-            
-        } finally {
-        	if (conn != null) {
-				try {
-					conn.setAutoCommit(true);
-					JdbcUtil.close(conn);
-				} catch (SQLException e) {
-					 e.printStackTrace();
-				}
-			}
-        }
-        
         
         }catch (NamingException | SQLException e) {
             e.printStackTrace();
