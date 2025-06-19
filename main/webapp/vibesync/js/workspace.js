@@ -553,11 +553,11 @@ $(document).ready(function() {
         if (calendarEl) {
             calendar = new FullCalendar.Calendar(calendarEl, {
 				eventDidMount: function(info) {
-        // 1. 이벤트의 원본 색상을 가져옵니다. 색상이 지정되지 않았다면 기본값을 사용합니다.
-        const originalColor = info.event.backgroundColor || info.event.borderColor || '#3788d8';
+        		// 1. 이벤트의 원본 색상을 가져옵니다. 색상이 지정되지 않았다면 기본값을 사용합니다.
+        		const originalColor = info.event.backgroundColor || info.event.borderColor || '#3788d8';
         
-        // 2. 이미 작성된 hexToRgb 함수를 사용해 HEX를 RGB 객체로 변환합니다.
-        const rgb = hexToRgb(originalColor);
+       			// 2. 이미 작성된 hexToRgb 함수를 사용해 HEX를 RGB 객체로 변환합니다.
+        		const rgb = hexToRgb(originalColor);
         
         if (rgb) {
             // 3. RGB에 투명도(alpha)를 추가하여 연한 배경색(rgba)을 만듭니다. (0.3은 30% 투명도)
@@ -575,6 +575,8 @@ $(document).ready(function() {
 	        }
 	    },
                 initialView: 'dayGridMonth',
+                selectable: true,
+                editable: true,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
@@ -655,10 +657,6 @@ $(document).ready(function() {
                 },
                 // --- 날짜 클릭 이벤트 ---
                 dateClick: function(info) {
-                    if (selectedDateCell) {
-                        selectedDateCell.classList.remove('fc-day-selected');
-                    }
-                    info.dayEl.classList.add('fc-day-selected');
                     selectedDateCell = info.dayEl;
 
                     $('.tab-btn[data-tab="tab_schedule"]').click();

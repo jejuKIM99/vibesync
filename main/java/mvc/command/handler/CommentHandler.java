@@ -35,7 +35,6 @@ public class CommentHandler implements CommandHandler {
                 if (comments != null && !comments.isEmpty()) {
                     System.out.println("조회된 댓글 수: " + comments.size());
                     for (CommentVO comment : comments) {
-                        // Lombok의 @ToString이 모든 필드를 출력하므로 depth 값도 함께 보입니다.
                         System.out.println(comment.toString());
                     }
                 } else {

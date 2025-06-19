@@ -56,7 +56,10 @@ const isLoggedIn = ${not empty user};
             return; 
         }
         $.ajax({
-          url: ajaxUrl, type: 'POST', data: { action: 'toggleFollow', userIdx: $('#followBtn').data('userIdx'), writerIdx: $('#followBtn').data('writerIdx'), nidx: $('#followBtn').data('nidx') }, dataType: 'json',
+          url: '${contextPath}/followToggle.do',
+          type: 'POST', 
+          data: { writerIdx: $('#followBtn').data('writerIdx') }, 
+          dataType: 'json',
           success: function(data) { $('#followBtn').text(data.following ? 'Unfollow' : 'Follow'); },
           error: function(xhr, status, error) { console.error('[AJAX-FOLLOW] 에러 발생:', error); }
         });
@@ -70,7 +73,10 @@ const isLoggedIn = ${not empty user};
         }
         const currentCount = parseInt($('#likeCount').text(), 10);
         $.ajax({
-          url: ajaxUrl, type: 'POST', data: { action: 'toggleLike', userIdx: $('#likeBtn').data('userIdx'), noteIdx: $('#likeBtn').data('noteIdx') }, dataType: 'json',
+          url: '${contextPath}/likeToggle.do', 
+          type: 'POST', 
+          data: { noteIdx: $('#likeBtn').data('noteIdx') }, 
+        	  dataType: 'json',
           success: function(data) {
             if (data.liked) { $('#likeImg').attr('src', './sources/icons/fill_heart.png'); $('#likeCount').text(currentCount + 1);
             } else { $('#likeImg').attr('src', './sources/icons/heart.svg'); $('#likeCount').text(currentCount - 1); }
@@ -79,6 +85,7 @@ const isLoggedIn = ${not empty user};
         });
       });
 
+      // 위지윅(WYSIWYG) 에디터(썸머노트)통해 이미지 저장 시 절대경로로 저장 -> 경로 맞추기 위한 함수
       $('.text_content img').each(function() {
         const src = $(this).attr('src');
         if (src && !src.startsWith('http') && !src.startsWith(ctx)) { $(this).attr('src', ctx + src.substring(1)); }
@@ -93,19 +100,16 @@ const isLoggedIn = ${not empty user};
         $.ajax({
           url: commentUrl, type: 'POST', data: { action: 'list', noteIdx: noteIdxForComment }, dataType: 'json',
           success: function(comments) {
-            const $commentList = $('#comment-list').empty();
+            const $commentList = $('#comment-list').empty(); // empty() 누락 시 기존댓글 중복해서 계속 가져옴. 
             if (comments && comments.length > 0) {
               
-              // [수정] forEach 루프 내부에 console.log 추가
               comments.forEach(function(comment) {
-                // ===================================================================
-                // [추가된 로그] 브라우저 개발자 도구 콘솔에서 각 댓글의 depth 값을 확인합니다.
+                // [로그] 브라우저 개발자 도구 콘솔에서 각 댓글의 depth 값을 확인
                 console.log('Comment ID:', comment.commentlist_idx, 'Received Depth:', comment.depth);
-                // ===================================================================
 
                 const indentStyle = `style="margin-left: \${(comment.depth - 1) * 20}px;"`;
                 const editDeleteButtons = (comment.ac_idx === loggedInUserIdx) ?
-                  ` <button class="edit-btn" data-id="\${comment.commentlist_idx}" data-text="\${encodeURIComponent(comment.text)}">수정</button>
+                  ` <button class="edit-btn" data-id="\${comment.commentlist_idx}" data-text="\${encodeURIComponent(comment.text)}">수정</button> // encodeURIComponent: 댓글 내용(comment.text)에 포함될 수 있는 특수 문자 때문에 HTML 코드가 깨지는 것을 방지
                     <button class="delete-btn" data-id="\${comment.commentlist_idx}">삭제</button>` : '';
                 
                 const commentHtml = `
@@ -143,10 +147,10 @@ const isLoggedIn = ${not empty user};
         });
       });
 
-      $('#comment-list').on('click', '.comment-content-wrapper', function() {
+      $('#comment-list').on('click', '.comment-content-wrapper', function() { // 이벤트 위임 d/t ajax로 나중에 생성
           const $parentComment = $(this).closest('.comment-item');
-          if ($parentComment.next().hasClass('reply-form-wrapper')) {
-              $parentComment.next('.reply-form-wrapper').remove();
+          if ($parentComment.next().hasClass('reply-form-wrapper')) { // next(): 다음 형제요소 찾기
+              $parentComment.next('.reply-form-wrapper').remove();    // 조건에 맞지 않으면 선택 x
               return;
           }
           $('.reply-form-wrapper').remove();
@@ -165,7 +169,7 @@ const isLoggedIn = ${not empty user};
           $parentComment.after(replyFormHtml);
       });
 
-      $('#comment-list').on('submit', '.reply-form', function(e) {
+      $('#comment-list').on('submit', '.reply-form', function(e) { // 이벤트 위임
           e.preventDefault();
           const text = $(this).find('textarea[name="text"]').val();
           const reCommentIdx = $(this).find('input[name="reCommentIdx"]').val();
@@ -180,9 +184,27 @@ const isLoggedIn = ${not empty user};
       });
       
       $('#comment-list').on('click', '.delete-btn', function(e) { e.stopPropagation(); if (confirm('정말로 삭제하시겠습니까?')) { $.ajax({ url: commentUrl, type: 'POST', data: { action: 'delete', commentIdx: $(this).data('id') }, dataType: 'json', success: function() { loadComments(); } }); } });
-      $('#comment-list').on('click', '.edit-btn', function(e) { e.stopPropagation(); $('#edit-comment-id').val($(this).data('id')); $('#edit-comment-text').val(decodeURIComponent($(this).data('text'))); $('#edit-comment-modal').show(); });
+      $('#comment-list').on('click', '.edit-btn', function(e) { 
+    	  e.stopPropagation(); 
+    	  $('#edit-comment-id').val($(this).data('id')); 
+    	  $('#edit-comment-text').val(decodeURIComponent($(this).data('text'))); 
+    	  $('#edit-comment-modal').show(); 
+    	  });
       $('#cancel-edit-btn').on('click', function() { $('#edit-comment-modal').hide(); });
-      $('#edit-comment-form').on('submit', function(e) { e.preventDefault(); const text = $('#edit-comment-text').val(); if(!text.trim()) { alert('수정할 내용을 입력하세요.'); return; } $.ajax({ url: commentUrl, type: 'POST', data: { action: 'update', commentIdx: $('#edit-comment-id').val(), text: text }, dataType: 'json', success: function() { $('#edit-comment-modal').hide(); loadComments(); } }); });
+      $('#edit-comment-form').on('submit', function(e) { 
+    	  e.preventDefault(); 
+    	  const text = $('#edit-comment-text').val(); 
+    	  if(!text.trim()) { alert('수정할 내용을 입력하세요.'); return; } 
+    	  
+    	  $.ajax({ 
+    		  url: commentUrl, 
+    		  type: 'POST', 
+    		  data: { action: 'update', commentIdx: $('#edit-comment-id').val(), text: text }, 
+    		  dataType: 'json', 
+    		  success: function() { $('#edit-comment-modal').hide(); 
+    		  						loadComments(); } 
+    		  }); 
+    	  });
     });
   </script>
   <style>
@@ -218,7 +240,7 @@ const isLoggedIn = ${not empty user};
             </div>
             <div class="writer_info">
               <div class="writer">
-                <img src="${(note.img == null or empty note.img) ? './sources/icons/profile.svg' : note.img}" alt="writer_profile">
+                <img src="${(note.img == null or empty note.img) ? './sources/icons/profile.svg' : note.img}" alt="writer_profile"><!-- note.img ? -->
                 <a href="userPage.do?acIdx=${note.ac_idx}">${note.nickname}</a>
                 <c:if test="${not empty sessionScope.userInfo and sessionScope.userInfo.ac_idx != note.upac_idx}">
                   <form id="followForm" style="display:inline; margin:0; padding:0;"><button id="followBtn" type="submit" data-user-idx="${user.ac_idx}" data-writer-idx="${note.upac_idx}" data-nidx="${note.note_idx}" style="background:#99bc85; border-radius:5px; border:none; cursor:pointer; padding:5px 10px;">${isFollowing ? "Unfollow" : "Follow"}</button></form>

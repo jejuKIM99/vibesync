@@ -28,29 +28,13 @@ public class postViewHandler implements CommandHandler {
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        request.setCharacterEncoding("UTF-8");
+        // request.setCharacterEncoding("UTF-8"); //필터 적용
 		String method = request.getMethod(); // 요청 메소드 확인 (GET 또는 POST)
 
         // POST 요청은 AJAX (팔로우/좋아요) 처리
         if ("POST".equalsIgnoreCase(method)) {
             response.setContentType("application/json; charset=UTF-8");
             String action = request.getParameter("action");
-
-            if ("toggleFollow".equals(action)) {
-                System.out.println(">>> postViewHandler.process(): toggleFollow 호출됨");
-                handleToggleFollow(request, response);
-            } else if ("toggleLike".equals(action)) {
-                System.out.println(">>> postViewHandler.process(): toggleLike 호출됨");
-                handleToggleLike(request, response);
-            } else {
-                // 정의되지 않은 action에 대한 오류 처리
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                try (PrintWriter out = response.getWriter()) {
-                    out.write("{\"error\":\"Invalid action\"}");
-                    out.flush();
-                }
-            }
-            return null; // AJAX 처리 후 forward 방지
 
         // GET 요청은 페이지 렌더링 처리
         } else if ("GET".equalsIgnoreCase(method)) {
@@ -64,8 +48,9 @@ public class postViewHandler implements CommandHandler {
             }
             int note_idx = Integer.parseInt(note_idx_str);
             
-         // --- '손님' 상태를 처리하도록 로직 수정 ---
+            // --- '손님' 상태 ---
             HttpSession session = request.getSession(false); // 없으면 null 반환
+            // loggedInUser가 null이면 손님, 아니면 로그인 사용자
             UserVO loggedInUser = null;
             
             // 1. 기본 게시물 정보는 항상 조회
@@ -81,12 +66,11 @@ public class postViewHandler implements CommandHandler {
                 UserNoteDTO followLike = postviews.getFollowLike(loggedInUser.getAc_idx(), note_idx, writerIdx);
                 request.setAttribute("followLike", followLike);
             }
-            // loggedInUser가 null이면 손님, 아니면 로그인 사용자
 
             // --- 조회수 처리 로직 ---
             HttpSession viewSession = request.getSession();
-            @SuppressWarnings("unchecked")
-            Set<Integer> accessPage = (Set<Integer>) viewSession.getAttribute("accessPage");
+            @SuppressWarnings("unchecked") // 타입 검사를 하지 않았다'는 경고를 무시하라는 의미. accessPage 객체가 Set<Integer> 타입이라는 것을 확신해서.
+            Set<Integer> accessPage = (Set<Integer>) viewSession.getAttribute("accessPage");// 세션에 저장된 데이터 기본적으로 Object타입. Set은 중복허용x
             if (accessPage == null) {
                 accessPage = new HashSet<>();
                 viewSession.setAttribute("accessPage", accessPage);
@@ -105,71 +89,4 @@ public class postViewHandler implements CommandHandler {
         return null;
     }
 
-    private void handleToggleFollow(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		response.setContentType("application/json; charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userInfo") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized 에러
-            out.write("{\"error\":\"login_required\"}");
-            out.flush();
-            return;
-        }
-        UserVO loggedInUser = (UserVO) session.getAttribute("userInfo");
-        
-		try {
-			// 1. 파라미터 받기
-			int userIdx = loggedInUser.getAc_idx();
-			int writerIdx = Integer.parseInt(request.getParameter("writerIdx"));
-
-			// 2. 서비스에 작업 위임
-			boolean isFollowing = postviews.toggleFollow(userIdx, writerIdx);
-
-			// 3. 결과 응답
-			out.write("{\"following\":" + isFollowing + "}");
-			
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			out.write("{\"error\":\"Unable to toggle follow\"}");
-			e.printStackTrace();
-		} finally {
-			out.flush();
-			out.close();
-		}
-	}
-
-    private void handleToggleLike(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		response.setContentType("application/json; charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userInfo") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            out.write("{\"error\":\"login_required\"}");
-            out.flush();
-            return;
-        }
-        UserVO loggedInUser = (UserVO) session.getAttribute("userInfo");
-		
-		try {
-			// 1. 파라미터 받기
-			int userIdx = loggedInUser.getAc_idx();
-			int noteIdx = Integer.parseInt(request.getParameter("noteIdx"));
-
-			// 2. 서비스에 작업 위임
-			boolean isLiking = postviews.toggleLike(userIdx, noteIdx);
-
-			// 3. 결과 응답
-			out.write("{\"liked\":" + isLiking + "}");
-
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			out.write("{\"error\":\"Unable to toggle like\"}");
-			e.printStackTrace();
-		} finally {
-			out.flush();
-			out.close();
-		}
-	}
 }

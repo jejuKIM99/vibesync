@@ -26,6 +26,7 @@ public class LikeHandler implements CommandHandler {
     public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        
         PrintWriter out = null;
         Gson gson = new Gson();
         Map<String, Object> serviceResult = null;
@@ -51,14 +52,16 @@ public class LikeHandler implements CommandHandler {
             if (userAcIdxFromSession == null) { // 세션이 없거나, ac_idx 속성이 없거나, Integer 타입이 아닌 경우
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 out.print(gson.toJson(Map.of("success", false, "message", "로그인이 필요합니다.")));
+                //out.print("{\"success\":false, \"message\":\"로그인이 필요합니다\"}");   
                 return null;
             }
             int acIdx = userAcIdxFromSession.intValue(); // 실제 사용할 ac_idx 값
 
-            String noteIdxParam = request.getParameter("noteId");
+            String noteIdxParam = request.getParameter("noteIdx");
             if (noteIdxParam == null || noteIdxParam.trim().isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 out.print(gson.toJson(Map.of("success", false, "message", "게시글 ID가 필요합니다.")));
+                //out.print("{\"success\":false, \"message\":\"게시글 ID가 필요합니다.\"}");  
                 return null;
             }
             int noteIdx = Integer.parseInt(noteIdxParam);
@@ -66,6 +69,9 @@ public class LikeHandler implements CommandHandler {
             serviceResult = likeService.toggleLike(acIdx, noteIdx);
 
             out.print(gson.toJson(serviceResult));
+            //boolean liked = (boolean) serviceResult.get("liked");
+            //out.print("{\"liked\":"+liked+"}");
+            
 
         } catch (NumberFormatException e) {
             if (out == null) out = response.getWriter();

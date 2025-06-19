@@ -178,8 +178,8 @@ public class FollowDAOImpl implements FollowDAO {
 	      } catch (Exception e) {
 	    	  e.printStackTrace();
 	      } finally {
-	    	  if (rs != null) rs.close();
-	    	  if (pstmt != null) pstmt.close();
+	    	  if (rs != null) JdbcUtil.close(rs);
+	    	  if (pstmt != null) JdbcUtil.close(pstmt);
 	      }
 	        
 	      return users;
@@ -234,8 +234,8 @@ public class FollowDAOImpl implements FollowDAO {
 	      } catch (Exception e) {
 	    	  e.printStackTrace();
 	      } finally {
-	    	  if (rs != null) rs.close();
-	    	  if (pstmt != null) pstmt.close();
+	    	  if (rs != null) JdbcUtil.close(rs);
+	    	  if (pstmt != null) JdbcUtil.close(pstmt);
 	      }
 	        
 	      return users;
@@ -252,7 +252,7 @@ public class FollowDAOImpl implements FollowDAO {
             pstmt.setInt(2, followingAcIdx);
             return pstmt.executeUpdate();
         } finally {
-            if (pstmt != null) pstmt.close();
+            if (pstmt != null) JdbcUtil.close(pstmt);
         }
     }
 
@@ -267,7 +267,7 @@ public class FollowDAOImpl implements FollowDAO {
             pstmt.setInt(2, followingAcIdx);
             return pstmt.executeUpdate();
         } finally {
-            if (pstmt != null) pstmt.close();
+            if (pstmt != null) JdbcUtil.close(pstmt);
         }
     }
 
@@ -287,8 +287,8 @@ public class FollowDAOImpl implements FollowDAO {
             }
             return false;
         } finally {
-            if (rs != null) rs.close();
-            if (pstmt != null) pstmt.close();
+            if (rs != null) JdbcUtil.close(rs);
+            if (pstmt != null) JdbcUtil.close(pstmt);
         }
     }
 
@@ -350,8 +350,8 @@ public class FollowDAOImpl implements FollowDAO {
                 count = rs.getInt(1);
             }
         } finally {
-            if (rs != null) rs.close();
-            if (pstmt != null) pstmt.close();
+            if (rs != null) JdbcUtil.close(rs);
+            if (pstmt != null) JdbcUtil.close(pstmt);
         }
         return count;
     }
@@ -370,8 +370,8 @@ public class FollowDAOImpl implements FollowDAO {
                 count = rs.getInt(1);
             }
         } finally {
-            if (rs != null) rs.close();
-            if (pstmt != null) pstmt.close();
+            if (rs != null) JdbcUtil.close(rs);
+            if (pstmt != null) JdbcUtil.close(pstmt);
         }
         return count;
     }

@@ -50,7 +50,7 @@ public class FollowHandler implements CommandHandler {
                 return null;
             }
 
-            String targetUserIdParam = request.getParameter("authorId"); // AJAX 요청 시 전달될 파라미터 이름
+            String targetUserIdParam = request.getParameter("writerIdx"); // AJAX 요청 시 전달될 파라미터 이름
             if (targetUserIdParam == null || targetUserIdParam.trim().isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 out.print(gson.toJson(Map.of("success", false, "message", "팔로우할 대상의 ID가 필요합니다.")));
