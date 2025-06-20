@@ -66,7 +66,7 @@ public class AddWatchPartyServlet extends HttpServlet {
         conn.setAutoCommit(false); // 자동 커밋 비활성화
 
         // 모든 DAO는 반드시 같은 커넥션으로 생성해야 합니다.
-        WatchPartyDAO partyDao = new WatchPartyDAO();
+        WatchPartyDAO partyDao = new WatchPartyDAOImpl(conn);
         WaSyncDAO syncDao = new WaSyncDAOImpl(conn);
 
         int chk = partyDao.checkExit(host);
@@ -113,13 +113,14 @@ public class AddWatchPartyServlet extends HttpServlet {
             success = false; // 실패 처리
             
         } finally {
-           try {
-         conn.setAutoCommit(true);
-         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+           if (conn != null) {
+            try {
+               conn.setAutoCommit(true);
+               JdbcUtil.close(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
          }
-           JdbcUtil.close(conn);
         }
         
         
