@@ -158,6 +158,7 @@
 					                <select id="month-select"></select>
 					                <button id="goto-date-btn">이동</button>
 					            </div>
+					            <button id="add-event-button" style="display: none; position: absolute;">+</button>
 					        </div>
 							<%-- 우측 영역: .calendar_contents --%>
 							<div class="calendar_contents">

@@ -879,6 +879,29 @@
 	width: 100%;
 }
 
+#add-event-button {
+    /* 캘린더보다 위에 보이도록 z-index 설정 */
+    z-index: 10;
+    
+    /* 버튼 모양 스타일 */
+    width: 28px;
+    height: 28px;
+    line-height: 24px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background-color: #3788d8; /* FullCalendar 기본 파란색 */
+    border: none;
+    border-radius: 50%; /* 원 모양으로 만들기 */
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#add-event-button:hover {
+    background-color: #2a79ca;
+}
+
 /* 할 일 목록 ul 스타일 */
 .todo-list {
     list-style: none;

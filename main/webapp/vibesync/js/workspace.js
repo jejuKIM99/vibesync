@@ -6,10 +6,7 @@ var todosById = {};
 let dateToRefreshAfterFetch = null;
 let isInitialLoad = true;
 
-// ========================================================
-//  함수 선언 영역
-// ========================================================
-
+//  함수 
 // [함수] 일별 일정 로딩 (우측 패널)
 function loadDailySchedules(dateString) {
 	
@@ -57,7 +54,7 @@ function loadDailySchedules(dateString) {
 // [함수] 할 일 목록 로딩
 function loadTodoList() { 
     $.ajax({
-        url: contextPath + '/todoList.do', // ★ contextPath 변수 사용
+        url: contextPath + '/todoList.do', 
         type: 'GET',
         dataType: 'json',
         success: function(todos) {
@@ -147,7 +144,7 @@ function loadPostsWidget(options) {
 function populateDatePicker() {
     const $yearSelect = $('#year-select');
     const $monthSelect = $('#month-select');
-    if ($yearSelect.children().length > 0) return;
+    if ($yearSelect.children().length > 0) return; // 처음 한 번만 시행
     const currentYear = new Date().getFullYear();
     for (let i = currentYear - 10; i <= currentYear + 10; i++) {
         $yearSelect.append(`<option value="${i}">${i}년</option>`);
@@ -157,9 +154,9 @@ function populateDatePicker() {
     }
 }
 
-/** 16진수 색상을 RGB 객체로 변환하는 헬퍼 함수 */
+// [함수] 16진수 색상을 RGB 객체로 변환하는 헬퍼 함수 
 function hexToRgb(hex) {
-    if (!hex || hex.length < 4) {
+    if (!hex || hex.length < 4) { // 가장 짧은 16진수 값 4글자
         hex = '#3788d8'; // 기본값
     }
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -170,9 +167,7 @@ function hexToRgb(hex) {
     } : { r: 55, g: 136, b: 216 }; // 기본값의 RGB
 }
 
-// ========================================================
 //  페이지 로드 완료 후 실행되는 메인 로직
-// ========================================================
 $(document).ready(function() {
 
     // --- 변수 선언 ---
@@ -183,6 +178,54 @@ $(document).ready(function() {
     const $datePickerPopover = $('#date-picker-popover');
     const $yearSelect = $('#year-select');
     const $monthSelect = $('#month-select');
+    
+    // 함수
+    const toLocalISOString = (date)=>{
+		const y = date.getFullYear(),
+			  m = String(date.getMonth()+1).padStart(2, '0'),
+			  d = String(date.getDate()).padStart(2,'0'),
+			  h = String(date.getHours()).padStart(2, '0'),
+			  min = String(date/getMinutes()).padStart(2,'0');
+		return y + "-" + m + "-" + d + "T" + h + ":" + min;
+	}
+    
+    // [함수] 스케줄생성 모달 열기 
+	 const openNewScheduleModal = (options) => {
+		// option객체가 전달되지 않은 경우 빈 객체로 초기화
+		options = options || {};
+		
+		// 1. 모달 제목 설정 및 폼 초기화
+		$modalTitle.text('새로운 일정 추가');
+		$scheduleForm[0].reset();
+		$('#schedule-id').val('');
+		
+		// 2. 시작/종료 날짜 결정
+		// option값이 있으면 그 날짜, 아니면 오늘 날짜
+		let startDate = options.start ? new Date(options.start) : new Date();
+		//															없으면 시작 날짜
+		let endDate = options.end ? new Date(options.end) : new Date(startDate);
+		
+		// 3. 시간에 대한 기본값 설정
+		startDate.setHours(9,0,0,0);
+		
+		if(options.end){
+			// select로 받은 end는 마지막 날+1일이므로 하루 빼기
+			endDate.setDate(endDate.getDate() -1);
+			endDate.setHours(18,0,0,0)
+		}else{
+			// 단일 날짜 선택(또는 오늘 날짜) 시 기본 1시간짜리 일정
+			endDate.setHours(10,0,0,0);
+		}
+		
+		// 4. 폼에 값 채우기
+		$('#schedule-start').val(toLocalISOString(startDate));
+		$('#schedule-end').val(toLocalISOString(endDate));
+		
+		// 5. 모달 띄우기
+		$todoForm.hide();
+    	$scheduleForm.show();
+    	$unifiedModal.show();
+	}
 
     // --- 이벤트 핸들러 설정 ---
 
@@ -203,13 +246,15 @@ $(document).ready(function() {
     });
 
     // 2. 할 일(Todo) 관련
-    $('#tab_todo').on('click', '.todo-checkbox', function() {
+    // #tab_todo 영역 안에서 클릭 발생 -> .todo-checkbox라는 클래스를 가진 요소에서 일어난 것인지 확인 -> 맞다면, 뒤 함수 실행
+    $('#tab_todo').on('click', '.todo-checkbox', function() { 
             var $li = $(this).closest('li');
             var todoIdx = $li.data('id');
-            var isChecked = $(this).is(':checked');
+            var isChecked = $(this).is(':checked'); // 체크박스가 체크된 상태인지를 확인하는 선택자
 
+			//두번재 인자 값이 true일 때 'completed' 클래스를 추가하고, false일 때 제거
             $li.find('.todo-text').toggleClass('completed', isChecked);
-
+            
             $.ajax({
                 url: contextPath + '/todoList.do',
                 type: 'POST',
@@ -228,11 +273,10 @@ $(document).ready(function() {
                 }
             });
         });
+        
     $('#tab_todo').on('click', '.todo-delete-btn', function() {
     	var $li = $(this).closest('li');
         var todoIdx = $li.data('id');
-            
-            console.log("삭제 버튼 클릭! 선택된 Todo의 ID:", todoIdx, "타입:", typeof todoIdx);
 
             if (confirm("정말로 이 할 일을 삭제하시겠습니까?")) {
                 $.ajax({
@@ -244,7 +288,7 @@ $(document).ready(function() {
                     },
                     success: function(response) {
                         console.log("Todo [ID:" + todoIdx + "] 삭제 완료:", response);
-                        $li.fadeOut(300, function() { $(this).remove(); });
+                        $li.fadeOut(300, function() { $(this).remove(); }); // 애니메이션 끝나고 실행
                     },
                     error: function() {
                         alert("삭제에 실패했습니다. 다시 시도해 주세요.");
@@ -252,7 +296,9 @@ $(document).ready(function() {
                 });
             }
     });
-    $('#tab_todo').on('click', '.todo-list li .todo-text', function() {const $li = $(this).closest('li');
+    
+    $('#tab_todo').on('click', '.todo-list li .todo-text', function() {
+			const $li = $(this).closest('li');
             const todoId = $li.data('id');
             const clickedTodo = todosById[todoId];
 
@@ -263,16 +309,16 @@ $(document).ready(function() {
             }
 
             $modalTitle.text('할 일 수정');
-            $todoForm[0].reset();
-            $scheduleForm.hide();
+            $todoForm[0].reset(); // $todoForm: jquery객체 -> reset() 없음, $todoForm[0](jquery에서 꺼내기): 순수 DOM 요소 -> reset 가능 
+            $scheduleForm.hide(); // 스케줄 수정 숨기기
             
             $('#todo-id').val(clickedTodo.todo_idx);
             $('#todo-text').val(clickedTodo.text);
             $('#todo-group').val(clickedTodo.todo_group || '');
             $('#todo-color').val(clickedTodo.color || '#3788d8');
 
-            $todoForm.show();
-            $unifiedModal.show();
+            $todoForm.show();	  // 할 일 수정 띄우기
+            $unifiedModal.show(); // 모달 창 띄우기
             
             
              }); // 수정 모달 열기
@@ -297,15 +343,6 @@ $(document).ready(function() {
             $('#schedule-id').val(clickedSchedule.id);
             $('#schedule-title').val(clickedSchedule.title);
             $('#schedule-description').val(clickedSchedule.description);
-            const toLocalISOString = (date) => {
-                const y = date.getFullYear(),
-                      m = String(date.getMonth() + 1).padStart(2, '0'),
-                      d = String(date.getDate()).padStart(2, '0'),
-                      h = String(date.getHours()).padStart(2, '0'),
-                      min = String(date.getMinutes()).padStart(2, '0');
-                // JSP와 충돌나지 않도록 템플릿 리터럴을 사용하지 않고 문자열 합치기로 변경
-                return y + "-" + m + "-" + d + "T" + h + ":" + min;
-            };
             
             $('#schedule-start').val(toLocalISOString(new Date(clickedSchedule.start)));
             $('#schedule-end').val(toLocalISOString(new Date(clickedSchedule.end)));
@@ -313,7 +350,9 @@ $(document).ready(function() {
 
             $scheduleForm.show();
             $unifiedModal.show();
-     }); // 수정 모달 열기
+            
+            });
+            
      
     $('#tab_schedule').on('click', '.schedule-delete-btn', function(e) { 
     	e.stopPropagation(); // 부모(li)의 수정 이벤트 방지
@@ -325,6 +364,7 @@ $(document).ready(function() {
                 if (found) {
                     const d = new Date(found.start);
                     scheduleDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                    // 삭제가 성공한 뒤, 어떤 날짜의 일일 목록을 새로고침해야 하는지 알려주기 위해 
                     break;
                 }
             }
@@ -360,43 +400,13 @@ $(document).ready(function() {
 
     // 4. 통합 모달(추가/수정) 관련
     $('#add-schedule-btn').on('click', function() { 
-		$modalTitle.text('새로운 일정 추가');
-            $scheduleForm[0].reset();
-            $('#schedule-id').val('');
-            let defaultDate = new Date(); // 기본값: 오늘
-
-            // 만약 사용자가 캘린더에서 특정 날짜를 선택한 상태라면,
-            if (selectedDateCell) {
-                // data-date 속성에서 'YYYY-MM-DD' 문자열을 가져옵니다.
-                const selectedDateStr = selectedDateCell.getAttribute('data-date');
-                if (selectedDateStr) {
-                    defaultDate = new Date(selectedDateStr);
-                }
-            }
-            
-         // 날짜를 'YYYY-MM-DDTHH:MM' 형식으로 변환하는 함수 (수정 로직에서 재활용)
-            const toLocalISOString = (date) => {
-                date.setHours(9, 0, 0, 0); // 기본 시작 시간을 오전 9시로 설정
-                const y = date.getFullYear(),
-                      m = String(date.getMonth() + 1).padStart(2, '0'),
-                      d = String(date.getDate()).padStart(2, '0'),
-                      h = String(date.getHours()).padStart(2, '0'),
-                      min = String(date.getMinutes()).padStart(2, '0');
-                return y + "-" + m + "-" + d + "T" + h + ":" + min;
-            };
-
-            // 시작 시간을 '선택한 날짜의 오전 9시'로 기본 설정합니다.
-            $('#schedule-start').val(toLocalISOString(defaultDate, true));
-
-            $todoForm.hide();
-            $scheduleForm.show();
-            $unifiedModal.show();
+		openNewScheduleModal();
 	 });
 	 
     $('#add-todo-btn').on('click', function() { 
     	$modalTitle.text('새로운 할 일 추가');
             $todoForm[0].reset();
-            $('#todo-id').val('');
+            $('#todo-id').val(''); // 새로운 할 일
             $('#todo-group').val('');
             $scheduleForm.hide();
             $todoForm.show();
@@ -404,26 +414,36 @@ $(document).ready(function() {
      });
      
      // 모달 닫기
-    $unifiedModal.on('click', '.modal-close-btn, .modal-overlay', function(e) { 
-			if ($(e.target).is('.modal-close-btn') || $(e.target).is('.modal-overlay')) {
-                $unifiedModal.hide();
-            }
+     // 1. 회색 배경(오버레이) 클릭 이벤트 처리
+    $unifiedModal.on('click', function(e) { 
+			// e.target은 실제 클릭이 시작된 요소
+			// this는 이벤트가 부착된 요소($unifiedModal)
+			// 두 개가 정확히 같을 때만 닫기
+			if(e.target === this){
+				$unifiedModal.hide();
+			}
 	 });
+	 
+	 // 2. 닫기 버튼 클릭 이벤트 별도 처리 
+	 $unifiedModal.on('click', '.modal-close-btn', function(){
+		$unifiedModal.hide();
+	});
 	 
 	 // 1. 일정 폼 제출
     $scheduleForm.on('submit', function(e) { 
-			 e.preventDefault();
+			e.preventDefault(); // 페이지 전체가 새로고침되는 브라우저의 기본 동작 막기
+								// AJAX를 이용해 폼을 제출하는 이벤트 핸들러에서는 반드시 가장 첫 줄에 e.preventDefault()를 작성
             const scheduleId = $('#schedule-id').val();
-            const isUpdating = !!scheduleId;
+            const isUpdating = !!scheduleId; // boolean값으로 변환. if (scheduleId !== '' && scheduleId !== null && ...)
             const scheduleData = {
                 action: isUpdating ? 'updateSchedule' : 'addSchedule',
                 title: $('#schedule-title').val(),
                 description: $('#schedule-description').val(),
-                start_time: $('#schedule-start').val().replace('T', ' ') + ':00',
+                start_time: $('#schedule-start').val().replace('T', ' ') + ':00', //YYYY-MM-DD HH:MM:SS. DB TIMESTAMP 형식
                 end_time: $('#schedule-end').val().replace('T', ' ') + ':00',
                 color: $('#schedule-color').val()
             };
-            if (isUpdating) { scheduleData.schedule_idx = scheduleId; }
+            if (isUpdating) { scheduleData.schedule_idx = scheduleId; } // update인 경우 schedule_idx 추가로 담아줌
             const alertMessage = isUpdating ? "수정" : "추가";
             $.ajax({
                 url: contextPath +'/schedules.do',
@@ -442,7 +462,8 @@ $(document).ready(function() {
 	 });
 	 
 	// 2. 할 일 폼 제출
-    $todoForm.on('submit', function(e) {  e.preventDefault();
+    $todoForm.on('submit', function(e) {  
+			e.preventDefault();
             const todoId = $('#todo-id').val();
             const isUpdating = !!todoId;
             const todoData = {
@@ -465,8 +486,8 @@ $(document).ready(function() {
                     } else { alert('할 일 ' + alertMessage + '에 실패했습니다.'); }
                 },
                 error: function() { alert('서버와 통신 중 오류가 발생했습니다.'); }
-            }); });
-    
+            }); 
+        });
     
     // 6. 위젯 '더보기' 및 전체 목록 모달
     $('#contents_grid').on('click', '.more-btn', function() { 
@@ -508,17 +529,26 @@ $(document).ready(function() {
                 }
             });
 	 });
-	 
-    $('#list-modal').on('click', '.modal-close-btn, .modal-overlay', function(e) { 
-    		if ($(e.target).is('.modal-close-btn') || $(e.target).is('.modal-overlay')) {
-                $('#list-modal').hide();
-            }
-     });
+     
+     // 모달 닫기
+     // 1. 회색 배경(오버레이) 클릭 이벤트 처리
+    $('#list-modal').on('click', function(e) { 
+			// e.target은 실제 클릭이 시작된 요소
+			// this는 이벤트가 부착된 요소($unifiedModal)
+			// 두 개가 정확히 같을 때만 닫기
+			if(e.target === this){
+				$('#list-modal').hide();
+			}
+	 });
+	 // 2. 닫기 버튼 클릭 이벤트 별도 처리 
+	 $('#list-modal').on('click', '.modal-close-btn', function(){
+		$('#list-modal').hide();
+	});
     
     // 7. 날짜 이동 팝오버 관련
-    setTimeout(() => {
+    setTimeout(() => { // 캘린더 렌더링 후 이벤트 바인딩을 위해 약간의 지연시간 부여
         $('#calendar .fc-toolbar-title').on('click', function(e) { 
-        		e.stopPropagation();
+        		//e.stopPropagation();
                 
                 // 현재 캘린더의 년/월을 select box에 설정
                 const currentDate = calendar.getDate();
@@ -526,8 +556,9 @@ $(document).ready(function() {
                 $monthSelect.val(currentDate.getMonth() + 1);
 
                 $datePickerPopover.toggle();
-         }); // 캘린더 렌더링 후 이벤트 바인딩을 위해 약간의 지연시간 부여
+         });
     }, 500);
+    
     // '이동' 버튼 클릭
     $('#goto-date-btn').on('click', function() { 
 			const year = $('#year-select').val();
@@ -546,28 +577,38 @@ $(document).ready(function() {
    
 
     // 9. ESC 키로 모달 닫기
-    $(document).on('keydown', function(e) { if (e.key === 'Escape') $('#addBlockModal, #list-modal').hide(); });
+    $(document).on('keydown', function(e) { 
+			if (e.key === 'Escape') {
+				$('#addBlockModal, #list-modal').hide();
+				$unifiedModal.hide();
+				$datePickerPopover.hide();
+				} 
+			
+			});
 
 	// 2. 캘린더 생성 및 렌더링
      var calendarEl = document.getElementById('calendar');
-        if (calendarEl) {
+        if (calendarEl) { 
             calendar = new FullCalendar.Calendar(calendarEl, {
-				eventDidMount: function(info) {
+				eventDidMount: function(info) { // FullCalendar 옵션. 일정 추가 직후(Did Mount) 추가 잡업할 수 있는 함수.
+				//						FullCalendar가 자동으로 전달
+				//						info.event: 해당 일정의 원본 데이터 객체
         		// 1. 이벤트의 원본 색상을 가져옵니다. 색상이 지정되지 않았다면 기본값을 사용합니다.
         		const originalColor = info.event.backgroundColor || info.event.borderColor || '#3788d8';
         
-       			// 2. 이미 작성된 hexToRgb 함수를 사용해 HEX를 RGB 객체로 변환합니다.
+       			// 2. hexToRgb 함수를 사용해 HEX를 RGB 객체로 변환합니다.
         		const rgb = hexToRgb(originalColor);
         
         if (rgb) {
-            // 3. RGB에 투명도(alpha)를 추가하여 연한 배경색(rgba)을 만듭니다. (0.3은 30% 투명도)
+            // 3. RGB에 투명도(alpha)를 추가하여 연한 배경색(rgba)
             const lightBackgroundColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`;
             
             // 4. 이벤트 요소에 직접 스타일을 적용합니다.
+            // info.el: 방금 화면에 추가된 일정의 실제 HTML DOM 요소(<div class="fc-event...">...</div>)
             info.el.style.backgroundColor = lightBackgroundColor; // 배경색을 연한 색으로 변경
-            info.el.style.borderColor = lightBackgroundColor;           // 테두리는 원본 색상 유지
+            info.el.style.borderColor = lightBackgroundColor;     
             
-            // 5. 배경색이 밝아졌으므로, 이벤트 제목(title)의 글자색을 어둡게 하여 가독성을 높입니다.
+            // 5. 배경색이 밝아졌으므로, 이벤트 제목(title)의 글자색을 어둡게 하여 가독성 높임
             const eventTitleEl = info.el.querySelector('.fc-event-title');
             if (eventTitleEl) {
                 eventTitleEl.style.color = 'var(--workspace-cal-font)'; // 진한 회색 계열
@@ -590,8 +631,7 @@ $(document).ready(function() {
 
                 events: function(fetchInfo, successCallback, failureCallback) {
                     var startIso = fetchInfo.start.toISOString();
-                    var endIso = fetchInfo.end.toISOString();
-
+                    var endIso = fetchInfo.end.toISOString(); 
                     $.ajax({
                         url: contextPath +'/schedules.do',
                         method: 'GET',
@@ -632,12 +672,7 @@ $(document).ready(function() {
                             if (isInitialLoad) {
                                 const todayStr = getTodayString();
                                 loadDailySchedules(todayStr);
-                                // 오늘 날짜 칸을 찾아 하이라이트
-                                /* const todayCell = document.querySelector('.fc-day-today');
-                                if(todayCell) {
-                                    todayCell.classList.add('fc-day-selected');
-                                    selectedDateCell = todayCell;
-                                } */
+                              
                                 isInitialLoad = false; // 플래그를 꺼서 다시는 실행되지 않게 함
                             }
 
@@ -676,7 +711,30 @@ $(document).ready(function() {
                         selectedDateCell = dayEl;
                         loadDailySchedules(dateStr);
                     }
-                }
+                },
+                select: function(selectInfo){
+					const addButton = $('#add-event-button');
+					
+					// 1. '+' 버튼의 위치를 마우스 클릭이 끝난 지점으로 계산합니다.
+   					// selectInfo.jsEvent는 마지막 마우스 이벤트 정보를 담고 있습니다. 
+   					const x = selectInfo.jsEvent.clientX;
+   					const y = selectInfo.jsEvent.clientY;
+   					
+   					// 버튼 위치 설정
+   					addButton.css({
+						top : y + 'px',
+						left : x + 'px',
+						display: 'block'
+					});
+					
+					// 3. 나중에 '+' 버튼을 클릭했을 때 사용할 수 있도록,
+    				//    선택된 날짜 정보를 버튼의 data 속성에 임시로 저장합니다.
+    				addButton.data('start', selectInfo.startStr);
+    				addButton.data('end', selectInfo.endStr);    				
+				}, 
+				unselect : function(){
+					$('#add-event-button').hide();
+				}
             });
             calendar.render();
         }
