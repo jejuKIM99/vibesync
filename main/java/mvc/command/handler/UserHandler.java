@@ -125,7 +125,7 @@ public class UserHandler implements CommandHandler {
      * ★★★ 로그인 성공 시 모든 공통 작업을 처리하는 핵심 메소드 ★★★
      */
     private String processSuccessfulLogin(HttpServletRequest request, HttpServletResponse response, UserVO userInfo) throws IOException {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         String userEmail = userInfo.getEmail();
 
         // 1. 중복 로그인 방지 로직

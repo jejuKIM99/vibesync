@@ -1,9 +1,5 @@
-// js/theme.js
-
-/**
- * 화면에 테마를 적용하고, 선택된 옵션에 시각적 효과를 주는 함수
- * @param {string} theme - 'light' 또는 'dark'
- */
+// theme
+// Light/Darl 테마 적용 함수
 function applyTheme(theme) {
     // 1. <html> 태그의 속성을 변경하여 CSS 전체에 테마 적용
     document.documentElement.setAttribute('color-theme', theme);
@@ -13,6 +9,7 @@ function applyTheme(theme) {
     $(`input[name="theme"][value="${theme}"]`).closest('.theme-option-label').addClass('selected');
 }
 
+// Theme
 // 문서가 준비되면 실행
 $(function() {
     const currentTheme = document.documentElement.getAttribute('color-theme') || 'light';
@@ -38,3 +35,21 @@ $(function() {
         });
     });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
