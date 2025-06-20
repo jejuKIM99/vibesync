@@ -136,7 +136,8 @@
 		background-color: var(--card-back) !important;
 		color: var(--font-color) !important;
 	}
-	.popover{
+	
+	   .popover{
       background-color: var(--card-back) !important;
       border: solid 2px var(--border-color) !important;
    }

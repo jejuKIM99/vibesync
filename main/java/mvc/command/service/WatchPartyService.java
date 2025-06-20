@@ -12,6 +12,7 @@ import com.util.ConnectionProvider;
 import mvc.domain.dto.WatchPartyDTO;
 import mvc.domain.vo.UserSummaryVO;
 import mvc.persistence.dao.FollowDAO;
+import mvc.persistence.dao.WSWatchPartyDAO;
 import mvc.persistence.dao.WatchPartyDAO;
 import mvc.persistence.daoImpl.FollowDAOImpl;
 import mvc.persistence.daoImpl.WatchPartyDAOImpl;
@@ -29,7 +30,7 @@ public class WatchPartyService {
 			FollowDAO followDAO = new FollowDAOImpl(conn);
 			List<Integer> followingUsers = followDAO.userFollowingIdList(acIdx);
 			
-			WatchPartyDAO watchPartyDAO = new WatchPartyDAOImpl(conn);
+			WSWatchPartyDAO watchPartyDAO = new WatchPartyDAOImpl(conn);
 			followingWatchParties = watchPartyDAO.selectWatchPartyListByHostId(followingUsers);
 			
 		} catch (NamingException e) {
