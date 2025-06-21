@@ -151,14 +151,15 @@
 				<section id="content">
 					<div id="workspace_wrapper">
 						<div id="todolist">
-							<div id="calendar"></div>
+							<div id="calendar">
+					            <button id="add-event-button" style="display: none; position: absolute;">+</button>
+					        </div>    
 							<div id="date-picker-popover" style="display: none;">
 					            <div class="date-picker-body">
 					                <select id="year-select"></select>
 					                <select id="month-select"></select>
 					                <button id="goto-date-btn">이동</button>
 					            </div>
-					            <button id="add-event-button" style="display: none; position: absolute;">+</button>
 					        </div>
 							<%-- 우측 영역: .calendar_contents --%>
 							<div class="calendar_contents">
@@ -350,7 +351,10 @@
             </div>
             <div class="form-group">
                 <label for="schedule-color">색상</label>
-                <input type="color" id="schedule-color" name="color" value="#3788d8">
+                <div class="color-picker-wrapper">
+			        <input type="color" id="schedule-color" name="color" value="#3788d8">
+			        <div id="schedule-recent-colors" class="recent-colors-container"></div>
+			    </div>
             </div>
             <div class="modal-buttons">
                 <button type="button" class="modal-close-btn">취소</button>
@@ -370,7 +374,10 @@
             </div>
             <div class="form-group">
         		<label for="todo-color">색상</label>
-        		<input type="color" id="todo-color" name="color" value="#3788d8">
+        		<div class="color-picker-wrapper">
+		        <input type="color" id="todo-color" name="color" value="#3788d8">
+		        <div id="todo-recent-colors" class="recent-colors-container"></div>
+		    </div>
     		</div>
             
             <div class="modal-buttons">

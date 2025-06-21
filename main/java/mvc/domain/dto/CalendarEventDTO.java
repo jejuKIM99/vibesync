@@ -25,6 +25,9 @@ public class CalendarEventDTO {
     private String color;    // 이벤트 색상
     private int ac_idx;
     private String description; 
+    
+    private boolean durationEditable;
+    private boolean allDay;
 
 
 }

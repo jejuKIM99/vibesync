@@ -44,8 +44,7 @@ public class ScheduleService {
             List<CalendarEventDTO> eventsForJson = new ArrayList<>();
 
             // 3. VO 리스트를 DTO 리스트로 변환합니다.
-            // === 이 부분을 수정해야 합니다: scheduleVOs 대신 schedulesFromDB 사용 ===
-            for (ScheduleVO vo : schedulesFromDB) { // <--- 여기가 잘못되었습니다. schedulesFromDB로 변경해야 합니다.
+            for (ScheduleVO vo : schedulesFromDB) { 
                 CalendarEventDTO dto = CalendarEventDTO.builder()
                         .schedule_idx(vo.getSchedule_idx())
                         .title(vo.getTitle())
@@ -55,6 +54,8 @@ public class ScheduleService {
                         .color(vo.getColor())
                         .ac_idx(vo.getAc_idx())
                         .description(vo.getDescription())
+                        .durationEditable(true)
+                        .allDay(false)
                         .build();
                 eventsForJson.add(dto);
             }

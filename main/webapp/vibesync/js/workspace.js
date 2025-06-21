@@ -7,6 +7,48 @@ let dateToRefreshAfterFetch = null;
 let isInitialLoad = true;
 
 //  함수 
+// 최근 색상 관리를 위한 함수
+// [함수] localStorage에서 최근 색상 배열 가져오기
+const getRecentColors = () => {
+	const colorsJSON = localStorage.getItem('recentColors');
+	return colorsJSON ? JSON.parse(colorsJSON) : [] ;
+};
+
+// localStorage에 최근 색상 저장하기(최대 5개)
+const saveRecentColor = (color) => {
+	if(!color) return;
+	let colors = getRecentColors();
+	// 이미 존재하는 색상은 배열에서 제거 (최신 순으로 이동시키기 위함)
+	colors = colors.filter(c => c !== color);
+	// 새로운 색상을 배열의 맨 앞에 추가
+	colors.unshift(color);
+	// 최근 5개의 색상만 유지
+	const updatedColors = colors.slice(0,5);
+	localStorage.setItem('recentColors', JSON.stringify(updatedColors));
+}
+
+// 모달에 최근 색상 동그라미 UI를 표시하는 함수
+const displayRecentColors = (containerSelector, inputSelector) => {
+	const colors = getRecentColors();
+	const $container = $(containerSelector);
+	const $colorInput = $(inputSelector);
+	$container.empty();
+	
+	colors.forEach(color => {
+		const $circle = $('<div>', {
+			class: 'recent-color-circle',
+			'data-color':color
+		}).css('background-color', color);
+		
+		// 현재 색상 input값과 같으면 'selected' 클래스 추가
+		if($colorInput.val() === color){
+			$circle.addClass('selected');
+		}
+		$container.append($circle);
+	});
+	
+}
+
 // [함수] 일별 일정 로딩 (우측 패널)
 function loadDailySchedules(dateString) {
 	
@@ -185,7 +227,7 @@ $(document).ready(function() {
 			  m = String(date.getMonth()+1).padStart(2, '0'),
 			  d = String(date.getDate()).padStart(2,'0'),
 			  h = String(date.getHours()).padStart(2, '0'),
-			  min = String(date/getMinutes()).padStart(2,'0');
+			  min = String(date.getMinutes()).padStart(2,'0');
 		return y + "-" + m + "-" + d + "T" + h + ":" + min;
 	}
     
@@ -221,12 +263,35 @@ $(document).ready(function() {
 		$('#schedule-start').val(toLocalISOString(startDate));
 		$('#schedule-end').val(toLocalISOString(endDate));
 		
+		displayRecentColors('#schedule-recent-colors', '#schedule-color');
+
 		// 5. 모달 띄우기
 		$todoForm.hide();
     	$scheduleForm.show();
     	$unifiedModal.show();
 	}
-
+	
+	// [함수]날짜 칸 선택
+	const handleDateSelection = (dayCell) => {
+		if(!dayCell || !dayCell.getAttribute('data-date')){
+			console.error("선택된 날짜 칸(dayCell) 또는 날짜 정보가 없습니다.");
+			return;
+		}
+		
+		const dateStr = dayCell.getAttribute('data-date');
+	                  
+        if(selectedDateCell){
+			selectedDateCell.classList.remove('fc-day-selected');
+			}
+		
+		dayCell.classList.add('fc-day-selected');
+		selectedDateCell = dayCell;
+					
+		loadDailySchedules(dateStr);
+					
+		$('.tab-btn[data-tab="tab_schedule"]').click();	
+	};
+	
     // --- 이벤트 핸들러 설정 ---
 
     // 1. 탭 전환
@@ -316,6 +381,8 @@ $(document).ready(function() {
             $('#todo-text').val(clickedTodo.text);
             $('#todo-group').val(clickedTodo.todo_group || '');
             $('#todo-color').val(clickedTodo.color || '#3788d8');
+            
+            displayRecentColors('#todo-recent-colors', '#todo-color');
 
             $todoForm.show();	  // 할 일 수정 띄우기
             $unifiedModal.show(); // 모달 창 띄우기
@@ -347,6 +414,8 @@ $(document).ready(function() {
             $('#schedule-start').val(toLocalISOString(new Date(clickedSchedule.start)));
             $('#schedule-end').val(toLocalISOString(new Date(clickedSchedule.end)));
             $('#schedule-color').val(clickedSchedule.color);
+            
+            displayRecentColors('#schedule-recent-colors', '#schedule-color');
 
             $scheduleForm.show();
             $unifiedModal.show();
@@ -408,6 +477,9 @@ $(document).ready(function() {
             $todoForm[0].reset();
             $('#todo-id').val(''); // 새로운 할 일
             $('#todo-group').val('');
+            
+            displayRecentColors('#todo-recent-colors', '#todo-color');
+            
             $scheduleForm.hide();
             $todoForm.show();
             $unifiedModal.show();
@@ -452,6 +524,7 @@ $(document).ready(function() {
                 success: function(response) {
                     if (response.success) {
                         alert('일정이 성공적으로 ' + alertMessage + '되었습니다.');
+                        saveRecentColor(scheduleData.color);
                         $unifiedModal.hide();
                         dateToRefreshAfterFetch = scheduleData.start_time.substring(0, 10);
                         calendar.refetchEvents();
@@ -481,6 +554,7 @@ $(document).ready(function() {
                 success: function(response) {
                     if (response.success) {
                         alert('할 일이 성공적으로 ' + alertMessage + '되었습니다.');
+                        saveRecentColor(todoData.color);
                         $unifiedModal.hide();
                         loadTodoList();
                     } else { alert('할 일 ' + alertMessage + '에 실패했습니다.'); }
@@ -488,6 +562,26 @@ $(document).ready(function() {
                 error: function() { alert('서버와 통신 중 오류가 발생했습니다.'); }
             }); 
         });
+        
+    // 최근 색상 동그라미 클릭 이벤트 핸들러
+    $unifiedModal.on("click", '.recent-color-circle', function(){
+		const color = $(this).data('color');
+		//클릭된 동그라미가 속한 컨테이너 찾기
+		const $container = $(this).closest('.recent-colors-container');
+		// 해당 컨테이너와 연결된 color input 찾기
+		const $colorInput = $container.siblings('input[type="color"]');
+		
+		// 색상 값 변경
+		$colorInput.val(color);
+		
+		$container.find('.recent-color-circle').removeClass('selected');
+		$(this).addClass('selected');
+});
+
+	// 기본 색상 선택기 값이 변경될 떄 'selected'클래스 제거
+	$('#schedule-color, #todo-color').on('input', function(){
+		$(this).siblings('.recent-colors-container').find('.recent-color-circle').removeClass('selected');
+	});
     
     // 6. 위젯 '더보기' 및 전체 목록 모달
     $('#contents_grid').on('click', '.more-btn', function() { 
@@ -585,6 +679,19 @@ $(document).ready(function() {
 				} 
 			
 			});
+			
+	$('#add-event-button').on("click", function(){
+		const $thisButton = $(this);
+		
+		openNewScheduleModal({
+			start : $thisButton.data('start'),
+			end : $thisButton.data('end')
+		});
+		
+		$thisButton.hide();
+		calendar.unselect();
+		
+	});
 
 	// 2. 캘린더 생성 및 렌더링
      var calendarEl = document.getElementById('calendar');
@@ -618,6 +725,7 @@ $(document).ready(function() {
                 initialView: 'dayGridMonth',
                 selectable: true,
                 editable: true,
+                eventDurationEditable: true,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
@@ -649,19 +757,38 @@ $(document).ready(function() {
                                     title: event.title,
                                     color: event.color,
                                     description: event.description,
-                                    start: new Date(event.start), // 문자열을 Date 객체로!
-                                    end: new Date(event.end) // 문자열을 Date 객체로!
+                                    start: new Date(event.start), // 문자열을 Date 객체로
+                                    end: new Date(event.end), // 문자열을 Date 객체로
+                                    durationEditable: event.durationEditable,
+                                    allDay : event.allDay
                                 };
                             });
 
                             // 2. Date 객체로 변환된 데이터를 사용해 schedulesByDate 객체 생성
                             schedulesByDate = {}; // 초기화
                             processedEvents.forEach(function(event) {
-                                var dateKey = event.start.toISOString().substring(0, 10);
-                                if (!schedulesByDate[dateKey]) {
-                                    schedulesByDate[dateKey] = [];
-                                }
-                                schedulesByDate[dateKey].push(event);
+								let loopStartDate = new Date(event.start);
+								// 종료일이 없으면 시작일과 동일하게 설정
+								let loopEndDate = event.end ? new Date(event.end) : new Date(event.start);
+								
+								// FullCalendar의 '종일' 이벤트는 종료일이 다음 날 00시
+								if(event.end &&loopEndDate.getHours()===0 && loopEndDate.getMinutes() === 0){
+									loopEndDate.setDate(loopEndDate.getDate() - 1);
+								}
+								
+								// 2일 이상 일정
+								// 시작일부터 종료일까지 하루씩 반복하면서 모든 날짜에 일정 추가
+								while(loopStartDate <= loopEndDate){
+									const dateKey = loopStartDate.toISOString().substring(0,10);
+									
+									if(!schedulesByDate[dateKey]){
+										schedulesByDate[dateKey] = []
+									}
+									schedulesByDate[dateKey].push(event);
+									
+									//다음 날로 날짜 증가
+									loopStartDate.setDate(loopStartDate.getDate()+1);
+								}
                             });
 
                             // 3. 날짜별로 일정 정렬
@@ -678,7 +805,13 @@ $(document).ready(function() {
 
                             // 4. 새로고침이 필요한 날짜가 있는지 확인하고, 목록을 다시 그립니다.
                             if (dateToRefreshAfterFetch) {
-                                loadDailySchedules(dateToRefreshAfterFetch);
+								const targetCell = calendarEl.querySelector(`td[data-date="${dateToRefreshAfterFetch}"]`)
+								if(targetCell){
+									handleDateSelection(targetCell);
+								}else{
+									// 현재 캘린더 뷰에 해당 날짜가 없으면 목록만 새로고침
+									loadDailySchedules(dateToRefreshAfterFetch);
+								}
                                 dateToRefreshAfterFetch = null; // 변수 초기화
                             }
 
@@ -692,33 +825,23 @@ $(document).ready(function() {
                 },
                 // --- 날짜 클릭 이벤트 ---
                 dateClick: function(info) {
-                    selectedDateCell = info.dayEl;
-
-                    $('.tab-btn[data-tab="tab_schedule"]').click();
-                    loadDailySchedules(info.dateStr);
+					handleDateSelection(info.dayEl);
                 },
                 eventClick: function(info) {
-                    // 클릭된 이벤트의 날짜를 YYYY-MM-DD 형식으로 구합니다.
-                    const dateStr = info.event.start.toISOString().substring(0, 10);
-                    
-                    // 해당 날짜의 DOM 요소를 직접 찾아 dateClick과 동일한 로직을 수행합니다.
-                    const dayEl = document.querySelector(`.fc-daygrid-day[data-date="${dateStr}"]`);
-                    if (dayEl) {
-                        if (selectedDateCell) {
-                            selectedDateCell.classList.remove('fc-day-selected');
-                        }
-                        dayEl.classList.add('fc-day-selected');
-                        selectedDateCell = dayEl;
-                        loadDailySchedules(dateStr);
-                    }
+					// 클릭된 지점에서 가장 가까운 날짜 칸(.fc-daygrid-day) 찾기
+					const dayCell = info.jsEvent.target.closest('.fc-daygrid-day');
+					handleDateSelection(dayCell);	
                 },
                 select: function(selectInfo){
 					const addButton = $('#add-event-button');
 					
-					// 1. '+' 버튼의 위치를 마우스 클릭이 끝난 지점으로 계산합니다.
-   					// selectInfo.jsEvent는 마지막 마우스 이벤트 정보를 담고 있습니다. 
-   					const x = selectInfo.jsEvent.clientX;
-   					const y = selectInfo.jsEvent.clientY;
+					// 1. 캘린더 요소의 현재 화면상 위치와 크기 정보를 가져옵니다.
+    				const calendarRect = calendarEl.getBoundingClientRect();
+					
+					// 2. 뷰포트 기준 클릭 좌표(clientX/Y)에서 캘린더의 시작 좌표(left/top)를 빼서,
+					//	  캘린더 내부에서의 상대적인 클릭 위치를 정화하게 계산
+					const x = selectInfo.jsEvent.clientX - calendarRect.left;
+					const y = selectInfo.jsEvent.clientY - calendarRect.top;
    					
    					// 버튼 위치 설정
    					addButton.css({
@@ -734,6 +857,67 @@ $(document).ready(function() {
 				}, 
 				unselect : function(){
 					$('#add-event-button').hide();
+				}, 
+				eventDrop: function(dropInfo){
+					// 1. 서버에 전송할 데이터 객체 생성
+					const scheduleData = {
+						action: 'updateSchedule',
+						schedule_idx : dropInfo.event.id,
+						title: dropInfo.event.title,
+						description: dropInfo.event.extendedProps.description || '',
+						color : dropInfo.event.backgroundColor,
+						start_time : toLocalISOString(dropInfo.event.start).replace('T', ' ') + ':00',
+						end_time : dropInfo.event.end ? toLocalISOString(dropInfo.event.end).replace('T', ' ') + ':00' : toLocalISOString(dropInfo.event.start).replace('T', ' ') + ':00'
+					}
+					
+					// 2. AJAX를 통해 서버에 변경 사항을 전송
+					$.ajax({
+						url : contextPath + '/schedules.do',
+						type :'POST',
+						data: scheduleData,
+						success : function(response){
+							if(response.success){
+								const newDateStr = scheduleData.start_time.substring(0,10);
+								dateToRefreshAfterFetch = newDateStr;
+								calendar.refetchEvents();
+								
+							}else{
+								dropInfo.revert();
+							}
+						},
+						error: function(){
+							alert("서버와 통신 중 오류가 발생했습니다.");
+							dropInfo.revert();
+						}
+					})
+				},
+				eventResize : function(resizeInfo){
+					const scheduleData = {
+						action: 'updateSchedule',
+						schedule_idx : resizeInfo.event.id,
+						title: resizeInfo.event.title,
+						description: resizeInfo.event.extendedProps.description || '',
+						color : resizeInfo.event.backgroundColor,
+						start_time : toLocalISOString(resizeInfo.event.start).replace('T', ' ') + ':00',
+						end_time : resizeInfo.event.end ? toLocalISOString(resizeInfo.event.end).replace('T', ' ') + ':00' : toLocalISOString(resizeInfo.event.start).replace('T', ' ') + ':00'
+					};
+					$.ajax({
+						url : contextPath + '/schedules.do',
+						type :'POST',
+						data: scheduleData,
+						success : function(response){
+							if(response.success){
+								dataToRefreshAfterFetch = scheduleData.start_time.substring(0,10);
+								calendar.refetchEvents();
+							}else{
+								resizeInfo.revert();
+							}
+						},
+						error: function(){
+							alert("서버와 통신 중 오류가 발생했습니다.");
+							resizeInfo.revert();
+						}
+					})	
 				}
             });
             calendar.render();
@@ -741,6 +925,5 @@ $(document).ready(function() {
 
     // --- 초기 데이터 로딩 함수 호출 ---
     loadTodoList();
-    loadDailySchedules(getTodayString());
     populateDatePicker();
 });
