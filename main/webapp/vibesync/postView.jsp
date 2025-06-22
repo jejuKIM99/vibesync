@@ -38,16 +38,24 @@ function goBackSmartly() {
 
 const isLoggedIn = ${not empty user}; 
 
+function requireLogin() {
+	
+	const ctx = "${pageContext.request.contextPath}";
+	
+    if (confirm('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?')) {
+        // 1. 현재 페이지의 전체 주소를 가져옵니다. (예: .../postView.do?nidx=26)
+        const currentUrl = window.location.href; 
+        // 2. 로그인 페이지 주소에 'returnUrl' 파라미터를 추가하여 보냅니다.
+        //    encodeURIComponent는 URL에 포함될 수 있는 특수문자(?, &, =)를 안전하게 인코딩합니다.
+        window.location.href = ctx + '/vibesync/user.do?returnUrl=' + encodeURIComponent(currentUrl);
+    }
+}
+      
     $(document).ready(function() {
       // 기존 코드 (Follow, Like, Image Path)
       const ajaxUrl = '${contextPath}/vibesync/postView.do';
       const ctx = '${contextPath}';
       
-      function requireLogin() {
-          if (confirm('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?')) {
-              window.location.href = ctx + '/vibesync/user.do';
-          }
-      }
       
       $('#followForm').on('submit', function(e) {
         e.preventDefault();
@@ -254,9 +262,8 @@ const isLoggedIn = ${not empty user};
                   <%-- 2. 로그인하지 않은 경우: 로그인 유도 메시지를 보여줌 --%>
                   <c:otherwise>
                       <div class="comment-login-prompt" 
-                          style="margin-bottom: 1.864rem; padding: 20px; border: 2px solid var(--border-color); border-radius: 4px; text-align: center; cursor: pointer;"
-                          onclick="location.href='${contextPath}/vibesync/user.do'">
-                          <a href="${contextPath}/vibesync/user.do" style="text-decoration: none; color: #888; font-weight: bold;">
+                          style="margin-bottom: 1.864rem; padding: 20px; border: 2px solid var(--border-color); border-radius: 4px; text-align: center; cursor: pointer;">
+                          <a href="javascript:void(0);" onclick="requireLogin()" style="text-decoration: none; color: #888; font-weight: bold;">
                               로그인 후 댓글을 작성할 수 있습니다.
                           </a>
                       </div>

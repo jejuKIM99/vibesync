@@ -398,8 +398,8 @@ public class UserDAOImpl implements UserDAO {
                 email = rs.getString("userEmail");
             }
         } finally {
-            if (rs != null) rs.close();
-            if (pstmt != null) pstmt.close();
+            if (rs != null) JdbcUtil.close(rs);
+            if (pstmt != null) JdbcUtil.close(pstmt);
         }
         return email;
     }

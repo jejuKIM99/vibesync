@@ -56,17 +56,7 @@ public class UserHandler implements CommandHandler {
         if (session.getAttribute("userInfo") != null) {
             response.sendRedirect(request.getContextPath() + "/vibesync/main.do");
             return null;
-        }
-        
-        // 'from=logout' 파라미터가 없는 경우에만 referer를 설정하도록 수정
-        String from = request.getParameter("from");
-        if (!"logout".equals(from) && session.getAttribute("referer") == null) {
-            String httpReferer = request.getHeader("Referer");
-        	// 이전 페이지가 있고, 그 페이지가 로그인 페이지 자신이 아닐 때만 저장
-            if (httpReferer != null && !httpReferer.contains("/user.do")) {
-                session.setAttribute("referer", httpReferer);
-            }
-        }
+        }        
                 
         // 자동 로그인 쿠키 확인
         Cookie[] cookies = request.getCookies();
@@ -135,7 +125,7 @@ public class UserHandler implements CommandHandler {
     }
     
     /**
-     * ★★★ 로그인 성공 시 모든 공통 작업을 처리하는 핵심 메소드 ★★★
+     * 로그인 성공 시 모든 공통 작업을 처리하는 핵심 메소드 
      */
     private String processSuccessfulLogin(HttpServletRequest request, HttpServletResponse response, UserVO userInfo) throws IOException {
         HttpSession session = request.getSession();
@@ -288,19 +278,16 @@ public class UserHandler implements CommandHandler {
     private String processRequestPasswordReset(HttpServletRequest request, HttpServletResponse response) {
         String email = request.getParameter("email");
         
-        // 이메일 링크에 포함될 현재 서버의 기본 URL을 동적으로 생성
-        // 예: "http://localhost:8080/vibesync"
-        String requestURL = request.getRequestURL().toString();
+        // 이메일 링크에 포함될 현재 서버의 컨텍스트루트
+        String requestURL = request.getRequestURL().toString(); // 실제로 브라우저 주소창에 입력한 전체 URL. ? 제외
         String contextPath = request.getContextPath();
         String baseURL = requestURL.substring(0, requestURL.indexOf(contextPath) + contextPath.length());
 
         try {
             passwordResetService.initiateReset(email, baseURL);
-            // 사용자에게는 항상 동일한 메시지를 보여주어 이메일 존재 여부 추측을 막음
             request.setAttribute("loginMessage", "If an account with that email exists, a reset link has been sent.");
         } catch (Exception e) {
             e.printStackTrace();
-            // 서비스 로직에서 예외가 발생하더라도 사용자에게는 동일한 메시지를 보여줌 (보안상)
             request.setAttribute("loginMessage", "If an account with that email exists, a reset link has been sent.");
         }
         

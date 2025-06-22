@@ -34,7 +34,7 @@ public class ScheduleService {
     public List<CalendarEventDTO> getMonthlySchedules(int acIdx, Timestamp start, Timestamp end) throws Exception {
         Connection conn = null;
         try {
-            conn = ConnectionProvider.getConnection(); // ConnectionProvider.getConnection() 호출
+            conn = ConnectionProvider.getConnection(); 
             ScheduleDAO scheduleDAO = new ScheduleDAOImpl(conn);
 
             // 1. DAO로부터 DB 데이터(VO)를 받습니다.
@@ -81,22 +81,13 @@ public class ScheduleService {
             ScheduleDAO scheduleDAO = new ScheduleDAOImpl(conn);
             return scheduleDAO.findSchedulesByDate(acIdx, dateStr);
         } catch (SQLException | NamingException e) {
-            e.printStackTrace(); // 실제 운영에서는 로깅 프레임워크 사용
+            e.printStackTrace(); 
             throw e;
         } finally {
             if (conn != null) {
                 JdbcUtil.close(conn);
             }
         }
-    }
-    
-
-    // Timestamp를 "yyyy-MM-dd'T'HH:mm:ss" 형식의 문자열로 변환하는 헬퍼 메소드
-    private String formatTimestamp(Timestamp ts) {
-    	 if (ts == null) return null;
-         // 기존 "MMM d, yyyy, h:mm:ss a" 형식 대신 ISO 8601 형식으로 변경
-         // 예: "2025-06-08T16:00:00"
-         return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(ts);
     }
     
     public boolean addSchedule(ScheduleVO schedule) throws Exception {

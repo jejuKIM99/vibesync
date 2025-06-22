@@ -11,7 +11,7 @@ let isInitialLoad = true;
 // [함수] localStorage에서 최근 색상 배열 가져오기
 const getRecentColors = () => {
 	const colorsJSON = localStorage.getItem('recentColors');
-	return colorsJSON ? JSON.parse(colorsJSON) : [] ;
+	return colorsJSON ? JSON.parse(colorsJSON) : [] ; // localStorage는 데이터를 오직 '문자열(String)' 형태로만 저장
 };
 
 // localStorage에 최근 색상 저장하기(최대 5개)
@@ -21,7 +21,7 @@ const saveRecentColor = (color) => {
 	// 이미 존재하는 색상은 배열에서 제거 (최신 순으로 이동시키기 위함)
 	colors = colors.filter(c => c !== color);
 	// 새로운 색상을 배열의 맨 앞에 추가
-	colors.unshift(color);
+	colors.unshift(color); // '맨 앞'에 새로운 요소를 추가하는 함수
 	// 최근 5개의 색상만 유지
 	const updatedColors = colors.slice(0,5);
 	localStorage.setItem('recentColors', JSON.stringify(updatedColors));
@@ -211,7 +211,6 @@ function hexToRgb(hex) {
 
 //  페이지 로드 완료 후 실행되는 메인 로직
 $(document).ready(function() {
-
     // --- 변수 선언 ---
     const $unifiedModal = $('#unified-modal');
     const $modalTitle = $('#modal-title');
