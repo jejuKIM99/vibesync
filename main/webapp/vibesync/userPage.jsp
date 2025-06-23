@@ -200,7 +200,7 @@
             <div id="chatHistory"></div>
             <div class="chat-input-row">
                 <input type="text" id="chatInput" placeholder="메시지를 입력하세요..." autocomplete="off" />
-                <button type="button" id="sendMessageBtn" title="전송" onclick="sendChatMessage();">
+                <button type="button" id="sendMessageBtn" title="전송">
                     <i class="fa-solid fa-paper-plane" style="color:white; font-size: 16px; filter: invert(0) !important;"></i>
                 </button>
             </div>
@@ -213,10 +213,6 @@
             <div id="settingContent"></div>
         </div>
     </div>
-
-    <form id="logoutForm" action="user.do" method="post">
-    	<input type="hidden" name="accessType" value="logout">
-    </form>
 
     <script>
         let currentChatSenderIdx = 0;
@@ -406,6 +402,8 @@
                 const nickname = $(this).data('nickname');
                 openChatWithUser(senderIdx, nickname);
             });
+            
+            $("#sendMessageBtn").on("click", sendChatMessage);
         
             $("#chatInput").on("keydown", function(e) {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -486,7 +484,7 @@
                         success: function(response) {
                             if (response.success) {
                                 // 1. 새 이미지 경로에 캐시 무효화를 위한 타임스탬프 추가
-                                const newImgSrc = '${pageContext.request.contextPath}/vibesync/' + response.newImagePath+ '?t=' + new Date().getTime();
+                                const newImgSrc = '${pageContext.request.contextPath}/vibesync/' + response.newImagePath + '?t=' + new Date().getTime();
 
                                 // 4. 화면에 보이는 이미지들의 src를 교체 (이제 즉시 반영됨)
                                 $('#mainProfileImage').attr('src', newImgSrc);
@@ -538,7 +536,7 @@
                     success: function(response) {
                         if (response.success) {
                             alert('비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요.');
-                            $("#logoutForm").submit();
+                            location.href = '${pageContext.request.contextPath}/vibesync/user.do?accessType=logout';
                         } else {
                             $(this).find('.setting-error-msg').text(response.message || '비밀번호 변경에 실패했습니다.');
                         }
@@ -687,8 +685,8 @@
 
     function showCombinedSettingsView() {
         const defaultImgSrc = '<%=contextPath %>/sources/default/default_user.jpg';
-        const currentImgSrc = currentUserData && currentUserData.img ? '${pageContext.request.contextPath}/vibesync/' + currentUserData.img : defaultImgSrc;
-
+        const currentImgSrc = currentUserData && currentUserData.img ? '${pageContext.request.contextPath}/vibesync/' + currentUserData.img : defaultImgSr
+        
         const combinedHtml = `
             <h4>계정 설정</h4>
             
