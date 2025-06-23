@@ -36,6 +36,9 @@ public class WorkspaceHandler implements CommandHandler {
         HttpSession session = request.getSession(false);
         UserVO userInfo = (UserVO) session.getAttribute("userInfo");
         int ac_idx = userInfo.getAc_idx();
+        HttpSession session = request.getSession(false);
+        UserVO userInfo = (UserVO) session.getAttribute("userInfo");
+        int ac_idx = userInfo.getAc_idx();
         
     	WorkspaceDTO initialData = workspaceService.getInitialData(ac_idx);
     	

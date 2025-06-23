@@ -64,6 +64,19 @@ function loadDailySchedules(dateString) {
     // 4. JSP에 추가한 h4 태그에 포맷된 날짜 텍스트를 삽입
     $('#tab_schedule .schedule-date-title').text(formattedDate);
 	
+	
+	// 1. 전달받은 dateString으로 Date 객체 생성
+    const date = new Date(dateString);
+
+    // 2. 요일을 한글로 변환하기 위한 배열
+    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+
+    // 3. 'YYYY년 MM월 DD일 (요일)' 형식으로 날짜 포맷팅
+    const formattedDate = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${weekdays[date.getDay()]})`;
+
+    // 4. JSP에 추가한 h4 태그에 포맷된 날짜 텍스트를 삽입
+    $('#tab_schedule .schedule-date-title').text(formattedDate);
+	
     var schedules = schedulesByDate[dateString];
     var scheduleHtml = '<ul class="schedule-list">';
     if (schedules && schedules.length > 0) {
@@ -91,6 +104,8 @@ function loadDailySchedules(dateString) {
     scheduleHtml += '</ul>';
     $('#tab_schedule .schedule-date-title').html('<i class="fa-regular fa-calendar-check"></i>' + formattedDate);
     $('#daily-schedule-list-container').html(scheduleHtml);
+    $('#tab_schedule .schedule-date-title').html('<i class="fa-regular fa-calendar-check"></i>' + formattedDate);
+    $('#daily-schedule-list-container').html(scheduleHtml);
 }
 
 // [함수] 할 일 목록 로딩
@@ -106,6 +121,19 @@ function loadTodoList() {
                 $.each(todos, function(index, todo) {
                     let isChecked = todo.status === 1 ? "checked" : "";
                     let textClass = todo.status === 1 ? "completed" : "";
+                    // 1. 색상 코드를 RGB 객체로 변환
+				    let rgb = hexToRgb(todo.color);
+				
+				    // 2. li 태그에 CSS 변수로 RGB 값을 전달하고, 체크박스 구조 변경
+				    todoListHtml += `<li data-id="${todo.todo_idx}" style="--todo-r: ${rgb.r}; --todo-g: ${rgb.g}; --todo-b: ${rgb.b};">
+				                        <label class="custom-checkbox-label">
+				                            <input type="checkbox" class="todo-checkbox" ${isChecked}>
+				                            <span class="custom-checkbox-span"></span>
+				                        </label>
+				                        <span class="todo-text \${textClass}">${todo.text}</span>
+				                        <button class="todo-delete-btn">&times;</button>
+				                    </li>`;
+				    todosById[todo.todo_idx] = todo;
                     // 1. 색상 코드를 RGB 객체로 변환
 				    let rgb = hexToRgb(todo.color);
 				
@@ -168,6 +196,7 @@ function loadPostsWidget(options) {
                                         <a href="postView.do?nidx=${post.note_idx}" title="${post.title}">
                                             <span>${post.title}</span>
                                             ${options.metaGenerator(post)}
+                                            ${options.metaGenerator(post)}
                                         </a>
                                     </li>`;
                 });
@@ -179,7 +208,17 @@ function loadPostsWidget(options) {
         },
         error: function() { $widget.html('<p>글을 불러오는 데 실패했습니다.</p>'); }
     });
+                });
+            } else {
+                contentHtml += `<li class="no-items">${options.noItemText}</li>`;
+            }
+            contentHtml += '</ul>';
+            $widget.html(contentHtml);
+        },
+        error: function() { $widget.html('<p>글을 불러오는 데 실패했습니다.</p>'); }
+    });
 }
+*/
 */
 
 // [함수] 날짜 선택 팝오버 채우기

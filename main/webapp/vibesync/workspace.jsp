@@ -182,6 +182,12 @@
 									    <div id="daily-schedule-list-container">
 									        <p>캘린더에서 날짜를 선택해주세요.</p>
 									    </div>
+										 <%-- 날짜 제목이 표시될 영역 --%>
+									    <h4 class="schedule-date-title"></h4> 
+									    <%-- 실제 일정 목록이 들어갈 컨테이너 --%>
+									    <div id="daily-schedule-list-container">
+									        <p>캘린더에서 날짜를 선택해주세요.</p>
+									    </div>
 									</div>
 									<div id="tab_todo" class="tab-content">
 										<p>로딩 중...</p>
@@ -204,6 +210,7 @@
 						</div>
 
 						<div id="contents_grid">
+							<!-- 내가 작성한 전체 글 목록 (인기글 순) -->
 							<!-- 내가 작성한 전체 글 목록 (인기글 순) -->
 							<div class="contents_item" id="my-posts">
 								<div class="widget-header">
@@ -231,6 +238,7 @@
 						        </c:choose>
 						    </ul>
 							</div>
+							<!-- 좋아요한 포스트 목록 -->
 							<!-- 좋아요한 포스트 목록 -->
 							<div class="contents_item" id="liked-posts">
 								<div class="widget-header">
@@ -286,6 +294,7 @@
                             </div>
 
 							<!-- 동적으로 추가된 블록들 -->
+							<!-- 동적으로 추가된 블록들 -->
 							<c:forEach var="block" items="${workspaceData.blocks}">
 								<div class="contents_item generated_block" id="block-${block.block_id}">
 									<div class="block-header">
@@ -313,6 +322,7 @@
 								</div>
 						</c:forEach>
 
+                        <!-- 블록 추가 버튼(블록) -->
                         <!-- 블록 추가 버튼(블록) -->
 			            <div id="content_plus" class="contents_item">+</div>
 
@@ -454,6 +464,12 @@
     let initialBlockOrder = null; // 편집 시작 시의 블록 순서 저장
 	
     /* 모달, 블록 관련 js, jquery */
+    
+    // 추가 블록 편집 모드 시 사용할 전역 변수
+    let isEditMode = false; // 편집 모드 상태 관리
+    let initialBlockOrder = null; // 편집 시작 시의 블록 순서 저장
+	
+    /* 모달, 블록 관련 js, jquery */
     $(document).ready(function() {
     	// 초기 페이지 로드
         <c:forEach var="block" items="${workspaceData.blocks}">
@@ -469,6 +485,7 @@
         // 이벤트 관련
         const grid = $('#contents_grid');
 
+     	// 이벤트 위임을 사용하여 새로고침 및 삭제 버튼 이벤트 한 번에 처리
      	// 이벤트 위임을 사용하여 새로고침 및 삭제 버튼 이벤트 한 번에 처리
         grid.on('click', '.block-actions button', function() {
             const button = $(this);
@@ -488,6 +505,8 @@
 
                         // 2. 만약 블록 타입이 'UserStats'이고 차트 데이터가 있다면 차트를 다시 그림
                         if (res.block_type === 'UserStats' && res.chart_data) {
+                        	$('#block-' + blockId).find('.block-header h4').html('<i class="fa-solid fa-chart-simple"></i>&nbsp;' + res.title);
+                        	createOrUpdateChart(blockId, res.chart_data);
                         	$('#block-' + blockId).find('.block-header h4').html('<i class="fa-solid fa-chart-simple"></i>&nbsp;' + res.title);
                         	createOrUpdateChart(blockId, res.chart_data);
                         }
@@ -511,6 +530,50 @@
                 chart.setDatasetVisibility(datasetIndex, checkbox.prop('checked'));
                 chart.update();
             }
+        });
+        
+        // 통계 블록의 기간 변경 버튼 이벤트 핸들러
+        grid.on('click', '.period-btn', function() {
+            const $button = $(this);
+            const blockId = $button.data('block-id');
+            const period = $button.data('period');
+
+            // 이미 활성화된 버튼을 누르면 아무것도 하지 않음
+            if ($button.hasClass('active')) {
+                return;
+            }
+            
+            // 버튼 활성 상태 UI 업데이트
+            $button.siblings().removeClass('active');
+            $button.addClass('active');
+
+            // 로딩 스피너 표시
+            const blockContentDiv = $('#block-' + blockId + ' .block-content');
+            blockContentDiv.html('<div class="loading-spinner"></div>');
+
+            // 해당 블록을 새로운 기간으로 새로고침
+            $.ajax({
+                url: '${pageContext.request.contextPath}/block.do',
+                type: 'GET',
+                data: { 
+                    block_id: blockId,
+                    period: period
+                },
+                dataType: 'json',
+                success: function(res) {
+                	// 새 HTML로 교체
+                    blockContentDiv.html(res.html);
+                    // 차트 다시 그리기
+                    if (res.block_type === 'UserStats' && res.chart_data) {
+                    	const $headerTitle = $('#block-' + blockId).find('.block-header h4');
+                    	$headerTitle.html('<i class="fa-solid fa-chart-simple"></i>&nbsp;' + res.title);
+                        createOrUpdateChart(blockId, res.chart_data);
+                    }
+                },
+                error: function() {
+                    blockContentDiv.html('<p style="color:red;">새로고침 실패</p>');
+                }
+            });
         });
         
         // 통계 블록의 기간 변경 버튼 이벤트 핸들러
@@ -581,6 +644,8 @@
             let dataToSend = {
                 block_type: blockType,
                 _method: 'ADD'
+                block_type: blockType,
+                _method: 'ADD'
             };
             if (blockType === 'CategoryPosts') {
                 dataToSend.category_idx = $('#categorySelector').val();
@@ -603,6 +668,63 @@
 	          $(this).hide();
 	        }
 	    });
+       
+	 	// --- 워크스페이스 순서 편집 관련 이벤트 ---
+	 	// 편집 모드 진입
+	    $('#edit-order-btn').on('click', function() {
+	        enterEditMode();
+	    });
+
+	 	// 편집 취소
+	    $('#cancel-order-btn').on('click', function() {
+	        if (initialBlockOrder) {
+	        	// 이동시킨 블록들 전부 제거
+	            $('.generated_block').remove();
+
+	            // 초기 상태의 블록들 다시 삽입
+	            initialBlockOrder.each(function() {
+	                $('#content_plus').before(this);
+	                
+	                if ($(this).find('canvas[id^="userStatsChart_"]').length > 0) {
+	                	$(this).find('.refresh-block-btn').trigger('click');
+	                }
+	            });
+	        }
+	        exitEditMode();
+	    });
+
+	 	// 편집된 순서 저장
+	    $('#save-order-btn').on('click', function() {
+	        saveBlockOrder();
+	    });
+
+	    // 동적으로 생성된 화살표 버튼 클릭 처리 : 이벤트 위임 사용
+	    $('#contents_grid').on('click', '.move-block-btn', function() {
+	        const $thisBlock = $(this).closest('.generated_block');
+	        const movableBlocks = $('.generated_block').toArray();
+	        const currentIndex = movableBlocks.indexOf($thisBlock[0]);
+
+	        let targetIndex = -1;
+
+	        if ($(this).hasClass('move-left-btn')) {
+	            targetIndex = currentIndex - 1;
+	        } else if ($(this).hasClass('move-right-btn')) {
+	            targetIndex = currentIndex + 1;
+	        }
+
+	        if (targetIndex >= 0 && targetIndex < movableBlocks.length) {
+	            const $targetBlock = $(movableBlocks[targetIndex]);
+	            if ($(this).hasClass('move-left-btn')) {
+	                $targetBlock.before($thisBlock);
+	            } else {
+	                $targetBlock.after($thisBlock);
+	            }
+	            updateArrowVisibility(); // 화살표 상태 즉시 업데이트
+	        }
+	    });
+    });
+    
+	/* 모달, 블록 관련 함수 */
        
 	 	// --- 워크스페이스 순서 편집 관련 이벤트 ---
 	 	// 편집 모드 진입
@@ -717,13 +839,16 @@
 	}
 
 	// 블록 삭제 함수
+	// 블록 삭제 함수
 	function deleteBlock(blockId) {
 	    if (!confirm("블록을 정말 삭제하시겠습니까?")) return;
 	    $.ajax({
 	        url: '${pageContext.request.contextPath}/block.do',
 	        type: 'POST',
+	        type: 'POST',
 	        data: {
 	            block_id: blockId,
+	            _method: 'DELETE'
 	            _method: 'DELETE'
 	        },
 	        dataType: 'json',
@@ -829,10 +954,102 @@
 	        }
 	    });
 	}
+	
+	// --- 워크스페이스 순서 편집 관련 함수 ---
+
+	// 편집 모드로 진입하는 함수
+	function enterEditMode() {
+	    isEditMode = true;
+	    initialBlockOrder = $('.generated_block').clone(true, true); // 초기 상태 저장
+
+	    $('#contents_grid').addClass('edit-mode');
+	    $('#edit-order-btn').hide();
+	    $('#save-order-btn, #cancel-order-btn').show();
+
+	    // 각 블록에 화살표 버튼 추가
+	    $('.generated_block').each(function() {
+	        $(this).append(`
+	            <button class="move-block-btn move-left-btn" title="왼쪽으로 이동"><i class="fa-solid fa-chevron-left"></i></button>
+	            <button class="move-block-btn move-right-btn" title="오른쪽으로 이동"><i class="fa-solid fa-chevron-right"></i></button>
+	        `);
+	    });
+	    updateArrowVisibility();
+	}
+
+	// 편집 모드를 종료하는 함수
+	function exitEditMode() {
+	    isEditMode = false;
+	    initialBlockOrder = null; // 초기 상태 리셋
+
+	    $('#contents_grid').removeClass('edit-mode');
+	    $('#edit-order-btn').show();
+	    $('#save-order-btn, #cancel-order-btn').hide();
+
+	    // 모든 화살표 버튼 제거
+	    $('.move-block-btn').remove();
+	}
+
+	// 화살표 버튼의 표시 여부를 업데이트하는 함수
+	function updateArrowVisibility() {
+	    const movableBlocks = $('.generated_block');
+	    const totalMovable = movableBlocks.length;
+
+	    movableBlocks.each(function(index) {
+	        const $leftArrow = $(this).find('.move-left-btn');
+	        const $rightArrow = $(this).find('.move-right-btn');
+
+	        // 첫 번째 블록이면 왼쪽 화살표 숨김
+	        if (index === 0) {
+	            $leftArrow.hide();
+	        } else {
+	            $leftArrow.show();
+	        }
+
+	        // 마지막 블록이면 오른쪽 화살표 숨김
+	        if (index === totalMovable - 1) {
+	            $rightArrow.hide();
+	        } else {
+	            $rightArrow.show();
+	        }
+	    });
+	}
+
+	// 변경된 블록 순서를 서버에 저장하는 함수
+	function saveBlockOrder() {
+	    const orderData = [];
+	    $('.generated_block').each(function(index) {
+	        const blockId = $(this).attr('id').split('-')[1];
+	        // block_order는 1부터 시작하도록 index + 1
+	        orderData.push({ block_id: parseInt(blockId), block_order: index + 1 });
+	    });
+
+	    $.ajax({
+	        url: '${pageContext.request.contextPath}/block.do',
+	        type: 'POST',
+	        data: {
+	            _method: 'EDIT',
+	            orders: JSON.stringify(orderData)
+	        },
+	        dataType: 'json',
+	        success: function(res) {
+	            if (res.success) {
+	                alert('블록 순서가 저장되었습니다.');
+	                exitEditMode();
+	            } else {
+	                alert(res.message || '순서 저장에 실패했습니다.');
+	            }
+	        },
+	        error: function() {
+	            alert('서버와 통신 중 오류가 발생했습니다.');
+	        }
+	    });
+	}
 
     
 </script>
 
+<script> /* 채팅방 */
+	/* 채팅방 관련 js, jquery */
 <script> /* 채팅방 */
 	/* 채팅방 관련 js, jquery */
 	let currentChatSenderIdx = null;
@@ -914,12 +1131,14 @@
 	});
 
 	/* 채팅방 함수 */
+	/* 채팅방 함수 */
 	// 채팅 내역 닫기
 	function closeChatModal() {
 		$('#chatModal').hide();
 		location.reload();
 	}
 	
+	// 채팅방에서 메시지 전송
 	// 채팅방에서 메시지 전송
 	function sendChatMessage() {
 	    const message = $("#chatInput").val().trim();

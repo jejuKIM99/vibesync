@@ -702,7 +702,9 @@ input[type="color"] {
     gap: 10px;
     align-items: stretch;
 }
-
+@media (max-width:760px) {
+#todolist {flex-direction: column;}
+}
 /* 캘린더 (왼쪽) - 2의 비율 */
 #calendar {
     flex: 2 1 0;          /* 팽창 비율 2, 수축 비율 1, 기본 너비 0 */
@@ -852,6 +854,26 @@ input[type="color"] {
 }
 
 /* style.css */
+
+.schedule-date-title {
+    display: flex;                   /* 아이콘과 텍스트를 가로로 정렬 */
+    align-items: center;             /* 세로 중앙 정렬 */
+    justify-content: center;         /* 가로 중앙 정렬 */
+    font-size: 18px;
+    font-weight: 600;
+    color: #34495e;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #e9ecef;
+    margin-top: 5px;    /* 제목의 위쪽 여백을 줄입니다. */
+    margin-bottom: 15px; /* 제목과 아래 목록 사이의 여백입니다. */
+}
+
+.schedule-date-title i {
+    color: #5d8aff;                 /* 아이콘 색상 */
+    margin-right: 10px;              /* 아이콘과 날짜 사이 간격 */
+    font-size: 20px;                 /* 아이콘 크기 */
+}
 
 .schedule-date-title {
     display: flex;                   /* 아이콘과 텍스트를 가로로 정렬 */

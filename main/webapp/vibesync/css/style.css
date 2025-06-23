@@ -126,6 +126,7 @@ p {
 #notion-app {
   width: 100%;
   min-height: 100vh;
+  min-height: 100vh;
 }
 .notion-app-inner {
   position: relative;

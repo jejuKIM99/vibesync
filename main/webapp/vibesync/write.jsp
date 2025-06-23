@@ -308,3 +308,4 @@
 </body>
 <jsp:include page="/vibesync/includes/footer.jsp" />
 </html>
+

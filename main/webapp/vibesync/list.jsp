@@ -22,6 +22,29 @@
     </c:forEach>
 </c:if>
 
+<%@ page import="mvc.domain.vo.CategoryVO, java.util.List" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- 세션에서 카테고리 목록 가져오기 (변수명 대소문자 수정: categoryvolist -> categoryVOList) --%>
+<c:set var="categoryList" value="${applicationScope.categoryVOList}" />
+
+<%-- 컨트롤러에서 전달된 페이징 결과 데이터 --%>
+<c:set var="result" value="${requestScope.result}" />
+<c:set var="list" value="${result.list}" />
+<c:set var="searchType" value="${requestScope.searchType}" />
+<c:set var="keyword" value="${requestScope.keyword}" />
+<c:set var="currentCategory" value="${requestScope.category_idx}" />
+
+<%-- 현재 선택된 카테고리 이름 찾기 --%>
+<c:set var="categoryName" value="전체" />
+<c:if test="${currentCategory > 0}">
+    <c:forEach var="cat" items="${categoryList}">
+        <c:if test="${cat.category_idx == currentCategory}">
+            <c:set var="categoryName" value="${cat.c_name}" />
+        </c:if>
+    </c:forEach>
+</c:if>
+
 <!DOCTYPE html>
 <jsp:include page="/vibesync/includes/header.jsp" />
 <head>
@@ -56,6 +79,7 @@
     </style>
 </head>
 <body>
+<div id="notion-app">
 <div id="notion-app">
     <input type="hidden" id="mode" value="board">
     <div class="notion-app-inner">

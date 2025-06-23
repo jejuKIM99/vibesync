@@ -63,6 +63,10 @@ function requireLogin() {
             requireLogin();
             return; 
         }
+        if (!isLoggedIn) {
+            requireLogin();
+            return; 
+        }
         $.ajax({
           url: ajaxUrl, type: 'POST', data: { action: 'toggleFollow', userIdx: $('#followBtn').data('userIdx'), writerIdx: $('#followBtn').data('writerIdx'), nidx: $('#followBtn').data('nidx') }, dataType: 'json',
           success: function(data) { $('#followBtn').text(data.following ? 'Unfollow' : 'Follow'); },
@@ -72,6 +76,10 @@ function requireLogin() {
 
       $('#likeForm').on('submit', function(e) {
         e.preventDefault();
+        if (!isLoggedIn) {
+            requireLogin();
+            return; // AJAX 요청 중단
+        }
         if (!isLoggedIn) {
             requireLogin();
             return; // AJAX 요청 중단
@@ -93,6 +101,9 @@ function requireLogin() {
       });
       
       // =================== 대댓글 기능이 포함된 스크립트 ===================
+      const commentUrl = '${contextPath}/vibesync/comment.do';
+      const loggedInUserIdx = ${not empty user ? user.ac_idx : -1};
+      const noteIdxForComment = ${note.note_idx};
       const commentUrl = '${contextPath}/vibesync/comment.do';
       const loggedInUserIdx = ${not empty user ? user.ac_idx : -1};
       const noteIdxForComment = ${note.note_idx};
@@ -139,6 +150,10 @@ function requireLogin() {
 
       $('#comment-form').on('submit', function(e) {
         e.preventDefault();
+        if (!isLoggedIn) {
+            requireLogin();
+            return;
+        }
         if (!isLoggedIn) {
             requireLogin();
             return;
@@ -229,6 +244,7 @@ function requireLogin() {
                 <img src="${(note.img == null or empty note.img) ? './sources/icons/profile.svg' : note.img}" alt="writer_profile">
                 <a href="userPage.do?acIdx=${note.ac_idx}">${note.nickname}</a>
                 <c:if test="${not empty sessionScope.userInfo and sessionScope.userInfo.ac_idx != note.upac_idx}">
+                  <form id="followForm" style="display:inline; margin:0; padding:0;"><button id="followBtn" type="submit" data-user-idx="${user.ac_idx}" data-writer-idx="${note.upac_idx}" data-nidx="${note.note_idx}" style="background:#99bc85; border-radius:5px; border:none; cursor:pointer; padding:5px 10px;">${isFollowing ? "Unfollow" : "Follow"}</button></form>
                   <form id="followForm" style="display:inline; margin:0; padding:0;"><button id="followBtn" type="submit" data-user-idx="${user.ac_idx}" data-writer-idx="${note.upac_idx}" data-nidx="${note.note_idx}" style="background:#99bc85; border-radius:5px; border:none; cursor:pointer; padding:5px 10px;">${isFollowing ? "Unfollow" : "Follow"}</button></form>
                 </c:if>
               </div>

@@ -1,10 +1,13 @@
 package mvc.command.handler;
 
 import java.io.IOException;
+import java.io.IOException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.listener.DuplicateLoginPreventer; 
 
 import com.listener.DuplicateLoginPreventer; 
 
@@ -22,6 +25,9 @@ public class UserHandler implements CommandHandler {
     private final SignUpService signUpService = new SignUpService();
     private final PasswordResetService passwordResetService = new PasswordResetService(); 
 
+    @Override
+    public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // 공통 캐시 제어 헤더 설정
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // 공통 캐시 제어 헤더 설정

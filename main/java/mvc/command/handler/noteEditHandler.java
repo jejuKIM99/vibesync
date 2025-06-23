@@ -149,7 +149,7 @@ public class noteEditHandler implements CommandHandler {
         return null;
     }
 
-    /**
+     /**
      * [신규] 지정된 길이의 영문/숫자 난수 문자열을 생성하는 헬퍼 메서드
      * @param length 생성할 문자열의 길이
      * @return 생성된 난수 문자열
