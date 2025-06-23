@@ -1084,11 +1084,11 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(response) {
-                if (response.success) {
+            if (response.success) {
                     if (response.following) { // 서버 응답에 따라 상태 변경
-                        $button.removeClass('unfollow').text('팔로잉');
+                        $button.removeClass('unfollow').text('팔로잉').css('background','#f44336');
                     } else {
-                        $button.addClass('unfollow').text('팔로우');
+                        $button.addClass('unfollow').text('팔로우').css('background', '#4CAF50');
                     }
                     // 사이드바의 팔로워/팔로잉 카운트 업데이트
                     updateFollowCount();
