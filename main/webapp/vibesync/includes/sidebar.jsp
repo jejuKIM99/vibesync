@@ -8,6 +8,7 @@
 %>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/vibesync/css/sidebar.css">
 
 <style>
 .notion-sidebar {
@@ -224,24 +225,6 @@ input:focus {
    max-width: 22px;
 }
 
-/* 
-#logout form > button {
-  border-color: #ffb7c5;
-  color: #e35a6d;
-}
-#logout form > button:hover {
-  background: #fff1f4;
-}
-
-#setting button {
-  border-color: #8cd9c9;
-  color: #2b8c7e;
-}
-#setting button:hover {
-  background: #e6f7f2;
-}
- */
-
 #setting .modal-btn:hover {
   background: #e6f0fa;
   color: #1a81d6;
@@ -255,7 +238,8 @@ input:focus {
 
 </style>
 
-<style> /* 설정 모드 */
+<style>
+/* 설정 모드 */
   /* 전체 테마 선택 영역 컨테이너 */
   .theme-selector-container {
     display: flex;
@@ -363,7 +347,8 @@ input:focus {
     background-clip: content-box, border-box;
   }
 </style>
-<style> /* 팔로잉/팔로워/메시지목록 모달창 */
+<style>
+/* 팔로잉/팔로워/메시지목록 모달창 */
     .modal-overlay-follow {
     	display: none;
         position: fixed;
@@ -378,7 +363,7 @@ input:focus {
     }
 
     .modal-follow-content {
-        background: #f5f8fb;
+        background-color: #f5f8fb;
         border-radius: 20px;
         box-shadow: 0 4px 32px 0 rgba(80,110,150,0.10), 0 0 0 1.5px #c7d3e8;
         width: 92%; max-width: 415px; min-width: 330px;
@@ -509,9 +494,8 @@ input:focus {
     .follow-list-item .action-buttons .message-btn:hover {
         opacity: 0.9;
     }
-</style>
 
-<style> /* 메시지 목록 */
+/* 메시지 목록 */
     
     @keyframes zoomIn {
         from { transform: scale(0.97); opacity: 0; }
@@ -663,23 +647,22 @@ input:focus {
         margin-left: 5px;
         user-select: none;
     }
-    
-</style>
 
-<style> /* 채팅방 */
-    .chatRoom-modal-super-container .modal-overlay-follow {
-        background: rgba(0,0,0,0.6);
-        backdrop-filter: blur(4px);
+/* 채팅방 */
+    #chatRoomModal {
+	  display: none; justify-content: center; align-items: center;
+	  position: fixed; z-index: 9999; top: 0; left: 0;
+	  width: 100vw; height: 100vh; background: rgba(0,0,0,0.6);
+	  backdrop-filter: blur(4px);
     }
     
-    .modal-follow-content .chatRoom-modal-content {
-        background-color: #f5f8fb;
-        color: #223355;
-        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
-        animation: fadeInUp 0.3s ease-out;
-        display: flex;
-        flex-direction: column;
-        max-height: 85vh;
+    .modal-follow-content.chatRoom-modal-content {
+	  position: relative; max-width: 430px; min-width: 350px;
+	  width: 90%; background-color: var(--background-color);
+	  padding: 0; border-radius: 16px; color: var(--font-color);
+	  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+	  animation: fadeInUp 0.3s ease-out; display: flex;
+	  flex-direction: column; max-height: 85vh;
     }
 
     #chatRoomTitle {
@@ -712,25 +695,25 @@ input:focus {
         overflow-wrap: break-word;
         white-space: normal;
     }
-    .bubble-me {
+    .chatRoom-bubble.chatRoom-bubble-me {
         align-self: flex-end;
         background-color: #FFFBE7;
         border: 1px solid #FFEAC4;
         border-bottom-right-radius: 4px;
     }
-    .bubble-other {
+    .chatRoom-bubble.chatRoom-bubble-other {
         align-self: flex-start;
         background-color: #fff;
         border: 1px solid #eef1f5;
         border-bottom-left-radius: 4px;
     }
-    .bubble-text {
+    .chatRoom-bubble-text {
         font-size: 14px;
         color: #000;
         margin: 0 0 4px 0;
         padding: 0;
     }
-    .bubble-time {
+    .chatRoom-bubble-time {
         font-size: 11px;
         color: #999;
         text-align: right;
@@ -761,7 +744,7 @@ input:focus {
         color: #b7b8bd;
         font-size: 14px;
     }
-    #sendMessageBtn {
+    #sendMsgBtn {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -774,7 +757,7 @@ input:focus {
         cursor: pointer;
         padding: 0;
     }
-    #sendMessageBtn:hover {
+    #sendMsgBtn:hover {
         background: #45607d;
     }
     .chatRoom-date-separator {
@@ -929,7 +912,7 @@ input:focus {
     <div id="chatRoomHistory"></div>
     <div class="chatRoom-input-row">
       <input id="chatRoomInput" placeholder="메시지를 입력하세요…" />
-      <button id="sendMessageBtn" onclick="sendchatRoomMessage()">
+      <button id="sendMsgBtn" onclick="sendChatRoomMessage();">
         <i class="fa-solid fa-paper-plane"></i>
       </button>
     </div>
@@ -967,6 +950,7 @@ $(document).ready(function() {
         $.ajax({
             type: 'GET',
             url: '<%= request.getContextPath() %>/follow.do',
+            cache: false,
             data: {action: 'getFollowing'},
             dataType: 'json',
             success: function(response) {
@@ -1113,7 +1097,7 @@ function updateFollowingCount() {
     $.ajax({
         type: 'GET',
         url: '<%= request.getContextPath() %>/follow.do',
-        cache: 'no-store',
+        cache: false,
         data: {action: 'getFollowingCount'},
         dataType: 'json',
         success: function(followingCount) {
@@ -1129,7 +1113,7 @@ function updateFollowerCount() {
     $.ajax({
         type: 'GET',
         url: '<%= request.getContextPath() %>/follow.do',
-        cache: 'no-store',
+        cache: false,
         data: {action: 'getFollowerCount'},
         dataType: 'json',
         success: function(followerCount) {
@@ -1185,6 +1169,7 @@ function loadFollowListData(tabType) {
     $.ajax({
         url: apiUrl,
         type: 'GET',
+        cache: false,
         data: requestData,
         dataType: 'json',
         success: function(response) {
@@ -1196,7 +1181,7 @@ function loadFollowListData(tabType) {
                     return;
                 }
                 list.forEach(user => {
-                    const profileImg = user.profile_img ? `<%= request.getContextPath() %>/\${user.profile_img}` : `\${basePath}default/default_user.jpg`;
+                	const profileImg = user.profile_img != null ? user.profile_img : '${pageContext.request.contextPath}/vibesync/sources/default/default_user.jpg';
                     const isFollowing = user.followedByCurrentUser;
                     const followButtonText = isFollowing ? '팔로잉' : '팔로우';
                     const followButtonClass = isFollowing ? 'follow-toggle-btn unfollow' : 'follow-toggle-btn';
@@ -1232,9 +1217,11 @@ function loadFollowListData(tabType) {
                     return;
                 }
                 messageList.forEach(message => {
+                	let profileImg = message.other.profile_img != null ? message.other.profile_img : '${pageContext.request.contextPath}/vibesync/sources/default/default_user.jpg';
+                	
                     let profileImgHtml = message.other.profile_img ?
-                        `<img src="<%= request.getContextPath() %>/\${message.other.profile_img}" alt="profile">` :
-                        `<img src="\${basePath}default/default_user.jpg" alt="기본 프로필">`;
+                        `<img src="\${profileImg}" alt="profile">` :
+                        `<img src="\${profileImg}" alt="기본 프로필">`;
 
                     let unreadBadgeHtml = '';
                     if (message.numOfUnreadMessages > 0) {
@@ -1290,6 +1277,7 @@ function openchatRoomWithUser(userIdx, nickname) {
     $.ajax({
         url: '<%= request.getContextPath() %>/message.do',
         type: 'GET',
+		cache: false,
         data: { sender_idx: userIdx, view: 'CHAT' },
         dataType: 'json',
 		success: function (chatRoomList) {
@@ -1306,12 +1294,12 @@ function openchatRoomWithUser(userIdx, nickname) {
 		                const dateLabel = $('<div class="chatRoom-date-separator"></div>').text(lastDate);
 		                chatRoomContainer.append(dateLabel);
 		            }
-		            const who = message.isMine ? 'bubble-me' : 'bubble-other';
+		            const who = message.isMine ? 'chatRoom-bubble-me' : 'chatRoom-bubble-other';
 		            const formattedText = message.text.replace(/\n/g, '<br>');
 		            const messageHtml = `
 		                <div class="chatRoom-bubble \${who}">
-		                    <div class="bubble-text">\${formattedText}</div>
-		                    <div class="bubble-time">\${message.relativeTime}</div>
+		                    <div class="chatRoom-bubble-text">\${formattedText}</div>
+		                    <div class="chatRoom-bubble-time">\${message.relativeTime}</div>
 		                </div>`;
 		            chatRoomContainer.append(messageHtml);
 		        });
@@ -1336,13 +1324,15 @@ function closechatRoomModal() {
 }
 
 //채팅 메시지 전송
-function sendchatRoomMessage() {
+function sendChatRoomMessage() {
+	console.log('전송버튼 실행');
     const message = $("#chatRoomInput").val().trim();
     if (!message || !currentchatRoomSenderIdx) return;
 
     $.ajax({
         url: '<%= request.getContextPath() %>/message.do',
         type: 'POST',
+		cache: false,
         data: JSON.stringify({
             receiver_idx: currentchatRoomSenderIdx,
             text: message
