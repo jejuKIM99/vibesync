@@ -2,7 +2,6 @@
 -- 테이블 삭제 (제약조건 순서에 유의)
 --------------------------------------------------------------------------------
 DROP TABLE schedule;
-DROP TABLE workspace_blocks;
 DROP TABLE commentlist;
 DROP TABLE noteAccess;
 DROP TABLE likes;
@@ -21,7 +20,6 @@ DROP TABLE wa_comment;
 DROP TABLE watchParty;
 DROP TABLE userAccount;
 DROP TABLE category;
-DROP TABLE passwordResetTokens;
 
 
 --------------------------------------------------------------------------------
@@ -117,10 +115,9 @@ CREATE TABLE todolist (
     todo_idx INT PRIMARY KEY,
     created_at TIMESTAMP NOT NULL,
     text CLOB not null,
-    todo_group VARCHAR2(100),
+    todo_group VARCHAR2(100) NOT NULL,
     color VARCHAR2(100) NOT NULL,
     ac_idx INT NOT NULL,
-    status NUMBER(1) DEFAULT 0 NOT NULL,
     CONSTRAINT FK_todolist_TO_userAccount FOREIGN KEY (ac_idx) REFERENCES userAccount(ac_idx) ON DELETE CASCADE
 );
 
@@ -266,24 +263,6 @@ CREATE TABLE schedule (
     color           VARCHAR2(100),                    -- 캘린더에 표시될 색상 (선택 사항)
     ac_idx          INT             NOT NULL,         -- 일정을 등록한 사용자 ID
     CONSTRAINT FK_schedule_TO_userAccount FOREIGN KEY (ac_idx) REFERENCES userAccount(ac_idx) ON DELETE CASCADE
-);
-
---------------------------------------------------------------------------------
--- 17. workspace_blocks (워크스페이스 추가블록)
---------------------------------------------------------------------------------
-CREATE TABLE workspace_blocks (
-    block_id      NUMBER(10)      CONSTRAINT pk_workspace_blocks PRIMARY KEY,
-    ac_idx        NUMBER(10)      NOT NULL,
-    block_type    VARCHAR2(50)    NOT NULL,
-    block_order   NUMBER(3)       NOT NULL,
-    config        VARCHAR2(4000)
-);
-
--- 비밀번호 찾기 
-CREATE TABLE passwordResetTokens (
-    token VARCHAR(255) PRIMARY KEY, -- 고유한 토큰 값
-    userEmail VARCHAR(255) NOT NULL, -- 요청한 사용자의 이메일
-    expiryDate TIMESTAMP NOT NULL -- 토큰 만료 시간
 );
 
 SELECT COUNT(*)

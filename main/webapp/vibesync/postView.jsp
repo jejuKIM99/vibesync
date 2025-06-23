@@ -38,31 +38,19 @@ function goBackSmartly() {
 
 const isLoggedIn = ${not empty user}; 
 
-function requireLogin() {
-	
-	const ctx = "${pageContext.request.contextPath}";
-	
-    if (confirm('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?')) {
-        // 1. 현재 페이지의 전체 주소를 가져옵니다. (예: .../postView.do?nidx=26)
-        const currentUrl = window.location.href; 
-        // 2. 로그인 페이지 주소에 'returnUrl' 파라미터를 추가하여 보냅니다.
-        //    encodeURIComponent는 URL에 포함될 수 있는 특수문자(?, &, =)를 안전하게 인코딩합니다.
-        window.location.href = ctx + '/vibesync/user.do?returnUrl=' + encodeURIComponent(currentUrl);
-    }
-}
-      
     $(document).ready(function() {
       // 기존 코드 (Follow, Like, Image Path)
       const ajaxUrl = '${contextPath}/vibesync/postView.do';
       const ctx = '${contextPath}';
       
+      function requireLogin() {
+          if (confirm('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?')) {
+              window.location.href = ctx + '/vibesync/user.do';
+          }
+      }
       
       $('#followForm').on('submit', function(e) {
         e.preventDefault();
-        if (!isLoggedIn) {
-            requireLogin();
-            return; 
-        }
         if (!isLoggedIn) {
             requireLogin();
             return; 
@@ -76,10 +64,6 @@ function requireLogin() {
 
       $('#likeForm').on('submit', function(e) {
         e.preventDefault();
-        if (!isLoggedIn) {
-            requireLogin();
-            return; // AJAX 요청 중단
-        }
         if (!isLoggedIn) {
             requireLogin();
             return; // AJAX 요청 중단
@@ -101,9 +85,6 @@ function requireLogin() {
       });
       
       // =================== 대댓글 기능이 포함된 스크립트 ===================
-      const commentUrl = '${contextPath}/vibesync/comment.do';
-      const loggedInUserIdx = ${not empty user ? user.ac_idx : -1};
-      const noteIdxForComment = ${note.note_idx};
       const commentUrl = '${contextPath}/vibesync/comment.do';
       const loggedInUserIdx = ${not empty user ? user.ac_idx : -1};
       const noteIdxForComment = ${note.note_idx};
@@ -154,10 +135,6 @@ function requireLogin() {
             requireLogin();
             return;
         }
-        if (!isLoggedIn) {
-            requireLogin();
-            return;
-        }
         const text = $(this).find('textarea[name="text"]').val();
         if(!text.trim()) { alert('댓글 내용을 입력하세요.'); return; }
         $.ajax({
@@ -179,8 +156,8 @@ function requireLogin() {
                 <form class="reply-form">
                     <input type="hidden" name="reCommentIdx" value="\${$parentComment.data('comment-id')}">
                     <div class="reco-div" style="display:flex; align-items: center; ">
-                    <textarea name="text" rows="2" placeholder="답글을 입력하세요..." required style="width:100%; resize:none; padding: 8px; border: solid 2px var(--border-color); border-radius: 4px 0 0 4px; outline: none; background-color: var(--background-color); color: var(--font-color);"></textarea>
-                    <button type="submit" style="padding: 5px 10px; height: 50px; border: solid 2px var(--border-color); border-left: none; border-radius: 0 4px 4px 0; font-weight: bold; background-color: var(--card-head); color: var(--card-back);">작성</button>
+                    <textarea name="text" rows="2" placeholder="답글을 입력하세요..." required style="width:100%; resize:none; padding: 8px; border: solid 2px var(--border-color); border-radius: 4px 0 0 4px; outline: none;"></textarea>
+                    <button type="submit" style="padding: 5px 10px; height: 50px; border: solid 2px var(--border-color); border-left: none; border-radius: 0 4px 4px 0; font-weight: bold;">작성</button>
                     </div>
                 </form>
             </div>
@@ -215,7 +192,6 @@ function requireLogin() {
   font-weight: bold;
   border: solid 2px var(--border-color);
   border-radius: 6px;
-  text-transform: uppercase;
   }
   </style>
 </head>
@@ -245,12 +221,11 @@ function requireLogin() {
                 <a href="userPage.do?acIdx=${note.ac_idx}">${note.nickname}</a>
                 <c:if test="${not empty sessionScope.userInfo and sessionScope.userInfo.ac_idx != note.upac_idx}">
                   <form id="followForm" style="display:inline; margin:0; padding:0;"><button id="followBtn" type="submit" data-user-idx="${user.ac_idx}" data-writer-idx="${note.upac_idx}" data-nidx="${note.note_idx}" style="background:#99bc85; border-radius:5px; border:none; cursor:pointer; padding:5px 10px;">${isFollowing ? "Unfollow" : "Follow"}</button></form>
-                  <form id="followForm" style="display:inline; margin:0; padding:0;"><button id="followBtn" type="submit" data-user-idx="${user.ac_idx}" data-writer-idx="${note.upac_idx}" data-nidx="${note.note_idx}" style="background:#99bc85; border-radius:5px; border:none; cursor:pointer; padding:5px 10px;">${isFollowing ? "Unfollow" : "Follow"}</button></form>
                 </c:if>
               </div>
               <div class="like_share">
                 <div><p><span>view : </span><span>${note.view_count}</span></p></div>
-                <form id="likeForm" style="display:inline; margin:0; padding:0;"><button id="likeBtn" type="submit" data-user-idx="${user.ac_idx}" data-note-idx="${note.note_idx}" style="border:none; background:none; cursor:pointer; filter: var(--icon-filter);"><img id="likeImg" src="${isLiking ? './sources/icons/fill_heart.png' : './sources/icons/heart.svg'}" alt="heart" style="vertical-align:middle; width:2rem; height:2rem;"><span id="likeCount" style="vertical-align:middle;">${note.like_num}</span></button></form>
+                <form id="likeForm" style="display:inline; margin:0; padding:0;"><button id="likeBtn" type="submit" data-user-idx="${user.ac_idx}" data-note-idx="${note.note_idx}" style="border:none; background:none; cursor:pointer;"><img id="likeImg" src="${isLiking ? './sources/icons/fill_heart.png' : './sources/icons/heart.svg'}" alt="heart" style="vertical-align:middle; width:2rem; height:2rem;"><span id="likeCount" style="vertical-align:middle;">${note.like_num}</span></button></form>
               </div>
             </div>
             <div class="line"></div>
@@ -269,17 +244,18 @@ function requireLogin() {
                               style="display: flex; align-items: center;">
                               <textarea name="text" rows="3" placeholder="댓글을 입력하세요..."
                                   required
-                                  style="width: 100%; resize: none; padding: 8px; border: solid 2px var(--border-color); border-radius: 4px 0 0 4px; outline: none; background-color: var(--background-color); color: var(--font-color);"></textarea>
+                                  style="width: 100%; resize: none; padding: 8px; border: solid 2px var(--border-color); border-radius: 4px 0 0 4px; outline: none;"></textarea>
                               <button type="submit"
-                                  style="margin: 0px; padding: 5px 10px; height: 65px; border: solid 2px var(--border-color); border-radius: 0 4px 4px 0; border-left: none; background-color: var(--card-head); color:var(--card-back); font-weight: bold;">작성</button>
+                                  style="margin: 0px; padding: 5px 10px; height: 65px; border: solid 2px var(--border-color); border-radius: 0 4px 4px 0; border-left: none; background-color: var(--background-color); font-weight: bold;">작성</button>
                           </div>
                       </form>
                   </c:when>
                   <%-- 2. 로그인하지 않은 경우: 로그인 유도 메시지를 보여줌 --%>
                   <c:otherwise>
                       <div class="comment-login-prompt" 
-                          style="margin-bottom: 1.864rem; padding: 20px; border: 2px solid var(--border-color); border-radius: 4px; text-align: center; cursor: pointer;">
-                          <a href="javascript:void(0);" onclick="requireLogin()" style="text-decoration: none; color: #888; font-weight: bold;">
+                          style="margin-bottom: 1.864rem; padding: 20px; border: 2px solid var(--border-color); border-radius: 4px; text-align: center; cursor: pointer;"
+                          onclick="location.href='${contextPath}/vibesync/user.do'">
+                          <a href="${contextPath}/vibesync/user.do" style="text-decoration: none; color: #888; font-weight: bold;">
                               로그인 후 댓글을 작성할 수 있습니다.
                           </a>
                       </div>

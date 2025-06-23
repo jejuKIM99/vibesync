@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.util.ConnectionProvider;
-import com.util.JdbcUtil;
 
 import mvc.domain.vo.CategoryVO;
 import mvc.domain.vo.ContentsVO;
@@ -69,7 +68,7 @@ public class noteEditHandler implements CommandHandler {
             } catch (Exception e) {
                 throw new RuntimeException("수정 페이지 로드 오류", e);
             } finally {
-                if (conn != null) try { JdbcUtil.close(conn); } catch (Exception ignored) {}
+                if (conn != null) try { conn.close(); } catch (Exception ignored) {}
             }
             return "edit.jsp"; 
 
@@ -137,7 +136,7 @@ public class noteEditHandler implements CommandHandler {
             } catch (Exception e) {
                 throw new RuntimeException("노트 업데이트 오류", e);
             } finally {
-                if (conn != null) JdbcUtil.close(conn);
+                if (conn != null) conn.close();
             }
 
             // 수정 완료 후 해당 게시글 보기 페이지로 리다이렉트
@@ -149,7 +148,7 @@ public class noteEditHandler implements CommandHandler {
         return null;
     }
 
-     /**
+    /**
      * [신규] 지정된 길이의 영문/숫자 난수 문자열을 생성하는 헬퍼 메서드
      * @param length 생성할 문자열의 길이
      * @return 생성된 난수 문자열

@@ -22,29 +22,6 @@
     </c:forEach>
 </c:if>
 
-<%@ page import="mvc.domain.vo.CategoryVO, java.util.List" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<%-- 세션에서 카테고리 목록 가져오기 (변수명 대소문자 수정: categoryvolist -> categoryVOList) --%>
-<c:set var="categoryList" value="${applicationScope.categoryVOList}" />
-
-<%-- 컨트롤러에서 전달된 페이징 결과 데이터 --%>
-<c:set var="result" value="${requestScope.result}" />
-<c:set var="list" value="${result.list}" />
-<c:set var="searchType" value="${requestScope.searchType}" />
-<c:set var="keyword" value="${requestScope.keyword}" />
-<c:set var="currentCategory" value="${requestScope.category_idx}" />
-
-<%-- 현재 선택된 카테고리 이름 찾기 --%>
-<c:set var="categoryName" value="전체" />
-<c:if test="${currentCategory > 0}">
-    <c:forEach var="cat" items="${categoryList}">
-        <c:if test="${cat.category_idx == currentCategory}">
-            <c:set var="categoryName" value="${cat.c_name}" />
-        </c:if>
-    </c:forEach>
-</c:if>
-
 <!DOCTYPE html>
 <jsp:include page="/vibesync/includes/header.jsp" />
 <head>
@@ -60,26 +37,24 @@
         .board_info { display: flex; justify-content: space-between; align-items: center; }
         .board_info p { font-size: 24px; font-weight: bold; }
         #filterForm { display: flex; gap: 10px; }
-        .filter_select, .searchInput { padding: 5px; border: 1px solid var(--border-color); color:var(--font-color); border-radius: 4px; background-color: var(--card-back); }
+        .filter_select, .searchInput { padding: 5px; border: 1px solid #ccc; border-radius: 4px; }
         #search_bar { margin-bottom: 20px; display: flex; justify-content: center; }
         #note-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 2rem }
-        #note-list .full-post { display: flex; padding: 10px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
-        #note-list .full-post:hover { background-color: var(--hover-color); }
-        #note-list .post-index { min-width: 50px; color: #c3c3c3; }
+        #note-list .full-post { display: flex; padding: 10px; border-bottom: 1px solid #000; cursor: pointer; }
+        #note-list .full-post:hover { background-color: #f5f5f5; }
+        #note-list .post-index { min-width: 50px; color: #888; }
         #note-list .post-title { font-weight: bold; }
-        #note-list .post-author { margin-left: auto; color: #c3c3c3; }
+        #note-list .post-author { margin-left: auto; color: #555; }
         #searchForm { display: flex; justify-content: center; align-items: center; gap: 0.2rem; }
-		.searchInput { background: none; border: none; border-bottom: 1px solid var(--border-color); font-weight: bold; }
-		.searchInput option{ background-color: var(--card-back);}
-		.searchBtn { background: none; border: 1px solid var(--border-color); border-radius: 5px; color:var(--font-color); padding-block: 2px; padding-inline: 8px; font-weight: bold; }
-		.searchBtn:hover { background: var(--hover-color) !important; }
+		.searchInput { background: none; border: none; border-bottom: 1px solid black; font-weight: bold; }
+		.searchBtn { background: none; border: 1px solid black; border-radius: 5px; padding-block: 2px; padding-inline: 8px; font-weight: bold; }
+		.searchBtn:hover { background: rgba(256, 256, 256, 0.88) !important; }
         .pagination { display: flex; justify-content: center; align-items: center; gap: 10px;}
-        .pagination a, .pagination strong { margin: 0 5px; text-decoration: none; }
+        .pagination a, .pagination strong { margin: 0 5px; text-decoration: none; color: #333; }
         .pagination strong { font-weight: bold; transform: scale(1.4); }
     </style>
 </head>
 <body>
-<div id="notion-app">
 <div id="notion-app">
     <input type="hidden" id="mode" value="board">
     <div class="notion-app-inner">
@@ -108,7 +83,7 @@
                         <div id="note-list">
                             <c:if test="${not empty list}">
                                 <c:forEach var="note" items="${list}">
-                                    <div class="full-post" onclick="location.href='postView.do?nidx=${note.note_idx}'">
+                                    <div class="full-post" onclick="location.href='postview.do?noteIdx=${note.note_idx}'">
                                         <div class="post-index">${note.note_idx}</div>
                                         <div class="post-title"><c:out value="${note.title}"/></div>
                                         <div class="post-author"><c:out value="${note.author_name}"/></div>

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.util.ConnectionProvider;
-import com.util.JdbcUtil;
 
 import mvc.domain.dto.MainPageDTO;
 import mvc.domain.dto.NoteSummaryDTO;
@@ -55,7 +54,11 @@ public class MainPageService {
         	e.printStackTrace();
 		} finally {
 			if (conn != null)
-				JdbcUtil.close(conn);
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 		}
 		
         return mainPageDTO;

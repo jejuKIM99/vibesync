@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.util.ConnectionProvider;
-import com.util.JdbcUtil;
 
 import mvc.domain.vo.PageVO;
 import mvc.persistence.dao.PageDAO;
@@ -23,7 +22,7 @@ public class pageListModalHandler implements CommandHandler {
         Connection conn = ConnectionProvider.getConnection();
         PageDAO dao = new PageDAOImpl(conn);
         List<PageVO> pages = dao.pageAll(acIdx);
-        JdbcUtil.close(conn);
+        conn.close();
 
         response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();

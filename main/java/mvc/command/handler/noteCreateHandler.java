@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.util.ConnectionProvider;
-import com.util.JdbcUtil;
 
 import mvc.domain.vo.CategoryVO;
 import mvc.domain.vo.ContentsVO;
@@ -63,7 +62,7 @@ public class noteCreateHandler implements CommandHandler {
             } catch (NamingException | java.sql.SQLException e) {
                 throw new RuntimeException("리스트 조회 오류", e);
             } finally {
-                if (conn != null) try { JdbcUtil.close(conn); } catch (Exception ignored) {}
+                if (conn != null) try { conn.close(); } catch (Exception ignored) {}
             }
             return "write.jsp";
 
@@ -160,7 +159,7 @@ public class noteCreateHandler implements CommandHandler {
             UserNoteDAO dao = new UserNoteDAOImpl(conn);
             dao.createNote(note);
 
-            if(conn != null) JdbcUtil.close(conn);
+            if(conn != null) conn.close();
 
             response.sendRedirect(request.getContextPath() + "/vibesync/page.do");
             return null;

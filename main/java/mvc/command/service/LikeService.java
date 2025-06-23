@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.naming.NamingException;
 
 import com.util.ConnectionProvider;
-import com.util.JdbcUtil;
 
 import mvc.persistence.dao.LikeDAO;
 import mvc.persistence.daoImpl.LikeDAOImpl;
@@ -69,7 +68,7 @@ public class LikeService {
                 } catch (SQLException e) {
                     System.err.println("Failed to reset auto-commit in LikeService: " + e.getMessage());
                 } finally {
-                    JdbcUtil.close(conn);
+                    conn.close();
                 }
             }
         }
@@ -91,7 +90,7 @@ public class LikeService {
 			e.printStackTrace();
 		} finally {
             if (conn != null) {
-            	JdbcUtil.close(conn); 
+            	conn.close(); 
             }
         }
         return status;

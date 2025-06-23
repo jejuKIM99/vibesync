@@ -1,5 +1,4 @@
 <%-- save.jsp --%>
-<%@page import="com.util.JdbcUtil"%>
 <%@ page import="java.io.*, java.util.Base64, java.sql.*, java.util.ArrayList, java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
@@ -108,9 +107,9 @@
                 message = "오류: 데이터베이스 작업 실패: " + e.getMessage();
                 e.printStackTrace();
             } finally {
-                if (rs != null) try { JdbcUtil.close(rs); } finally{}
-                if (ps != null) try { JdbcUtil.close(ps); } finally{}
-                if (conn != null) try { JdbcUtil.close(conn); } finally{}
+                if (rs != null) try { rs.close(); } catch (SQLException e) {}
+                if (ps != null) try { ps.close(); } catch (SQLException e) {}
+                if (conn != null) try { conn.close(); } catch (SQLException e) {}
             }
         }
 

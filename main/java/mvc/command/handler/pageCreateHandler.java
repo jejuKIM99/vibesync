@@ -10,7 +10,6 @@ import mvc.domain.vo.UserVO;
 import mvc.persistence.dao.PageDAO;
 import mvc.persistence.daoImpl.PageDAOImpl;
 import com.util.ConnectionProvider;
-import com.util.JdbcUtil;
 
 /** 새 페이지 생성 처리 */
 public class pageCreateHandler implements CommandHandler {
@@ -36,7 +35,7 @@ public class pageCreateHandler implements CommandHandler {
         Connection conn = ConnectionProvider.getConnection();
         PageDAO dao = new PageDAOImpl(conn);
         dao.createPage(page);
-        JdbcUtil.close(conn);
+        conn.close();
 
         // JSON 응답
         response.setContentType("application/json; charset=UTF-8");

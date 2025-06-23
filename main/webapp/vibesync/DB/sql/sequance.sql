@@ -2,8 +2,6 @@
 --------------------------------------------------------------------------------
 -- 시퀀스 삭제
 --------------------------------------------------------------------------------
-DROP SEQUENCE schedule_seq;
-DROP SEQUENCE workspace_blocks_seq;
 DROP SEQUENCE commentlist_seq;
 DROP SEQUENCE noteAccess_seq;
 DROP SEQUENCE likes_seq;
@@ -162,24 +160,16 @@ CREATE SEQUENCE seq_wa_comment
   
 -- 19. schedule 시퀀스
 CREATE SEQUENCE schedule_seq 
-	START WITH 31
-    INCREMENT BY 1
+	START WITH 1 
+	NCREMENT BY 1
 	NOCACHE
-    NOCYCLE;
- 
--- workspace_blocks
-CREATE SEQUENCE workspace_blocks_seq
-    START WITH 6     -- 이후 실제 MAX(block_id)+1 로 조정
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
+  NOCYCLE;
 
 SELECT COUNT(*) AS sequence_count FROM user_sequences;
 
 --------------------------------------------------------------------------------
 -- 트리거 삭제 => userAccount테이블 제외
 --------------------------------------------------------------------------------
-DROP TRIGGER trg_schedule_bi;
 DROP TRIGGER trg_commentlist_bi;
 DROP TRIGGER trg_noteAccess_bi;
 DROP TRIGGER trg_likes_bi;
@@ -373,20 +363,5 @@ BEGIN
   END IF;
 END;
 /
--- schedule IDX 자동 증가 트리거
-CREATE OR REPLACE TRIGGER trg_schedule_bi
-  BEFORE INSERT ON schedule
-  FOR EACH ROW
-BEGIN
-    SELECT schedule_seq.NEXTVAL 
-      INTO :NEW.schedule_idx 
-      FROM dual;
-END;
-/
 
 SELECT COUNT(*) AS trigger_count FROM user_triggers;
-
-commit;
-
-select *
-from useraccount;

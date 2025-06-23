@@ -58,26 +58,6 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-    
-    document.getElementById('host-container').addEventListener('keydown', function(e) {
-    // 이벤트가 발생한 요소의 id가 'chat-input-'으로 시작하고, 눌린 키가 'Enter'인지 확인합니다.
-    if (e.target.id.startsWith('chat-input-') && e.key === 'Enter') {
-        // 기본 엔터 동작(예: 줄바꿈)을 막습니다.
-        e.preventDefault();
-
-        // 입력창 id에서 watchPartyIdx를 추출합니다 (예: "chat-input-123" -> "123").
-        const watchPartyIdx = e.target.id.split('-')[2];
-
-        // 추출한 watchPartyIdx를 사용하여 해당하는 '전송' 버튼을 찾습니다.
-        const sendButton = document.querySelector(`.host-chat-send-btn[data-wp-idx='${watchPartyIdx}']`);
-
-        // 버튼이 존재하면 프로그래매틱하게 클릭하여 기존 전송 로직을 재사용합니다.
-        if (sendButton) {
-            sendButton.click();
-        }
-    }
-});
-
 
 });
 
@@ -151,14 +131,7 @@ function renderList(data, containerId) {
     const ul = document.createElement('ul');
     data.forEach(item => {
         const li = document.createElement('li');
-        console.log(item);
-        li.innerHTML = `
-          ${item.title}
-          <div>
-            <img src="${item.hostImg}" alt="profile" />
-            <span>${item.hostNickname}</span>
-          </div>
-        `;
+        li.textContent = item.title;
         li.dataset.watchPartyIdx = item.watchParty_idx || item.watchPartyIdx;
         li.addEventListener('click', () => {
             window.location.href = `${CONTEXT_PATH}/vibesync/watch.jsp?watchPartyIdx=${item.watchParty_idx || item.watchPartyIdx}`;
@@ -198,6 +171,7 @@ function renderHostTable(data) {
     [thId, thTitle, thVideo, thChat].forEach(th => { // thChat 추가
         th.style.border = '1px solid #ccc';
         th.style.padding = '0.5rem';
+        th.style.backgroundColor = '#f2f2f2';
         headerRow.appendChild(th);
     });
     thead.appendChild(headerRow);
@@ -217,8 +191,8 @@ function renderHostTable(data) {
 
         const iframe = document.createElement('iframe');
         iframe.id = `host-player-${watchPartyIdx}`;
-        iframe.width = '500';
-        iframe.height = '281';
+        iframe.width = '320';
+        iframe.height = '180';
         iframe.src = `https://www.youtube.com/embed/${item.video_id || item.videoId}?enablejsapi=1`;
         iframe.frameBorder = '0';
         iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
@@ -228,9 +202,6 @@ function renderHostTable(data) {
         const tdChat = document.createElement('td');
         tdChat.style.verticalAlign = 'top';
 
-        const chatwrapper = document.createElement("div");
-        chatwrapper.id = "chat-wrapper"
-
         const chatLog = document.createElement('div');
         chatLog.id = `chat-log-${watchPartyIdx}`;
         chatLog.className = 'host-chat-log';
@@ -238,23 +209,18 @@ function renderHostTable(data) {
         const chatInputWrapper = document.createElement('div');
         chatInputWrapper.className = 'chat-input-wrapper';
         chatInputWrapper.innerHTML = `
-        <div class="chat-input-submit">
             <input type="text" id="chat-input-${watchPartyIdx}" placeholder="메시지 전송...">
             <button class="host-chat-send-btn" data-wp-idx="${watchPartyIdx}">전송</button>
-        </div>
         `;
-        chatwrapper.appendChild(chatLog);
-        chatwrapper.appendChild(chatInputWrapper);
-        tdChat.appendChild(chatwrapper);
+        tdChat.appendChild(chatLog);
+        tdChat.appendChild(chatInputWrapper);
 
         // 각 셀에 스타일 적용 및 행에 추가
-        [tdId, tdTitle, tdVideo].forEach(td => {
+        [tdId, tdTitle, tdVideo, tdChat].forEach(td => {
             td.style.border = '1px solid #ccc';
             td.style.padding = '0.5rem';
             tr.appendChild(td);
         });
-        tdChat.style.border = '1px solid #ccc';
-        tr.appendChild(tdChat);
         tbody.appendChild(tr);
 
         // YT 플레이어 인스턴스 생성

@@ -21,7 +21,7 @@ $(function() {
         applyTheme(selectedTheme);
         
         $.ajax({
-            url: `${contextPath}/setting.do`,
+            url: '/vibeSyncTest/setting.do',
             type: 'POST',
             data: {
                 theme: selectedTheme

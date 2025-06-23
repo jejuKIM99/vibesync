@@ -77,7 +77,7 @@ public class FollowService {
                 } catch (SQLException e) {
                     System.err.println("Failed to reset auto-commit in FollowService: " + e.getMessage());
                 } finally {
-                    JdbcUtil.close(conn);
+                    conn.close();
                 }
             }
         }
@@ -97,7 +97,7 @@ public class FollowService {
 			e.printStackTrace();
 		} finally {
             if (conn != null) {
-            	JdbcUtil.close(conn);
+            	conn.close();
             }
         }
 		return isUserFollowing;
