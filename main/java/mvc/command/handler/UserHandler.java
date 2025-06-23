@@ -56,7 +56,7 @@ public class UserHandler implements CommandHandler {
         if (session.getAttribute("userInfo") != null) {
             response.sendRedirect(request.getContextPath() + "/vibesync/main.do");
             return null;
-        }        
+        }
                 
         // 자동 로그인 쿠키 확인
         Cookie[] cookies = request.getCookies();
@@ -228,8 +228,9 @@ public class UserHandler implements CommandHandler {
         // 세션 초기화
         session.invalidate();
 
-        // 로그아웃 후 login.jsp로 리디렉션
+		// 로그아웃 후 login.jsp로 리디렉션
         response.sendRedirect(request.getContextPath() + "/vibesync/user.do?from=logout");
+        
         return null;
     }
 
