@@ -977,12 +977,9 @@ $(document).ready(function() {
                     $ul.append('<li><p>No Follower</p></li>');
                 } else {
                     $.each(items, function(i, user) {
-                    	let profileImg = user.profile_img != null ? user.profile_img : '${pageContext.request.contextPath}/vibesync/sources/default/default_user.jpg';
-                    	
                         var liHtml = ''
-                            + '<li class="sidebar-profile">'
+                            + '<li>'
                             +   '<a href="userPage.do?acIdx=' + user.ac_idx + '">' 
-                            +     '<img src="'+ profileImg +'" alt="profileImg">'
                             +     user.nickname 
                             +   '</a>'
                             + '</li>';
