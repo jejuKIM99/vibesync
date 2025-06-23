@@ -19,7 +19,7 @@
   <!-- 차트 그리기 : chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <%-- 달력 --%>
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script> 
 <link rel="stylesheet" href="./css/workspace.css">
 <link rel="stylesheet" href="./css/style.css"> 
 <link rel="stylesheet" href="./css/sidebar.css">
@@ -151,7 +151,9 @@
 				<section id="content">
 					<div id="workspace_wrapper">
 						<div id="todolist">
-							<div id="calendar"></div>
+							<div id="calendar">
+					            <button id="add-event-button" style="display: none; position: absolute;">+</button>
+					        </div>    
 							<div id="date-picker-popover" style="display: none;">
 					            <div class="date-picker-body">
 					                <select id="year-select"></select>
@@ -349,7 +351,10 @@
             </div>
             <div class="form-group">
                 <label for="schedule-color">색상</label>
-                <input type="color" id="schedule-color" name="color" value="#3788d8">
+                <div class="color-picker-wrapper">
+			        <input type="color" id="schedule-color" name="color" value="#3788d8">
+			        <div id="schedule-recent-colors" class="recent-colors-container"></div>
+			    </div>
             </div>
             <div class="modal-buttons">
                 <button type="button" class="modal-close-btn">취소</button>
@@ -369,7 +374,10 @@
             </div>
             <div class="form-group">
         		<label for="todo-color">색상</label>
-        		<input type="color" id="todo-color" name="color" value="#3788d8">
+        		<div class="color-picker-wrapper">
+		        <input type="color" id="todo-color" name="color" value="#3788d8">
+		        <div id="todo-recent-colors" class="recent-colors-container"></div>
+		    </div>
     		</div>
             
             <div class="modal-buttons">

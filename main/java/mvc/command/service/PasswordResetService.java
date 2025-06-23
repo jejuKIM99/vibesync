@@ -16,8 +16,8 @@ import mvc.persistence.daoImpl.UserDAOImpl;
 
 public class PasswordResetService {
 
-    // 생성자를 통해 외부에서 생성된 DAO 객체를 주입받음
     public PasswordResetService() {
+    	
     }
 
     /**
@@ -79,7 +79,7 @@ public class PasswordResetService {
             String email = userDAO.findEmailByValidToken(token);
 
             if (email != null) {
-                // 2. ★★★ 새 비밀번호에 대한 새로운 salt 생성 ★★★
+                // 2. 새 비밀번호에 대한 새로운 salt 생성
                 String newSalt = PasswordMigrator.generateSalt();
                 // 3. 새 salt로 새 비밀번호를 해싱
                 String hashedPassword = PasswordMigrator.hashPassword(newPassword, newSalt);
@@ -93,6 +93,7 @@ public class PasswordResetService {
             }
             
             conn.commit();
+            
         } catch (Exception e) { // SQLException 및 해싱 Exception 포함
         	try {
                 if (conn != null) conn.rollback();

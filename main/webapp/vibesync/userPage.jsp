@@ -67,25 +67,6 @@
         .unread-badge { display: flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; background: #45607d; color: #fff; font-size: 12px; font-weight: 700; border-radius: 50%; box-shadow: 0 1px 3px rgba(175,175,160,0.10); margin-left: 5px; user-select: none; }
     </style>
     
-    <style> /* Chat */
-        .chat-modal-super-container { display: none; justify-content: center; align-items: center; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
-        .chat-modal-content { position: relative; max-width: 430px; min-width: 350px; width: 90%; background-color: var(--background-color); padding: 0; border-radius: 16px; color: var(--font-color); box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3); animation: fadeInUp 0.3s ease-out; display: flex; flex-direction: column; max-height: 85vh; }
-        #chatTitle { padding: 18px 24px 16px 24px; margin: 0; text-align: center; border-bottom: 1.5px solid #e3ecf6; flex-shrink: 0; font-size: 17px; font-weight: 700; }
-        #chatHistory { padding: 10px; overflow-y: auto; flex-grow: 1; }
-        .chat-container { display: flex; flex-direction: column; gap: 12px; }
-        .chat-bubble { max-width: 70%; padding: 10px 14px; border-radius: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); text-align: left; word-break: keep-all; overflow-wrap: break-word; white-space: normal; }
-        .bubble-me { align-self: flex-end; background-color: #FFFBE7; border: 1px solid #FFEAC4; border-bottom-right-radius: 4px; }
-        .bubble-other { align-self: flex-start; background-color: #fff; border: 1px solid #eef1f5; border-bottom-left-radius: 4px; }
-        .bubble-text { font-size: 14px; color: #000; margin: 0 0 4px 0; padding: 0; }
-        .bubble-time { font-size: 11px; color: #999; text-align: right; }
-        .chat-input-row { display: flex; align-items: center; gap: 8px; margin: 12px; background: #fff; border-radius: 12px; border: 1.5px solid #e2e5ea; padding: 7px 12px; box-shadow: 0 1px 4px rgba(80,110,140,0.08); flex-shrink: 0; }
-        #chatInput { flex: 1; border: none; font-size: 15px; color: #23272f; outline: none; padding: 8px 0; height: 38px; background: none; }
-        #chatInput::placeholder { color: #b7b8bd; font-size: 14px; }
-        #sendMessageBtn { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; background: #7fa6c9; border: none; border-radius: 50%; transition: background 0.16s; cursor: pointer; padding: 0; }
-        #sendMessageBtn:hover { background: #45607d; }
-        .chat-date-separator { display: inline-block; padding: 4px 12px; margin: 16px auto; font-size: 12px; color: var(--chat-date-font); background: var(--chat-date-back); border-radius: 12px; text-align: center; }
-    </style>
-    
     <style> /* Setting Modal */
         .modal-setting-container { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); backdrop-filter: blur(3px); justify-content: center; align-items: center; }
         .setting-modal-content { color: #333; background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 420px; text-align: center; position: relative; animation: zoomIn 0.2s; }
@@ -200,7 +181,7 @@
             <div id="chatHistory"></div>
             <div class="chat-input-row">
                 <input type="text" id="chatInput" placeholder="메시지를 입력하세요..." autocomplete="off" />
-                <button type="button" id="sendMessageBtn" title="전송">
+                <button type="button" id="sendMessageBtn" title="전송" onclick="sendChatMessage();">
                     <i class="fa-solid fa-paper-plane" style="color:white; font-size: 16px; filter: invert(0) !important;"></i>
                 </button>
             </div>
@@ -213,6 +194,10 @@
             <div id="settingContent"></div>
         </div>
     </div>
+
+    <form id="logoutForm" action="user.do" method="post">
+    	<input type="hidden" name="accessType" value="logout">
+    </form>
 
     <script>
         let currentChatSenderIdx = 0;
@@ -302,6 +287,8 @@
                             if (typeof response.newFollowerCount !== 'undefined') {
                                 $('#profileFollowerCount').text(response.newFollowerCount);
                             }
+                            updateFollowingCount();
+                        	updateFollowerCount();
                         } else {
                             alert('오류: ' + (response.message || '팔로우 처리에 실패했습니다.'));
                         }
@@ -402,8 +389,6 @@
                 const nickname = $(this).data('nickname');
                 openChatWithUser(senderIdx, nickname);
             });
-            
-            $("#sendMessageBtn").on("click", sendChatMessage);
         
             $("#chatInput").on("keydown", function(e) {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -484,7 +469,7 @@
                         success: function(response) {
                             if (response.success) {
                                 // 1. 새 이미지 경로에 캐시 무효화를 위한 타임스탬프 추가
-                                const newImgSrc = '${pageContext.request.contextPath}/vibesync/' + response.newImagePath + '?t=' + new Date().getTime();
+                                const newImgSrc = '${pageContext.request.contextPath}/vibesync/' + response.newImagePath+ '?t=' + new Date().getTime();
 
                                 // 4. 화면에 보이는 이미지들의 src를 교체 (이제 즉시 반영됨)
                                 $('#mainProfileImage').attr('src', newImgSrc);
@@ -536,7 +521,7 @@
                     success: function(response) {
                         if (response.success) {
                             alert('비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요.');
-                            location.href = '${pageContext.request.contextPath}/main.do';
+                            $("#logoutForm").submit();
                         } else {
                             $(this).find('.setting-error-msg').text(response.message || '비밀번호 변경에 실패했습니다.');
                         }
@@ -569,7 +554,7 @@
     function openMessageModal() {
         window.location.hash = "msg";
         const acIdx = ${sessionScope.userInfo.ac_idx};
-        const basePath = '${pageContext.request.contextPath}/vibesync/sources/';
+        const basePath = '${pageContext.request.contextPath}/vibesync/';
         $.ajax({
             url: '${pageContext.request.contextPath}/message.do',
             type: 'GET',
@@ -586,7 +571,7 @@
                 }
                 const msgContainer = $('<div class="msg-container"></div>');
                 msgList.forEach(msg => {
-                    let profileImgHtml = msg.other.profile_img ? `<img src="\${basePath}profile/\${msg.other.profile_img}" alt="profile">` : `<img src="\${basePath}default/default_user.jpg" alt="기본 프로필">`;
+                    let profileImgHtml = msg.other.profile_img ? `<img src="\${basePath}\${msg.other.profile_img}" alt="profile">` : `<img src="\${basePath}sources/default/default_user.jpg" alt="기본 프로필">`;
                     let unreadBadgeHtml = '';
                     if (msg.numOfUnreadMessages > 0) {
                         unreadBadgeHtml = `<span class="unread-badge">\${msg.numOfUnreadMessages}</span>`;
@@ -684,15 +669,15 @@
     }
 
     function showCombinedSettingsView() {
-        const defaultImgSrc = '<%=contextPath %>/vibesync/sources/default/default_user.jpg';
-        const currentImgSrc = currentUserData && currentUserData.img ? '${pageContext.request.contextPath}/' + currentUserData.img : defaultImgSrc;
-        
+        const defaultImgSrc = '<%=contextPath %>/sources/default/default_user.jpg';
+        const currentImgSrc = currentUserData && currentUserData.img ? '${pageContext.request.contextPath}/vibesync/' + currentUserData.img : defaultImgSrc;
+
         const combinedHtml = `
             <h4>계정 설정</h4>
             
             <h5>프로필 사진 변경</h5>
             <form id="profileImageForm">
-                <img id="profileImagePreview" src="/vibesync\${currentImgSrc}" alt="프로필 미리보기">
+                <img id="profileImagePreview" src="\${currentImgSrc}" alt="프로필 미리보기">
                 <input type="file" name="profileImage" id="profileImageInput" accept="image/*" required>
                 <button type="submit">프로필 사진 저장</button>
             </form>

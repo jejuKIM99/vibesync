@@ -244,10 +244,3 @@ INSERT INTO follows (ac_follow, ac_following) VALUES (26, 8);
 INSERT INTO follows (ac_follow, ac_following) VALUES (26, 12);
 INSERT INTO follows (ac_follow, ac_following) VALUES (26, 25);
 commit;
-
-select *
-from useraccount;
-
-select *
-from follows
-where ac_follow = 26;

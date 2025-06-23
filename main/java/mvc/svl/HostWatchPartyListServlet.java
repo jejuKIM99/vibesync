@@ -19,8 +19,8 @@ import java.util.List;
 @WebServlet("/HostWatchPartyListServlet")
 public class HostWatchPartyListServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
-	private WatchPartyDAO dao = new WatchPartyDAO();
+   private static final long serialVersionUID = 1L;
+   private WatchPartyDAO dao = new WatchPartyDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
@@ -32,8 +32,8 @@ public class HostWatchPartyListServlet extends HttpServlet {
         if (cookies != null) {
             for (Cookie c : cookies) {
                 if ("login_user_idx".equals(c.getName())) {
-                	useridx_str = c.getValue();
-                	useridx = Integer.parseInt(useridx_str);
+                   useridx_str = c.getValue();
+                   useridx = Integer.parseInt(useridx_str);
                 }
             }
         }

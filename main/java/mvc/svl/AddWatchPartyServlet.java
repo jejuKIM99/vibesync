@@ -114,11 +114,11 @@ public class AddWatchPartyServlet extends HttpServlet {
             
         } finally {
            try {
-			conn.setAutoCommit(true);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+         conn.setAutoCommit(true);
+         } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
            JdbcUtil.close(conn);
         }
         

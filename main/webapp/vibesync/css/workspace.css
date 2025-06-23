@@ -344,6 +344,42 @@
      color: black;
    }
    
+   /* --- 색상 선택기 & 최근 색상 --- */
+.color-picker-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 기본 색상 선택 input 스타일 조정 (선택 사항) */
+input[type="color"] {
+    width: 40px;
+    height: 40px;
+    border: none;
+    padding: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.recent-colors-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.recent-color-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #ddd;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.recent-color-circle:hover {
+    transform: scale(1.15);
+}
+   
    /* ===================================================================
    모달창 스크롤 및 정렬 수정
 =================================================================== */
@@ -528,6 +564,13 @@
    list-style: none;
    overflow-y: auto;
    flex-grow: 1;
+   -ms-overflow-style: none;
+}
+
+#my-posts ul::-webkit-scrollbar,
+#liked-posts ul::-webkit-scrollbar,
+.generated_block ul::-webkit-scrollbar{
+   display: none;
 }
 
 #my-posts ul li,
@@ -763,6 +806,10 @@
     font-weight: 700;              /* 폰트 굵기를 중간(medium) 정도로 설정하여 통일성 부여 */
 }
 
+.fc-event-time {
+    text-transform: uppercase;
+}
+
 /* 탭 버튼 컨테이너 */
 .tab-buttons {
     display: flex;
@@ -877,6 +924,30 @@
 
 .schedule-item-content{
 	width: 100%;
+}
+
+#add-event-button {
+	position: absolute;
+    /* 캘린더보다 위에 보이도록 z-index 설정 */
+    z-index: 999;
+    
+    /* 버튼 모양 스타일 */
+    width: 28px;
+    height: 28px;
+    line-height: 24px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background-color:var(--workspace-cal-back);
+    border: none;
+    border-radius: 50%; /* 원 모양으로 만들기 */
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#add-event-button:hover {
+    background-color:var(--workspace-cal-hover);
 }
 
 /* 할 일 목록 ul 스타일 */
@@ -1322,7 +1393,9 @@
 }
 
    @media (max-width: 800px) {
+   	     #todolist {flex-direction: column; height: 800px;}
      .contents_item, .generated_block { padding: 12px 7px !important; }
      #content_plus.contents_item { font-size: 30px; }
+     .calendar_contents{flex: 2 1 0;}
    }
   

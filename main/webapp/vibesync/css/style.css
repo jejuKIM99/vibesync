@@ -971,6 +971,26 @@ p {
     z-index: 2; /* 이미지 위에 오도록 */
 }
 
+/*------Chat------*/
+.chat-modal-super-container { display: none; justify-content: center; align-items: center; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+.chat-modal-content { position: relative; max-width: 430px; min-width: 350px; width: 90%; background-color: var(--background-color); padding: 0; border-radius: 16px; color: var(--font-color); box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3); animation: fadeInUp 0.3s ease-out; display: flex; flex-direction: column; max-height: 85vh; }
+#chatTitle, #chatRoomTitle { padding: 18px 24px 16px 24px; margin: 0; text-align: center; border-bottom: 1.5px solid #e3ecf6; flex-shrink: 0; font-size: 17px; font-weight: 700; }
+#chatHistory, #chatRoomHistory { padding: 10px; overflow-y: auto; flex-grow: 1; }
+.chat-container, .chatRoom-container { display: flex; flex-direction: column; gap: 12px; }
+.chat-bubble, .chatRoom-bubble { max-width: 70%; padding: 10px 14px; border-radius: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); text-align: left; word-break: keep-all; overflow-wrap: break-word; white-space: normal; }
+.bubble-me { align-self: flex-end; background-color: #FFFBE7; border: 1px solid #FFEAC4; border-bottom-right-radius: 4px; }
+.bubble-other { align-self: flex-start; background-color: #fff; border: 1px solid #eef1f5; border-bottom-left-radius: 4px; }
+.bubble-text { font-size: 14px; color: #000; margin: 0 0 4px 0; padding: 0; }
+.bubble-time { font-size: 11px; color: #999; text-align: right; }
+.chat-input-row, .chatRoom-input-row { display: flex; align-items: center; gap: 8px; margin: 12px; background: #fff; border-radius: 12px; border: 1.5px solid #e2e5ea; padding: 7px 12px; box-shadow: 0 1px 4px rgba(80,110,140,0.08); flex-shrink: 0; }
+#chatInput, #chatRoomInput  { flex: 1; border: none; font-size: 15px; color: #23272f; outline: none; padding: 8px 0; height: 38px; background: none; }
+#chatInput::placeholder, #chatRoomInput::placeholder { color: #b7b8bd; font-size: 14px; }
+#sendMessageBtn { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; background: #fe4f4f; border: none; border-radius: 50%; transition: background 0.16s; cursor: pointer; padding: 0; }
+#sendMessageBtn:hover { background: #fe1717; }
+.chat-date-separator, .chatRoom-date-separator { display: inline-block; padding: 4px 12px; margin: 16px auto; font-size: 12px; color: var(--chat-date-font); background: var(--chat-date-back); border-radius: 12px; text-align: center; }
+
+
+
 @media (max-width:700px) {
   #login_wrapper {flex-direction: column; margin-top: 150px;}
   #login_signup_form, #signUp {border-left: none;}
@@ -980,8 +1000,7 @@ p {
   #userInfo {flex-direction: column; margin-bottom: 30px;}
 }
 
-@media (max-width:600px) {
-  #todolist {flex-direction: column;}
+@media (max-width:953px) {
   #contents_grid {grid-template-columns: repeat(1, 1fr);}
   #swiper2 .swiper-wrapper .swiper-slide {width: 100% !important}
 }

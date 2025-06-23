@@ -2,7 +2,9 @@ package mvc.command.service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.NamingException;
@@ -10,6 +12,7 @@ import javax.naming.NamingException;
 import com.util.ConnectionProvider;
 import com.util.JdbcUtil;
 
+import mvc.domain.vo.UserSummaryVO;
 import mvc.persistence.dao.FollowDAO;
 import mvc.persistence.daoImpl.FollowDAOImpl;
 
@@ -64,7 +67,6 @@ public class FollowService {
             // 핸들러에서 오류 메시지를 포함하여 최종 JSON 응답을 생성하도록 예외를 다시 던짐
             throw e;
         } catch (NamingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
             if (conn != null) {
@@ -99,5 +101,89 @@ public class FollowService {
             }
         }
 		return isUserFollowing;
+    }
+    
+ // 팔로잉 수 조회
+    public int getFollowingCount(int userIdx) throws SQLException {
+    	int followingCnt = 0;
+    	
+    	Connection conn = null;
+    	
+        try {
+        	conn = ConnectionProvider.getConnection();
+        	FollowDAO followDAO = new FollowDAOImpl(conn);
+        	followingCnt = followDAO.getFollowingCount(userIdx) ;
+        } catch (SQLException e) {
+            throw e;
+        } catch (NamingException e) {
+			e.printStackTrace();
+		} finally {
+            JdbcUtil.close(conn);
+        }
+    	
+		return followingCnt;
+    }
+    
+    // 팔로워 수 조회
+    public int getFollowerCount(int userIdx) throws SQLException {
+    	int followerCnt = 0;
+    	
+    	Connection conn = null;
+    	
+        try {
+        	conn = ConnectionProvider.getConnection();
+        	FollowDAO followDAO = new FollowDAOImpl(conn);
+        	followerCnt = followDAO.getFollowerCount(userIdx) ;
+        } catch (SQLException e) {
+            throw e;
+        } catch (NamingException e) {
+			e.printStackTrace();
+		} finally {
+            JdbcUtil.close(conn);
+        }
+    	
+		return followerCnt;
+    }
+    
+    // 팔로잉 목록 조회
+    public List<UserSummaryVO> getFollowingList(int userIdx) throws SQLException {
+    	List<UserSummaryVO> followingList = new ArrayList<UserSummaryVO>();
+    	
+    	Connection conn = null;
+    	
+        try {
+        	conn = ConnectionProvider.getConnection();
+        	FollowDAO followDAO = new FollowDAOImpl(conn);
+        	followingList = followDAO.userFollowingList(userIdx);
+        } catch (SQLException e) {
+            throw e;
+        } catch (NamingException e) {
+			e.printStackTrace();
+		} finally {
+            JdbcUtil.close(conn);
+        }
+    	
+    	return followingList;
+    }
+    
+    // 팔로워 목록 조회
+    public List<UserSummaryVO> getFollowerList(int userIdx) throws SQLException {
+    	List<UserSummaryVO> followerList = new ArrayList<UserSummaryVO>();
+    	
+    	Connection conn = null;
+    	
+        try {
+        	conn = ConnectionProvider.getConnection();
+        	FollowDAO followDAO = new FollowDAOImpl(conn);
+        	followerList = followDAO.userFollowerList(userIdx);
+        } catch (SQLException e) {
+            throw e;
+        } catch (NamingException e) {
+			e.printStackTrace();
+		} finally {
+            JdbcUtil.close(conn);
+        }
+    	
+    	return followerList;
     }
 }

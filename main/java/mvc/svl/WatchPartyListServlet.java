@@ -17,8 +17,8 @@ import java.util.List;
 @WebServlet("/WatchPartyListServlet")
 public class WatchPartyListServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
-	private WatchPartyDAO dao = new WatchPartyDAO();
+   private static final long serialVersionUID = 1L;
+   private WatchPartyDAO dao = new WatchPartyDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) 

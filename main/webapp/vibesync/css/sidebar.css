@@ -35,13 +35,14 @@
   justify-content: center;
   align-items: start;
   flex-direction: column;
-  gap: 40px;
-  font-size: 20px;
+  gap: 30px;
+  font-size: min(16px,4vw);
   font-weight: bold;
   margin-left: 10px;
   margin-block: 60px;
 }
 .notion-app-inner .notion-sidebar-container .notion-sidebar .menu_content .nickname {
+  font-size: 18px;
   text-decoration: none;
   color: var(--font-color);
   overflow: hidden;
@@ -105,7 +106,7 @@
 .notion-sidebar .follow_items {
   list-style: none;
   padding: 0;
-  margin: 20px 0 0;
+  margin: 10px 0 0;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out;
