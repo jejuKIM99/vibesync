@@ -223,7 +223,6 @@ input:focus {
    max-width: 22px;
 }
 
-
 #setting .modal-btn:hover {
   background: #e6f0fa;
   color: #1a81d6;
