@@ -38,8 +38,21 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 		
 		String requestURI = request.getRequestURI();
 		
-		// ▼▼▼ 1. 공개적으로 접근 가능한 '허용된 경로(Whitelist)' 목록 정의 ▼▼▼
-	    List<String> publicPaths = Arrays.asList("/user.do", "/postView.do", "/comment.do");
+		
+		// 현재 요청이 로그인 페이지로 향하는지 확인하고, returnUrl 파라미터가 있는지 검사합니다.
+	    if (requestURI.endsWith("/user.do")) {
+	        String returnUrl = request.getParameter("returnUrl");
+	        if (returnUrl != null && !returnUrl.isEmpty()) {
+	            // returnUrl을 세션에 저장해야 하므로, 세션이 없다면 새로 생성합니다.
+	            HttpSession session = request.getSession(); 
+	            session.setAttribute("referer", returnUrl);
+	            System.out.println("[LoginCheckFilter] returnUrl 파라미터를 세션에 저장: " + returnUrl);
+	        }
+	    }
+	    
+		
+		// 1. 공개적으로 접근 가능한 '허용된 경로(Whitelist)' 목록 정의
+	    List<String> publicPaths = Arrays.asList("/user.do", "/postView.do", "/comment.do", "/sidebar.do");
 	    
 	    boolean isPublicPath = false;
 	    for (String path : publicPaths) {
@@ -54,30 +67,28 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 	    if (requestURI.startsWith(request.getContextPath() + "/resources/")) {
 	        isPublicPath = true;
 	    }
+	    
+	    if (isPublicPath) {
+	        chain.doFilter(request, response);
+	        return; 
+	    }
 		
 		HttpSession session = request.getSession(false);
 		boolean isLoggedIn = (session != null && session.getAttribute("userInfo") != null);
 
-	    // 2. 로그인을 했거나, 허용된 공개 경로에 접근하는 경우 -> 통과!
-	    if (isLoggedIn || isPublicPath) {
-	        chain.doFilter(request, response);
-	    } else {
-	        // 3. 로그인을 안 했고, 허용된 경로도 아닌 경우 -> 로그인 페이지로!
-	        HttpSession newSession = request.getSession();
-	        
-
-	        // ★★★★★ 디버깅 코드 추가 ① ★★★★★
-	        System.out.println("--- [LoginCheckFilter] ---");
-	        System.out.println("세션 ID: " + newSession.getId());
-	        System.out.println("저장할 Referer: " + requestURI);
-	        System.out.println("-------------------------");
-	        // ★★★★★★★★★★★★★★★★★★★★★
-	        
-	        newSession.setAttribute("referer", requestURI);
-	        
-	        String loginPage = request.getContextPath() + "/vibesync/user.do";
-	        response.sendRedirect(loginPage);
-	    }
+		 if (isLoggedIn) {
+		        chain.doFilter(request, response);
+		        return;
+		    }
+		 
+		 System.out.println("[LoginCheckFilter] 접근 거부! 로그인 페이지로 리다이렉트합니다. 요청 URI: " + requestURI);
+		 
+		 HttpSession newSession = request.getSession(); 
+		 newSession.setAttribute("referer", requestURI);
+		    
+		 // 로그인 페이지로 리다이렉트
+		 String loginPage = request.getContextPath() + "/vibesync/user.do";
+		 response.sendRedirect(loginPage);
 	}
 
 	public void init(FilterConfig fConfig) throws ServletException {

@@ -19,7 +19,7 @@
   <!-- 차트 그리기 : chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <%-- 달력 --%>
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script> 
 <link rel="stylesheet" href="./css/workspace.css">
 <link rel="stylesheet" href="./css/style.css"> 
 <link rel="stylesheet" href="./css/sidebar.css">
@@ -30,7 +30,7 @@
         .block-actions button { background: none; border: none; cursor: pointer; color: #888; font-size: 14px; margin-left: 5px; }
         .block-actions button:hover { color: #000; }
         .chart-toggles { margin-bottom: 10px; }
-        .chart-toggles label { margin-right: 15px; font-size: 13px; cursor: pointer; }
+        .chart-toggles label { margin-right: 15px; font-size: 13px; cursor: pointer; display: none; }
         .loading-spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -116,7 +116,7 @@
     <style> /* 통계 기간 변경 */
 		.stats-controls {
 		    display: flex;
-		    justify-content: space-between;
+		    justify-content: center;
 		    align-items: center;
 		    margin-bottom: 15px;
 		    flex-wrap: wrap; /* 창이 좁을 때 줄바꿈 */
@@ -151,7 +151,9 @@
 				<section id="content">
 					<div id="workspace_wrapper">
 						<div id="todolist">
-							<div id="calendar"></div>
+							<div id="calendar">
+					            <button id="add-event-button" style="display: none; position: absolute;">+</button>
+					        </div>    
 							<div id="date-picker-popover" style="display: none;">
 					            <div class="date-picker-body">
 					                <select id="year-select"></select>
@@ -195,9 +197,9 @@
 						<div class="workspace-controls">
 						    <h3><i class="fa-solid fa-shapes"></i>&nbsp;&nbsp;My Workspace</h3>
 						    <div class="workspace-buttons">
-						        <button id="edit-order-btn" class="control-btn"><i class="fa-solid fa-pen-to-square"></i> 편집</button>
-						        <button id="save-order-btn" class="control-btn" style="display: none;"><i class="fa-solid fa-save"></i> 저장</button>
-						        <button id="cancel-order-btn" class="control-btn" style="display: none;"><i class="fa-solid fa-times"></i> 취소</button>
+						        <button id="edit-order-btn" class="control-btn"><i class="fa-solid fa-pen-to-square" style="filter: invert(0) !important;"></i> 편집</button>
+						        <button id="save-order-btn" class="control-btn" style="display: none;"><i class="fa-solid fa-save" style="filter: invert(0) !important;"></i> 저장</button>
+						        <button id="cancel-order-btn" class="control-btn" style="display: none;"><i class="fa-solid fa-times" style="filter: invert(0) !important;"></i> 취소</button>
 						    </div>
 						</div>
 
@@ -349,7 +351,10 @@
             </div>
             <div class="form-group">
                 <label for="schedule-color">색상</label>
-                <input type="color" id="schedule-color" name="color" value="#3788d8">
+                <div class="color-picker-wrapper">
+			        <input type="color" id="schedule-color" name="color" value="#3788d8">
+			        <div id="schedule-recent-colors" class="recent-colors-container"></div>
+			    </div>
             </div>
             <div class="modal-buttons">
                 <button type="button" class="modal-close-btn">취소</button>
@@ -369,7 +374,10 @@
             </div>
             <div class="form-group">
         		<label for="todo-color">색상</label>
-        		<input type="color" id="todo-color" name="color" value="#3788d8">
+        		<div class="color-picker-wrapper">
+		        <input type="color" id="todo-color" name="color" value="#3788d8">
+		        <div id="todo-recent-colors" class="recent-colors-container"></div>
+		    </div>
     		</div>
             
             <div class="modal-buttons">
@@ -412,7 +420,7 @@
 	<div id="addBlockModal" class="modal">
 		<div class="modal-content" style="text-align: center;">
 			<h4>추가할 블록 선택</h4>
-			<hr><br>
+			<hr style="width: 100%; border: solid 1px var(--border-color);"><br>
 			<select id="blockTypeSelector">
 				<option value="CategoryPosts">카테고리별 글</option>
 				<option value="WatchParties">구독 워치파티</option>

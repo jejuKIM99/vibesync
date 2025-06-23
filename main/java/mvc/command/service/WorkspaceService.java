@@ -21,7 +21,6 @@ public class WorkspaceService {
     public WorkspaceDTO getInitialData(int acIdx) throws Exception {
         WorkspaceDTO dto = null;
         
-        List<TodoVO> todolists = todoService.getTodoListByUser(acIdx);
         List<NoteSummaryDTO> myPosts = noteService.getMyPostsPreview(acIdx);
         List<NoteSummaryDTO> myAllPosts = noteService.getAllMyPosts(acIdx);
         List<NoteSummaryDTO> likedPosts = noteService.getLikedPostsPreview(acIdx);
@@ -34,7 +33,6 @@ public class WorkspaceService {
         System.out.println("MessageService가 반환한 안읽은 메시지 개수: " + (unreadMessages != null ? unreadMessages.size() : "null"));
         
         dto = new WorkspaceDTO().builder()
-        					    .todolists(todolists)
         					    .myPosts(myPosts)
         					    .likedPosts(likedPosts)
         					    .unreadMessages(unreadMessages)

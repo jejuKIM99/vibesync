@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
 
-	String contextPath = request.getContextPath() + "/vibesync";
+   String contextPath = request.getContextPath() + "/vibesync";
 
 %>
 
@@ -32,7 +32,6 @@
 }
 .notion-sidebar .menu_content .nickname {
   text-decoration: none;
-  text-transform: uppercase;
   color: var(--font-color);
 }
 
@@ -108,15 +107,17 @@ input:focus {
 }
 
 .profile img {
-  width: 100x;
+  width: 100px;
   height: 100px;
   object-fit: cover;
   border-radius: 50%;
   aspect-ratio: 1/1;
   margin-bottom: 13px;
-  border: 1.5px solid lightgrey;
-  background: #faf9f6;
+  border: 4px solid transparent;
   display: block;
+  background-image: linear-gradient(var(--card-back), var(--card-back)), linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
 }
 
 .nickname {
@@ -140,7 +141,7 @@ input:focus {
 .accountDataLabel {
   font-weight: 400;
   font-size: medium;
-  color: grey;
+  color: grey !important;
 }
 
 .accountDataValue {
@@ -153,8 +154,8 @@ input:focus {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
+    background-color: var(--card-back);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 1000;
@@ -170,7 +171,7 @@ input:focus {
   text-decoration: none;
   color: var(--modal-font);
   padding: 4px 10px;
-  background-color: #c7e5ff; /*임시 구분용 색상*/
+  margin-bottom: 10px;
 }
 
 .modal-nickname:hover {
@@ -215,11 +216,13 @@ input:focus {
 .modal-btn i {
   font-size: 18px;
   margin-right: 2px;
+  color: var(--font-color);
 }
 .modal-btn img {
-	max-height: 20px;
-	max-width: 20px;
+   max-height: 22px;
+   max-width: 22px;
 }
+
 
 #setting .modal-btn:hover {
   background: #e6f0fa;
@@ -256,7 +259,7 @@ input:focus {
   }
 
   .theme-option-label:hover {
-    background-color: #f0f0f0;
+    background-color: var(--hover-color);
   }
   
   /* 기본 라디오 버튼 숨기기 */
@@ -760,11 +763,11 @@ input:focus {
       <div class="nickname-container">
         <span class="profile" id="profile-display">
           <c:choose>
-          	<c:when test="${not empty userInfo.img}">
-          		<img src="<%= contextPath %>${userInfo.img}" alt="프로필">
+             <c:when test="${not empty userInfo.img}">
+                <img src="${pageContext.request.contextPath}/vibesync/${userInfo.img}" alt="프로필">
             </c:when>
             <c:otherwise>
-            	<img src="<%= contextPath %>/sources/default/default_user.jpg" alt="기본 프로필">
+               <img src="<%= contextPath %>/sources/default/default_user.jpg" alt="기본 프로필">
             </c:otherwise>
           </c:choose>
         </span>
@@ -781,60 +784,59 @@ input:focus {
         </div>
         <div id="nickname-modal" class="modal-sidebar">
           <div id="nickname-modal-1">
-	          <a href="userPage.do?acIdx=${userInfo.ac_idx}" class="modal-nickname">
-	            ${userInfo.nickname}
-	          </a>
-	          <br>
-	          <div id="setting">
-		      	<button type="button" id="setting-btn" class="modal-btn">
-		      		<img src="./sources/icons/settings.svg" alt="setting icon"> Setting
-		      	</button>
-		      </div>
-		      <div id="logout">
-		        <form action="user.do" method="post">
-		          <input type="hidden" name="accessType" value="logout">
-		          <button type="submit" class="modal-btn">
-		          	<i class="fa-solid fa-right-from-bracket"></i> Logout
-		          </button>
-		        </form>
-		      </div>
-	      </div>
-	      <div id="nickname-modal-2">
-	        <button type="button" id="back-btn" class="modal-btn">
-	            <i class="fa-solid fa-arrow-left"></i> 뒤로가기
-	        </button>
-			<div class="theme-selector-container">
-			  
-			  <label class="theme-option-label">
-			    <input type="radio" name="theme" value="light" ${sessionScope.theme == 'light' || empty sessionScope.theme ? 'checked' : ''}>
-			    <div class="custom-radio">
-			      <div class="inner-circle"></div>
-			    </div>
-			    <span class="theme-label-text">Light</span>
-			    <div class="theme-icon-svg">
-			      <img src="./sources/sidebar/light_icon.svg">
-			    </div>
-			  </label>
-			
-			  <label class="theme-option-label">
-			    <input type="radio" name="theme" value="dark" ${sessionScope.theme == 'dark' ? 'checked' : ''}>
-			    <div class="custom-radio">
-			        <div class="inner-circle"></div>
-			    </div>
-			    <span class="theme-label-text">Dark</span>
-			    <div class="theme-icon-svg">
-			      <img src="./sources/sidebar/dark_icon.svg">
-			    </div>
-			  </label>
-			
-			</div>
-	      </div>
+             <a href="userPage.do?acIdx=${userInfo.ac_idx}" class="modal-nickname">
+               ${userInfo.nickname}
+             </a>
+             <div id="setting">
+               <button type="button" id="setting-btn" class="modal-btn">
+                  <img src="./sources/icons/settings.svg" alt="setting icon"> Theme
+               </button>
+            </div>
+            <div id="logout">
+              <form action="user.do" method="post">
+                <input type="hidden" name="accessType" value="logout">
+                <button type="submit" class="modal-btn">
+                   <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+              </form>
+            </div>
+         </div>
+         <div id="nickname-modal-2">
+           <button type="button" id="back-btn" class="modal-btn">
+               <i class="fa-solid fa-arrow-left"></i> 뒤로가기
+           </button>
+         <div class="theme-selector-container">
+           
+           <label class="theme-option-label">
+             <input type="radio" name="theme" value="light" ${sessionScope.theme == 'light' || empty sessionScope.theme ? 'checked' : ''}>
+             <div class="custom-radio">
+               <div class="inner-circle"></div>
+             </div>
+             <span class="theme-label-text">Light</span>
+             <div class="theme-icon-svg">
+               <img src="./sources/sidebar/light_icon.svg">
+             </div>
+           </label>
+         
+           <label class="theme-option-label">
+             <input type="radio" name="theme" value="dark" ${sessionScope.theme == 'dark' ? 'checked' : ''}>
+             <div class="custom-radio">
+                 <div class="inner-circle"></div>
+             </div>
+             <span class="theme-label-text">Dark</span>
+             <div class="theme-icon-svg">
+               <img src="./sources/sidebar/dark_icon.svg">
+             </div>
+           </label>
+         
+         </div>
+         </div>
         </div>
       </div>
-      <div class="search icon_wrap">
+      <!-- <div class="search icon_wrap">
         <img src="./sources/icons/search.svg" alt="search icon" class="sidebar_icon">
         <input type="text" class="search-input" placeholder="Search…">
-      </div>
+      </div> -->
 
       <a href="main.do" class="home icon_wrap">
         <img src="./sources/icons/home.svg" alt="home icon" class="sidebar_icon">
@@ -941,8 +943,9 @@ $(document).ready(function() {
                 } else {
                     $.each(items, function(i, user) {
                         var liHtml = ''
-                            + '<li>'
+                            + '<li class="sidebar-profile">'
                             +   '<a href="userPage.do?acIdx=' + user.ac_idx + '">' 
+                            +     '<img src="'+ user.profile_img +'" alt="profileImg">'
                             +     user.nickname 
                             +   '</a>'
                             + '</li>';
