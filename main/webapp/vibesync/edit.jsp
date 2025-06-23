@@ -131,6 +131,17 @@
 		font-weight: bold;
 		margin: 0 !important;
 	}
+	
+	.dropdown-menu{
+		background-color: var(--card-back) !important;
+		color: var(--font-color) !important;
+	}
+	
+	   .popover{
+      background-color: var(--card-back) !important;
+      border: solid 2px var(--border-color) !important;
+   }
+	
   </style>
   
 </head>

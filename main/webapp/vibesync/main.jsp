@@ -3,7 +3,7 @@
 <% String contextPath = request.getContextPath() + "/vibesync"; %>
 <!DOCTYPE html>
 <jsp:include page="/vibesync/includes/header.jsp" />
-
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>main</title>
@@ -15,11 +15,11 @@
     href="https://unpkg.com/swiper/swiper-bundle.min.css"
   />
   <!-- css,js -->
-  
-  
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/sidebar.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-  
+  <script defer src="./js/script.js"></script>
 </head>
 <body>
   <div id="notion-app">

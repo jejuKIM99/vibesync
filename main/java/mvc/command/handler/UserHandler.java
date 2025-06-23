@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import com.listener.DuplicateLoginPreventer; 
 
 import mvc.command.service.LoginService;
+import mvc.command.service.PasswordResetService;
 import mvc.command.service.SettingService;
 import mvc.command.service.SignUpService;
 import mvc.domain.dto.LoginDTO;
@@ -19,6 +20,7 @@ public class UserHandler implements CommandHandler {
 
     private final LoginService loginService = new LoginService();
     private final SignUpService signUpService = new SignUpService();
+    private final PasswordResetService passwordResetService = new PasswordResetService(); 
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -43,22 +45,19 @@ public class UserHandler implements CommandHandler {
      * GET 요청을 처리하는 메소드
      */
     private String handleGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	String accessType = request.getParameter("accessType");
+        if ("showResetForm".equals(accessType)) {
+            return processShowResetForm(request, response);
+        }
+        
         HttpSession session = request.getSession();
 
         // 이미 로그인된 사용자가 user.do에 접근 시 메인으로 리다이렉트
         if (session.getAttribute("userInfo") != null) {
             response.sendRedirect(request.getContextPath() + "/vibesync/main.do");
             return null;
-        }
-
-        // JavaScript를 통해 직접 로그인 페이지로 이동된 경우, 이전 페이지 주소 저장
-        if (session.getAttribute("referer") == null) {
-            String httpReferer = request.getHeader("Referer");
-            if (httpReferer != null && !httpReferer.contains("/user.do")) {
-                session.setAttribute("referer", httpReferer);
-            }
-        }
-        
+        }        
+                
         // 자동 로그인 쿠키 확인
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -96,6 +95,10 @@ public class UserHandler implements CommandHandler {
                 return processSignUp(request, response);
             case "logout":
                 return processLogout(request, response);
+            case "requestPasswordReset":
+                return processRequestPasswordReset(request, response);
+            case "performPasswordReset":
+                return processPerformPasswordReset(request, response);
             default:
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid AccessType.");
                 return null;
@@ -122,10 +125,10 @@ public class UserHandler implements CommandHandler {
     }
     
     /**
-     * ★★★ 로그인 성공 시 모든 공통 작업을 처리하는 핵심 메소드 ★★★
+     * 로그인 성공 시 모든 공통 작업을 처리하는 핵심 메소드 
      */
     private String processSuccessfulLogin(HttpServletRequest request, HttpServletResponse response, UserVO userInfo) throws IOException {
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         String userEmail = userInfo.getEmail();
 
         // 1. 중복 로그인 방지 로직
@@ -226,7 +229,7 @@ public class UserHandler implements CommandHandler {
         session.invalidate();
 
         // 로그아웃 후 login.jsp로 리디렉션
-        response.sendRedirect(request.getContextPath() + "/vibesync/user.do");
+        response.sendRedirect(request.getContextPath() + "/vibesync/user.do?from=logout");
         return null;
     }
 
@@ -262,6 +265,7 @@ public class UserHandler implements CommandHandler {
      */
     private void redirectToPreviousOrMainPage(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String referer = (String) session.getAttribute("referer");
+        System.out.println("[redirectToPreviousOrMainPage] referer 값 확인: " + referer);
         if (referer != null && !referer.isEmpty() && !referer.contains("index.html")) {
             session.removeAttribute("referer");
             response.sendRedirect(referer);
@@ -269,5 +273,62 @@ public class UserHandler implements CommandHandler {
             String mainPage = request.getContextPath() + "/vibesync/main.do";
             response.sendRedirect(mainPage);
         }
+    }
+    
+    private String processRequestPasswordReset(HttpServletRequest request, HttpServletResponse response) {
+        String email = request.getParameter("email");
+        
+        // 이메일 링크에 포함될 현재 서버의 컨텍스트루트
+        String requestURL = request.getRequestURL().toString(); // 실제로 브라우저 주소창에 입력한 전체 URL. ? 제외
+        String contextPath = request.getContextPath();
+        String baseURL = requestURL.substring(0, requestURL.indexOf(contextPath) + contextPath.length());
+
+        try {
+            passwordResetService.initiateReset(email, baseURL);
+            request.setAttribute("loginMessage", "If an account with that email exists, a reset link has been sent.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("loginMessage", "If an account with that email exists, a reset link has been sent.");
+        }
+        
+        return "login.jsp";
+    }
+    
+    /**
+     * 이메일 링크를 통해 들어온 새 비밀번호 설정 페이지 표시 요청(GET)을 처리합니다.
+     */
+    private String processShowResetForm(HttpServletRequest request, HttpServletResponse response) {
+        String token = request.getParameter("token");
+        
+        if (token == null || token.isEmpty()) {
+            request.setAttribute("loginErrorForDisplay", "Invalid access token.");
+            return "login.jsp";
+        }
+        
+        request.setAttribute("token", token);
+        return "resetPasswordForm.jsp"; // 새 비밀번호 입력 폼 JSP로 포워딩
+    }
+    
+    /**
+     * 새 비밀번호를 입력하고 제출한 POST 요청을 처리합니다.
+     */
+    private String processPerformPasswordReset(HttpServletRequest request, HttpServletResponse response) {
+        String token = request.getParameter("token");
+        String newPassword = request.getParameter("newPassword");
+        
+        try {
+            boolean success = passwordResetService.finalizeReset(token, newPassword);
+            
+            if (success) {
+                request.setAttribute("signupSuccessForDisplay", "Password has been reset successfully. Please log in.");
+            } else {
+                request.setAttribute("loginErrorForDisplay", "Invalid or expired link. Please try again.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("loginErrorForDisplay", "An error occurred while resetting the password. Please try again later.");
+        }
+        
+        return "login.jsp";
     }
 }

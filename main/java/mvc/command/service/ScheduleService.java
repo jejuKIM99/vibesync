@@ -10,7 +10,9 @@ import java.util.List;
 
 import javax.naming.NamingException;
 
-import com.util.ConnectionProvider; 
+import com.util.ConnectionProvider;
+import com.util.JdbcUtil;
+
 import mvc.domain.dto.CalendarEventDTO;
 import mvc.domain.vo.ScheduleVO;
 import mvc.persistence.dao.ScheduleDAO;
@@ -30,9 +32,9 @@ public class ScheduleService {
      * @throws Exception
      */
     public List<CalendarEventDTO> getMonthlySchedules(int acIdx, Timestamp start, Timestamp end) throws Exception {
-        Connection conn = null; // finally 블록에서 conn.close()를 위해 try-with-resources 밖에서 선언
+        Connection conn = null;
         try {
-            conn = ConnectionProvider.getConnection(); // ConnectionProvider.getConnection() 호출
+            conn = ConnectionProvider.getConnection(); 
             ScheduleDAO scheduleDAO = new ScheduleDAOImpl(conn);
 
             // 1. DAO로부터 DB 데이터(VO)를 받습니다.
@@ -42,8 +44,7 @@ public class ScheduleService {
             List<CalendarEventDTO> eventsForJson = new ArrayList<>();
 
             // 3. VO 리스트를 DTO 리스트로 변환합니다.
-            // === 이 부분을 수정해야 합니다: scheduleVOs 대신 schedulesFromDB 사용 ===
-            for (ScheduleVO vo : schedulesFromDB) { // <--- 여기가 잘못되었습니다. schedulesFromDB로 변경해야 합니다.
+            for (ScheduleVO vo : schedulesFromDB) { 
                 CalendarEventDTO dto = CalendarEventDTO.builder()
                         .schedule_idx(vo.getSchedule_idx())
                         .title(vo.getTitle())
@@ -53,6 +54,8 @@ public class ScheduleService {
                         .color(vo.getColor())
                         .ac_idx(vo.getAc_idx())
                         .description(vo.getDescription())
+                        .durationEditable(true)
+                        .allDay(false)
                         .build();
                 eventsForJson.add(dto);
             }
@@ -62,7 +65,7 @@ public class ScheduleService {
         } finally {
             if (conn != null) {
                 try {
-                    conn.close(); // 연결 닫기
+                	JdbcUtil.close(conn);
                 } catch (Exception e) {
                     System.err.println("DB 연결 닫는 중 오류 발생: " + e.getMessage());
                     e.printStackTrace();
@@ -78,26 +81,13 @@ public class ScheduleService {
             ScheduleDAO scheduleDAO = new ScheduleDAOImpl(conn);
             return scheduleDAO.findSchedulesByDate(acIdx, dateStr);
         } catch (SQLException | NamingException e) {
-            e.printStackTrace(); // 실제 운영에서는 로깅 프레임워크 사용
+            e.printStackTrace(); 
             throw e;
         } finally {
             if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                JdbcUtil.close(conn);
             }
         }
-    }
-    
-
-    // Timestamp를 "yyyy-MM-dd'T'HH:mm:ss" 형식의 문자열로 변환하는 헬퍼 메소드
-    private String formatTimestamp(Timestamp ts) {
-    	 if (ts == null) return null;
-         // 기존 "MMM d, yyyy, h:mm:ss a" 형식 대신 ISO 8601 형식으로 변경
-         // 예: "2025-06-08T16:00:00"
-         return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(ts);
     }
     
     public boolean addSchedule(ScheduleVO schedule) throws Exception {
@@ -117,7 +107,7 @@ public class ScheduleService {
             if (conn != null) conn.rollback();
             throw e;
         } finally {
-            if (conn != null) conn.close();
+            if (conn != null) JdbcUtil.close(conn);
         }
         return false;
     }
@@ -139,7 +129,7 @@ public class ScheduleService {
             if (conn != null) conn.rollback();
             throw e;
         } finally {
-            if (conn != null) conn.close();
+            if (conn != null) JdbcUtil.close(conn);
         }
         return false;
     }
@@ -164,7 +154,7 @@ public class ScheduleService {
             if (conn != null) conn.rollback();
             throw e;
         } finally {
-            if (conn != null) conn.close();
+            if (conn != null) JdbcUtil.close(conn);
         }
     }
 }

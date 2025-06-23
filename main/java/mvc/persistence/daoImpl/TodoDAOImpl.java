@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.util.JdbcUtil;
+
 import mvc.domain.vo.TodoVO;
 import mvc.persistence.dao.TodoDAO;
 
@@ -45,8 +48,8 @@ public class TodoDAOImpl implements TodoDAO {
                 todos.add(todo);
             }
         } finally {
-            if (rs != null) rs.close();
-            if (pstmt != null) pstmt.close();
+            if (rs != null) JdbcUtil.close(rs);
+            if (pstmt != null) JdbcUtil.close(pstmt);
         }
         return todos;
     }
@@ -84,8 +87,7 @@ public class TodoDAOImpl implements TodoDAO {
     
     @Override
     public int addTodo(TodoVO todo) throws SQLException {
-        // status는 기본값 0(미완료)으로, created_at은 DB 기본값(SYSDATE)으로 자동 생성되도록 합니다.
-        // todo_seq는 Oracle의 시퀀스 예시입니다.
+        // status는 기본값 0(미완료)으로, created_at은 DB 기본값(SYSDATE)으로 자동 생성.
         String sql = "INSERT INTO todolist (todo_idx, text, ac_idx, status, created_at, todo_group, color) VALUES (todolist_seq.NEXTVAL, ?, ?, 0, SYSDATE,?,?)";
         
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -93,8 +95,7 @@ public class TodoDAOImpl implements TodoDAO {
             pstmt.setInt(2, todo.getAc_idx());
             pstmt.setString(3, todo.getTodo_group());
             pstmt.setString(4, todo.getColor());
-            // INSERT, UPDATE, DELETE는 executeUpdate()를 사용합니다.
-            // 성공적으로 추가된 행(row)의 개수를 반환합니다. (보통 1)
+           
             return pstmt.executeUpdate();
         }
     }

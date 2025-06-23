@@ -34,7 +34,7 @@ public class SidebarHandler implements CommandHandler {
             doGet(request, response);
         } else if ("POST".equalsIgnoreCase(method)) {
         	response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-        	// doPost(request, response);
+            // doPost(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         }
@@ -43,7 +43,7 @@ public class SidebarHandler implements CommandHandler {
 	}
 
 	private void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/json");
+		response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
         PrintWriter out = response.getWriter();
@@ -78,9 +78,9 @@ public class SidebarHandler implements CommandHandler {
         }
 	}
 
-/*
+	/*
 	private void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
+		
 	}
-*/
+	*/
 }
