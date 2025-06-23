@@ -23,6 +23,7 @@ public class FollowService {
     public FollowService() {
     }
 
+
     //팔로우 상태를 토글.
     public Map<String, Object> toggleFollow(int followerAcIdx, int targetUserAcIdx) throws SQLException {
         Map<String, Object> result = new HashMap<>();
@@ -66,7 +67,6 @@ public class FollowService {
             // 핸들러에서 오류 메시지를 포함하여 최종 JSON 응답을 생성하도록 예외를 다시 던짐
             throw e;
         } catch (NamingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
             if (conn != null) {
@@ -77,7 +77,7 @@ public class FollowService {
                 } catch (SQLException e) {
                     System.err.println("Failed to reset auto-commit in FollowService: " + e.getMessage());
                 } finally {
-                    conn.close();
+                    JdbcUtil.close(conn);
                 }
             }
         }
@@ -97,13 +97,13 @@ public class FollowService {
 			e.printStackTrace();
 		} finally {
             if (conn != null) {
-            	conn.close();
+            	JdbcUtil.close(conn);
             }
         }
 		return isUserFollowing;
     }
-
-    // 팔로잉 수 조회
+    
+ // 팔로잉 수 조회
     public int getFollowingCount(int userIdx) throws SQLException {
     	int followingCnt = 0;
     	

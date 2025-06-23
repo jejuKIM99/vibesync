@@ -31,16 +31,16 @@ public class FollowDAOImpl implements FollowDAO {
 	    ResultSet rs = null;
 	    
 	    String sql = " SELECT " + 
-	    			 " u.ac_idx, u.nickname, u.img, u.category_idx, " +
-	    			 " CASE " +
-	    			 " 		WHEN f_reverse.ac_following IS NOT NULL THEN 1 " +
-	    			 " 		ELSE 0 " +
-	    			 " END AS followedByCurrentUser " +
-	    			 " FROM follows f " +
-	    			 " JOIN userAccount u ON u.ac_idx = f.ac_follow " +
-	    			 " LEFT JOIN follows f_reverse ON f_reverse.ac_follow = f.ac_following " +
-	    			 " 							   AND f_reverse.ac_following = f.ac_follow " +
-	    			 " WHERE f.ac_following = ? ";
+   			 " u.ac_idx, u.nickname, u.img, u.category_idx, " +
+   			 " CASE " +
+   			 " 		WHEN f_reverse.ac_following IS NOT NULL THEN 1 " +
+   			 " 		ELSE 0 " +
+   			 " END AS followedByCurrentUser " +
+   			 " FROM follows f " +
+   			 " JOIN userAccount u ON u.ac_idx = f.ac_follow " +
+   			 " LEFT JOIN follows f_reverse ON f_reverse.ac_follow = f.ac_following " +
+   			 " 							   AND f_reverse.ac_following = f.ac_follow " +
+   			 " WHERE f.ac_following = ? ";
 	    
 	    try {
 			pstmt = conn.prepareStatement(sql);

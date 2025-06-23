@@ -28,7 +28,7 @@ public class ScheduleHandler implements CommandHandler {
         UserVO loginUser = (UserVO) session.getAttribute("userInfo");
         int acIdx = loginUser.getAc_idx();
 
-        // ✨ 1. action 파라미터를 받아 어떤 기능인지 확인합니다.
+        // action 파라미터
         String action = request.getParameter("action");
         System.out.println("[Handler] Received action parameter: '" + action + "'"); 
 
@@ -41,37 +41,35 @@ public class ScheduleHandler implements CommandHandler {
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create(); // 자바의 날짜/시간 객체(Timestamp, Date)를 JSON 문자열로 변환할 때, 형식을 지정
         
         try {
-            // ✨ 2. action 값에 따라 다른 로직을 실행합니다.
             if ("getMonthlySchedules".equals(action)) {
                 // 월별 일정 조회 로직
             	String startParam = request.getParameter("start"); // String 그대로 받음
                 String endParam = request.getParameter("end");   // String 그대로 받음
                 
-             // ✨ FullCalendar가 보낸 ISO 문자열을 Timestamp 객체로 변환합니다.
+                // FullCalendar가 보낸 ISO 문자열을 Timestamp 객체로 변환합니다.
                 Timestamp start = Timestamp.valueOf(startParam.replace("T", " ").substring(0, 19));
                 Timestamp end = Timestamp.valueOf(endParam.replace("T", " ").substring(0, 19));
 
-                // ✨ 수정한 서비스 메소드를 호출합니다.
                 List<CalendarEventDTO> events = scheduleService.getMonthlySchedules(acIdx, start, end);
                 out.print(gson.toJson(events));
 
             } else if ("getDailySchedules".equals(action)) {
                 String dateStr = request.getParameter("date");
                 List<ScheduleVO> dailySchedules = scheduleService.getDailySchedules(acIdx, dateStr);
-                // ✨ 포맷이 지정된 Gson 객체가 ScheduleVO의 Timestamp 필드를 올바르게 변환해줍니다.
                 out.print(gson.toJson(dailySchedules));
+                
             }else if ("addSchedule".equals(action)) {
-                    // 1. 요청 파라미터를 VO 객체에 담습니다.
+                    
                     ScheduleVO newSchedule = ScheduleVO.builder()
                             .title(request.getParameter("title"))
                             .description(request.getParameter("description"))
                             .start_time(Timestamp.valueOf(request.getParameter("start_time")))
                             .end_time(Timestamp.valueOf(request.getParameter("end_time")))
                             .color(request.getParameter("color"))
-                            .ac_idx(acIdx) // 세션에서 가져온 사용자 ID
+                            .ac_idx(acIdx) 
                             .build();
                     
                     // 2. 서비스를 호출하여 일정을 추가합니다.
@@ -85,6 +83,7 @@ public class ScheduleHandler implements CommandHandler {
                 String dateStr = request.getParameter("date");
                 List<ScheduleVO> dailySchedules = scheduleService.getDailySchedules(acIdx, dateStr);
                 out.print(gson.toJson(dailySchedules));
+                
             }else if ("updateSchedule".equals(action)) {
                 ScheduleVO updatedSchedule = ScheduleVO.builder()
                         .schedule_idx(Integer.parseInt(request.getParameter("schedule_idx")))

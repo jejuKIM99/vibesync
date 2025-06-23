@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.util.JdbcUtil;
+
 import mvc.domain.dto.CalendarEventDTO;
 import mvc.domain.vo.ScheduleVO;
 import mvc.persistence.dao.ScheduleDAO;
@@ -35,7 +37,6 @@ public class ScheduleDAOImpl implements ScheduleDAO {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    // DB 데이터를 VO 객체에만 매핑합니다. (DTO 생성 X)
                     ScheduleVO schedule = ScheduleVO.builder()
                             .schedule_idx(rs.getInt("schedule_idx"))
                             .title(rs.getString("title"))
@@ -82,8 +83,10 @@ public class ScheduleDAOImpl implements ScheduleDAO {
                 schedules.add(schedule);
             }
         } finally {
-        	 if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-             if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+        	 if (rs != null)
+				JdbcUtil.close(rs);
+             if (pstmt != null)
+				JdbcUtil.close(pstmt);
         }
         return schedules;
     }

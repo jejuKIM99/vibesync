@@ -23,12 +23,12 @@ public class WorkspaceHandler implements CommandHandler {
 	private WorkspaceService workspaceService;
     
     public WorkspaceHandler() {
-        this.workspaceService = new WorkspaceService(); // 생성자에서 초기화
+        this.workspaceService = new WorkspaceService(); 
     }
 
     @Override
     public String process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setContentType("text/html; charset=UTF-8");
+        response.setContentType("text/html; charset=UTF-8");	
        
         // 현재 링크 위치 : 이후 페이지 리디렉션에 활용
         String contextPath = request.getContextPath();
