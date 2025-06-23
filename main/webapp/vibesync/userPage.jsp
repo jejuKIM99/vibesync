@@ -536,7 +536,7 @@
                     success: function(response) {
                         if (response.success) {
                             alert('비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요.');
-                            location.href = '${pageContext.request.contextPath}/vibesync/user.do';
+                            location.href = '${pageContext.request.contextPath}/vibesync/user.do?accessType=logout';
                         } else {
                             $(this).find('.setting-error-msg').text(response.message || '비밀번호 변경에 실패했습니다.');
                         }
@@ -684,15 +684,15 @@
     }
 
     function showCombinedSettingsView() {
-        const defaultImgSrc = '<%=contextPath %>/vibesync/sources/default/default_user.jpg';
-        const currentImgSrc = currentUserData && currentUserData.img ? '${pageContext.request.contextPath}/' + currentUserData.img : defaultImgSrc;
+        const defaultImgSrc = '<%=contextPath %>/sources/default/default_user.jpg';
+        const currentImgSrc = currentUserData && currentUserData.img ? '${pageContext.request.contextPath}/vibesync/' + currentUserData.img : defaultImgSr
         
         const combinedHtml = `
             <h4>계정 설정</h4>
             
             <h5>프로필 사진 변경</h5>
             <form id="profileImageForm">
-                <img id="profileImagePreview" src="/vibesync\${currentImgSrc}" alt="프로필 미리보기">
+                <img id="profileImagePreview" src="\${currentImgSrc}" alt="프로필 미리보기">
                 <input type="file" name="profileImage" id="profileImageInput" accept="image/*" required>
                 <button type="submit">프로필 사진 저장</button>
             </form>
