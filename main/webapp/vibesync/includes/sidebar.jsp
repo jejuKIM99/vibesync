@@ -8,7 +8,6 @@
 %>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="<%= request.getContextPath() %>/vibesync/css/sidebar.css">
 
 <style>
 .notion-sidebar {
@@ -561,7 +560,7 @@ input:focus {
         border-radius: 11px;
         animation: fadeInUp 0.26s;
         border: 2px solid var(--border-color);
-        margin-bottom: 18px;
+        margin-bottom: 5px;
         transition: background-color 0.14s ease-in-out;
     }  
     .message_item:last-child {
@@ -647,129 +646,25 @@ input:focus {
         margin-left: 5px;
         user-select: none;
     }
+</style>
 
-/* 채팅방 */
-    #chatRoomModal {
-	  display: none; justify-content: center; align-items: center;
-	  position: fixed; z-index: 9999; top: 0; left: 0;
-	  width: 100vw; height: 100vh; background: rgba(0,0,0,0.6);
-	  backdrop-filter: blur(4px);
-    }
-    
-    .modal-follow-content.chatRoom-modal-content {
-	  position: relative; max-width: 430px; min-width: 350px;
-	  width: 90%; background-color: var(--background-color);
-	  padding: 0; border-radius: 16px; color: var(--font-color);
-	  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
-	  animation: fadeInUp 0.3s ease-out; display: flex;
-	  flex-direction: column; max-height: 85vh;
-    }
-
-    #chatRoomTitle {
-        padding: 18px 24px 16px 24px;
-        margin: 0;
-        text-align: center;
-        border-bottom: 1.5px solid #e3ecf6;
-        flex-shrink: 0;
-        font-size: 17px;
-        font-weight: 700;
-    }
-    
-    #chatRoomHistory {
-        padding: 10px;
-        overflow-y: auto;
-        flex-grow: 1;
-    }
-    .chatRoom-container {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-    .chatRoom-bubble {
-        max-width: 70%;
-        padding: 10px 14px;
-        border-radius: 18px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        text-align: left;
-        word-break: keep-all;
-        overflow-wrap: break-word;
-        white-space: normal;
-    }
-    .chatRoom-bubble.chatRoom-bubble-me {
-        align-self: flex-end;
-        background-color: #FFFBE7;
-        border: 1px solid #FFEAC4;
-        border-bottom-right-radius: 4px;
-    }
-    .chatRoom-bubble.chatRoom-bubble-other {
-        align-self: flex-start;
-        background-color: #fff;
-        border: 1px solid #eef1f5;
-        border-bottom-left-radius: 4px;
-    }
-    .chatRoom-bubble-text {
-        font-size: 14px;
-        color: #000;
-        margin: 0 0 4px 0;
-        padding: 0;
-    }
-    .chatRoom-bubble-time {
-        font-size: 11px;
-        color: #999;
-        text-align: right;
-    }
-    .chatRoom-input-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 12px;
-        background: #fff;
-        border-radius: 12px;
-        border: 1.5px solid #e2e5ea;
-        padding: 7px 12px;
-        box-shadow: 0 1px 4px rgba(80,110,140,0.08);
-        flex-shrink: 0;
-    }
-    #chatRoomInput {
-        flex: 1;
-        border: none;
-        font-size: 15px;
-        color: #23272f;
-        outline: none;
-        padding: 8px 0;
-        height: 38px;
-        background: none;
-    }
-    #chatRoomInput::placeholder {
-        color: #b7b8bd;
-        font-size: 14px;
-    }
-    #sendMsgBtn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 38px;
-        height: 38px;
-        background: #7fa6c9;
-        border: none;
-        border-radius: 50%;
-        transition: background 0.16s;
-        cursor: pointer;
-        padding: 0;
-    }
-    #sendMsgBtn:hover {
-        background: #45607d;
-    }
-    .chatRoom-date-separator {
-        display: inline-block;
-        padding: 4px 12px;
-        margin: 16px auto;
-        font-size: 12px;
-        color: #666;
-        background: #e9ecef;
-        border-radius: 12px;
-        text-align: center;
-    }
+<style> /* Chat */
+	#chatRoomModal { display: none; justify-content: center; align-items: center; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+	.modal-follow-content.chatRoom-modal-content { position: relative; max-width: 430px; min-width: 350px; width: 90%; background-color: var(--background-color); padding: 0; border-radius: 16px; color: var(--font-color); box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3); animation: fadeInUp 0.3s ease-out; display: flex; flex-direction: column; max-height: 85vh; }
+	#chatRoomTitle { padding: 18px 24px 16px 24px; margin: 0; text-align: center; border-bottom: 1.5px solid #e3ecf6; flex-shrink: 0; font-size: 17px; font-weight: 700; }
+	#chatRoomHistory { padding: 10px; overflow-y: auto; flex-grow: 1; }
+	.chatRoom-container { display: flex; flex-direction: column; gap: 12px; }
+	.chatRoom-bubble { max-width: 70%; padding: 10px 14px; border-radius: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); text-align: left; word-break: keep-all; overflow-wrap: break-word; white-space: normal; }
+	.chatRoom-bubble-me { align-self: flex-end; background-color: #FFFBE7; border: 1px solid #FFEAC4; border-bottom-right-radius: 4px; }
+	.chatRoom-bubble-other { align-self: flex-start; background-color: #fff; border: 1px solid #eef1f5; border-bottom-left-radius: 4px; }
+	.chatRoom-bubble-text { font-size: 14px; color: #000; margin: 0 0 4px 0; padding: 0; }
+	.chatRoom-bubble-time { font-size: 11px; color: #999; text-align: right; }
+	.chatRoom-input-row { display: flex; align-items: center; gap: 8px; margin: 12px; background: #fff; border-radius: 12px; border: 1.5px solid #e2e5ea; padding: 7px 12px; box-shadow: 0 1px 4px rgba(80,110,140,0.08); flex-shrink: 0; }
+	#chatRoomInput { flex: 1; border: none; font-size: 15px; color: #23272f; outline: none; padding: 8px 0; height: 38px; background: none; }
+	#chatRoomInput::placeholder { color: #b7b8bd; font-size: 14px; }
+	#sendMsgBtn { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; background: #fe4f4f; border: none; border-radius: 50%; transition: background 0.16s; cursor: pointer; padding: 0; }
+	#sendMsgBtn:hover { background: #fe1717; }
+	.chatRoom-date-separator { display: inline-block; padding: 4px 12px; margin: 16px auto; font-size: 12px; color: var(--chat-date-font); background: var(--chat-date-back); border-radius: 12px; text-align: center; }
 </style>
 
 <button id="toggle-btn">☰</button>
@@ -1046,9 +941,9 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     if (response.following) { // 서버 응답에 따라 상태 변경
-                        $button.removeClass('unfollow').text('팔로잉');
+                        $button.removeClass('unfollow').text('팔로잉').css('background','#f44336');
                     } else {
-                        $button.addClass('unfollow').text('팔로우');
+                        $button.addClass('unfollow').text('팔로우').css('background', '#4CAF50');
                     }
                     // 사이드바의 팔로워/팔로잉 카운트 업데이트
                     updateFollowCount();
@@ -1081,6 +976,14 @@ $(document).ready(function() {
     // 모달 닫기 버튼
     $(document).on('click', '#followListModal .close-modal', function() {
         closeFollowListModal();
+    });
+    
+    // 채팅방에서 메시지 전송 (전송 버튼 말고 Enter키로도 전송 가능)
+    $("#chatRoomInput").on("keydown", function(event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            sendChatRoomMessage();
+        }
     });
     
 });
@@ -1147,7 +1050,7 @@ function loadFollowListData(tabType) {
     const listContainer = $('#followListContent');
     listContainer.empty().html('<p style="text-align:center; padding: 20px;">로딩 중...</p>'); // 로딩 스피너
 
-    const basePath = '<%= contextPath %>/sources/';
+    const basePath = '<%= contextPath %>/';
 
     let apiUrl;
     let requestData;
@@ -1181,7 +1084,7 @@ function loadFollowListData(tabType) {
                     return;
                 }
                 list.forEach(user => {
-                	const profileImg = user.profile_img != null ? user.profile_img : '${pageContext.request.contextPath}/vibesync/sources/default/default_user.jpg';
+                	const profileImg = user.profile_img != null ? `<%= request.getContextPath() %>/vibesync/\${user.profile_img}` : `\${basePath}sources/default/default_user.jpg`;
                     const isFollowing = user.followedByCurrentUser;
                     const followButtonText = isFollowing ? '팔로잉' : '팔로우';
                     const followButtonClass = isFollowing ? 'follow-toggle-btn unfollow' : 'follow-toggle-btn';
@@ -1217,7 +1120,7 @@ function loadFollowListData(tabType) {
                     return;
                 }
                 messageList.forEach(message => {
-                	let profileImg = message.other.profile_img != null ? message.other.profile_img : '${pageContext.request.contextPath}/vibesync/sources/default/default_user.jpg';
+                	let profileImg = message.other.profile_img != null ? `<%= request.getContextPath() %>/vibesync/\${message.other.profile_img}` : `\${basePath}sources/default/default_user.jpg`;
                 	
                     let profileImgHtml = message.other.profile_img ?
                         `<img src="\${profileImg}" alt="profile">` :
