@@ -76,38 +76,51 @@ public class SettingService {
      * @param inputPassword 사용자가 입력한 비밀번호
      * @return 'success' (boolean)와 'userData' (UserDetailVO)를 담은 Map
      */
-    public Map<String, Object> checkUserPasswordAndGetData(int acIdx, String inputPassword) throws Exception {
-        Map<String, Object> result = new HashMap<>();
-        Connection conn = null;
-        try {
+   public Map<String, Object> checkUserPasswordAndGetData(int acIdx, String inputPassword) throws Exception {
+       Map<String, Object> result = new HashMap<>();
+       Connection conn = null;
+       try {
            conn = ConnectionProvider.getConnection();
-            UserAccountDAO dao = new UserAccountDAOImpl(conn);
-            UserDetailVO user = dao.getUserAccountById(acIdx);
+           UserAccountDAO dao = new UserAccountDAOImpl(conn);
+           UserDetailVO user = dao.getUserAccountById(acIdx);
 
-            if (user == null) {
-                result.put("success", false);
-                result.put("message", "사용자 정보를 찾을 수 없습니다.");
-                return result;
-            }
+           if (user == null) {
+               result.put("success", false);
+               result.put("message", "사용자 정보를 찾을 수 없습니다.");
+               return result;
+           }
 
-            // 입력된 비밀번호를 DB의 salt 값으로 해싱
-            String hashedInputPassword = PasswordUtil.hashPassword(inputPassword, user.getSalt());
+           // 입력된 비밀번호를 DB의 salt 값으로 해싱
+           String hashedInputPassword = PasswordUtil.hashPassword(inputPassword, user.getSalt());
 
-            if (hashedInputPassword.equals(user.getPw())) {
-                result.put("success", true);
-                // 보안을 위해 비밀번호와 salt 정보는 제거하고 반환
-                user.setPw(null);
-                user.setSalt(null);
-                result.put("userData", user);
-            } else {
-                result.put("success", false);
-                result.put("message", "비밀번호가 일치하지 않습니다.");
-            }
-        } finally {
+           if (hashedInputPassword.equals(user.getPw())) {
+               result.put("success", true);
+               
+               // [수정된 핵심 로직]
+               // UserDetailVO를 직접 반환하는 대신, 필요한 데이터만 Map에 담아서 반환합니다.
+               Map<String, Object> userData = new HashMap<>();
+               userData.put("ac_idx", user.getAc_idx());
+               userData.put("email", user.getEmail());
+               userData.put("nickname", user.getNickname());
+               userData.put("img", user.getImg());
+               userData.put("name", user.getName());
+               
+               // kakao_auth_id 필드를 명시적으로 포함시킵니다.
+               // 이 필드의 값이 null이더라도, JSON 결과에 "kakao_auth_id": null 이 포함됩니다.
+               userData.put("kakao_auth_id", user.getKakao_auth_id());
+System.out.println(" ---------user.getKakao_auth_id() : " +  user.getKakao_auth_id());
+               result.put("userData", userData);
+               System.out.println("--------result : " + result);
+               
+           } else {
+               result.put("success", false);
+               result.put("message", "비밀번호가 일치하지 않습니다.");
+           }
+       } finally {
            if (conn != null) JdbcUtil.close(conn);
-        }
-        return result;
-    }
+       }
+       return result;
+   }
 
     /**
      * [수정됨] Base64로 인코딩된 프로필 이미지를 업데이트하는 비즈니스 로직

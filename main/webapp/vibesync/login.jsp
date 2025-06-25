@@ -112,6 +112,13 @@
 
 						<button type="submit" id="loginBtn">Login</button>
 					</form>
+					<div id="social-login-container">
+						<a href="https://kauth.kakao.com/oauth/authorize?client_id=5552b4df7e716e5ec496a4a58b2cf809&redirect_uri=http://localhost:8081/vibesync/vibesync/auth/kakao/callback.do&response_type=code&prompt=login" class="kakao-login-btn">
+						    <img id="kakao_img" src="<%=request.getContextPath()%>/vibesync/sources/icons/KakaoTalk_logo.svg" alt="카카오 로그인">
+							<span>KAKAO LOGIN</span>
+						</a>
+					</div>
+					
 					<div class="links">
 						Forget your Password? <a href="#">Reset Password</a>
 					</div>

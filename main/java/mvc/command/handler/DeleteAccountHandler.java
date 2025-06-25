@@ -22,7 +22,7 @@ public class DeleteAccountHandler implements CommandHandler {
         }
 
         try {
-            String rootPath = request.getServletContext().getRealPath("/") + "vibesync/";
+        	String rootPath = request.getServletContext().getRealPath("/") + "vibesync/";
             settingService.deleteUserAccount(loginUser.getAc_idx(), rootPath);
 
             // 세션 무효화

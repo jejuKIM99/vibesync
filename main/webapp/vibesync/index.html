@@ -9,389 +9,57 @@
   <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
   <link rel="icon" href="./sources/favicon.ico" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      font-family: "National Park", sans-serif;
-      width: 100%;
-      height: 100%;
-      overflow-x: hidden;
-      overflow-y: scroll;
-      scroll-behavior: smooth;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      scroll-snap-type: y mandatory;
-    }
-    body::-webkit-scrollbar {
-      display: none;
-    }
-    body {
-    background-color: #000310;
-    color: #fff;
-    overflow: hidden;
-    }
-
-
-    .highlight {
-      background: linear-gradient(90deg, #9b59b6, #3498db, #2ecc71);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: bold;
-      font-size: 1.05em;
-    }
-
-    .slo_highlight {
-      background: linear-gradient(90deg, #9b59b6, #3498db, #2ecc71);
-      font-weight: bold;
-      border-radius: 8px;
-    }
-
-    nav {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      background: rgba(0,0,0,0.7);
-      box-shadow: 0px 0px 14px #ffffff91;
-      color: #fff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      z-index: 1000;
-    }
-    @media screen and (max-width: 536px) {
-      nav{
-        flex-direction: column-reverse;
-        gap: 10px;
-      }
-      .auth-buttons{
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        border-bottom: solid 2px #fff;
-      }
-      .auth-buttons button{
-        width: 100%;
-      }
-    }
-
-    nav .menu {
-      display: flex;
-      list-style: none;
-      gap: 20px;
-    }
-    nav .menu li a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: clamp(14px, 1vw, 20px);
-    }
-
-    nav .menu li a:hover {
-      background: linear-gradient(90deg, #9b59b6, #3498db, #2ecc71);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    nav .auth-buttons button {
-      padding: 6px 12px;
-      background: transparent;
-      border: none;
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-family: "Cal Sans", sans-serif;
-    }
-    nav .auth-buttons button:hover {
-      background: linear-gradient(90deg, #9b59b6, #3498db, #2ecc71);
-    }
-
-    section {
-      width: 100%;
-      min-height: 100vh;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-top: 80px;
-      scroll-snap-align: start;
-    }
-
-    #section1 {
-      height: 100vh;
-      z-index: 1;
-    }
-    #section1 #background_interaction {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      top: 0;
-      left: 0;
-      z-index: -1;
-    }
-    .black_blur {
-      top: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #000;
-      position: absolute;
-      z-index: -1;
-      opacity: 0.4;
-    }
-    #section1 .overlay {
-      max-width: 1200px;
-      text-align: center;
-      color: #fff;
-      padding: 20px;
-    }
-    #slogan {
-      font-weight: bold;
-      font-size: 2rem;
-      white-space: pre-wrap;
-    }
-    #logo1 {
-      font-family: "Cal Sans", sans-serif;
-      margin-top: 20px;
-      font-size: 3rem;
-      font-weight: bold;
-      opacity: 0;
-      transition: opacity 1s;
-    }
-
-    #section2, #section3, #section4 {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 40px;
-    }
-    .content {
-      width: 90%;
-      max-width: 1200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .se2_con{
-      display: flex;
-      align-items: center;
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-    #section2 .logo {
-      opacity: 0;
-      transform: translateY(-20px);
-      transition: opacity 1s, transform 1s;
-      flex: 1 1 300px;
-      text-align: center;
-    }
-    #section2 .intro {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 1s 0.5s, transform 1s 0.5s;
-      flex: 1 1 400px;
-    }
-    #section2 .intro h2,
-    #section2 .intro p {
-      margin-bottom: 10px;
-    }
-
-    #section3 .text-list {
-      max-width: 586px;
-      margin-bottom: 40px;
-      width: 100%;
-    }
-    #section3 .text-list ul {
-      list-style: disc inside;
-      font-size: min(16px, 3.6vw);
-      line-height: 1.6;
-    }
-
-    .se4_con{
-      flex-direction: row;
-      display: flex  ;
-      align-items: center;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    #section4 .team-img,
-    #section4 .team-text {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 1s, transform 1s;
-    }
-
-    .team-img {
-      flex: 1 1 300px;
-      max-width: min(500px,76vw);
-      width: 50%;
-    }
-    .team-text {
-      text-align: left;
-      flex: 1 1 400px;
-      padding: 20px;
-      font-size: min(16px, 3.6vw);
-      line-height: 1.6;
-    }
-
-    .Purpose_p {
-      font-family: "Cal Sans", sans-serif;
-      text-align: center;
-      font-size: min(40px, 10vw);
-      margin-bottom: 20px;
-      font-weight: bold;
-    }
-
-    .slider-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 1200px;
-      overflow: hidden;
-      margin-bottom: 40px;
-    }
-
-    .slider-wrapper::before,
-    .slider-wrapper::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 80px;
-      pointer-events: none;
-      z-index: 10;
-    }
-    .slider-wrapper::before {
-      left: 0;
-      background: linear-gradient(to right, #000310, rgba(255,255,255,0));
-    }
-    .slider-wrapper::after {
-      right: 0;
-      background: linear-gradient(to left, #000310, rgba(255,255,255,0));
-    }
-
-    .swiper-container {
-      width: 100%;
-    }
-    .swiper-wrapper {
-      align-items: center;
-    }
-    .swiper-slide {
-      display: flex;
-      align-items: center;
-      width: 300px;
-      height: 169px;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .swiper-slide img{
-      width: 100%;
-      border-radius: 8px;
-    }
-
-    footer {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 20px;
-      text-align: center;
-      color: #fff;
-      scroll-snap-align: start;
-      z-index: 1;
-    }
-
-    .footer_member_warpper{
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 30px;
-    }
-
-    .footer_member .p_role{
-      font-size: .8em;
-    }
-
-    .footer_member .p_name{
-      letter-spacing: 2.4px;
-      font-family: "Cal Sans", sans-serif;
-      font-size: 1.2em;
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
-
-    #language-select {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      z-index: 1001;
-      background: rgba(0,0,0,0.7);
-      box-shadow: 0px 0px 14px #ffffff91;
-      color: #fff;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-
-    @media screen and (max-width: 675px) {
-      .wave{
-        align-items: center;
-      }
-    }
-
-    @media (max-width: 768px) {
-      #section2 .logo, #section2 .intro,
-      #section4 .content {
-        flex-direction: column;
-        text-align: center;
-      }
-      #section2 .intro h2 { font-size: min(24px, 5vw); }
-      #section2 .intro p  { font-size: min(16px, 3.6vw); }
-      #slogan            { font-size: 1.5rem; }
-      #logo1             { font-size: 2rem; }
-      .swiper-slide {
-        width: 80%;
-      }
-    }
-    #starfield {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: -2;
-      pointer-events: none;
-    }
-
-    .shooting-star {
-      position: fixed;
-      width: 120px;
-      height: 4px; 
-      background: linear-gradient(to left, white, rgba(255,255,255,0));
-      opacity: 0.8;
-      pointer-events: none;
-      transform-origin: 0 0;
-      animation: shoot 1s ease-out forwards;
-    }
-
-    @keyframes shoot {
-      to {
-        transform: rotate(45deg) translate(600px, 0) scale(0.5);
-        opacity: 0;
-      }
-    }
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{font-family:"National Park",sans-serif;width:100%;height:100%;overflow-x:hidden;overflow-y:scroll;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;scroll-snap-type:y mandatory;}
+body::-webkit-scrollbar{display:none;}
+body{background-color:#000310;color:#fff;overflow:hidden;}
+.highlight{background:linear-gradient(90deg,#9b59b6,#3498db,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:bold;font-size:1.05em;}
+.slo_highlight{background:linear-gradient(90deg,#9b59b6,#3498db,#2ecc71);font-weight:bold;border-radius:8px;}
+nav{position:fixed;top:0;left:0;width:100%;background:rgba(0,0,0,0.7);box-shadow:0px 0px 14px #ffffff91;color:#fff;display:flex;justify-content:space-between;align-items:center;padding:10px 20px;z-index:1000;}
+@media screen and (max-width:536px){nav{flex-direction:column-reverse;gap:10px;}.auth-buttons{width:100%;display:flex;justify-content:center;border-bottom:solid 2px #fff;}.auth-buttons button{width:100%;}}
+nav .menu{display:flex;list-style:none;gap:20px;}
+nav .menu li a{color:#fff;text-decoration:none;font-weight:bold;font-size:clamp(14px,1vw,20px);}
+nav .menu li a:hover{background:linear-gradient(90deg,#9b59b6,#3498db,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+nav .auth-buttons button{padding:6px 12px;background:transparent;border:none;color:#fff;border-radius:5px;cursor:pointer;font-size:0.9rem;font-family:"Cal Sans",sans-serif;}
+nav .auth-buttons button:hover{background:linear-gradient(90deg,#9b59b6,#3498db,#2ecc71);}
+section{width:100%;min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;padding-top:80px;scroll-snap-align:start;}
+#section1{height:100vh;z-index:1;}
+#section1 #background_interaction{position:absolute;width:100%;height:100%;object-fit:cover;top:0;left:0;z-index:-1;}
+.black_blur{top:0;width:100vw;height:100vh;background:#000;position:absolute;z-index:-1;opacity:0.4;}
+#section1 .overlay{max-width:1200px;text-align:center;color:#fff;padding:20px;}
+#slogan{font-weight:bold;font-size:2rem;white-space:pre-wrap;}
+#logo1{font-family:"Cal Sans",sans-serif;margin-top:20px;font-size:3rem;font-weight:bold;opacity:0;transition:opacity 1s;}
+#section2,#section3,#section4{display:flex;justify-content:center;align-items:center;margin-bottom:40px;}
+.content{width:90%;max-width:1200px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;}
+.se2_con{display:flex;align-items:center;flex-direction:row;flex-wrap:wrap;}
+#section2 .logo{opacity:0;transform:translateY(-20px);transition:opacity 1s,transform 1s;flex:1 1 300px;text-align:center;}
+#section2 .intro{opacity:0;transform:translateY(20px);transition:opacity 1s 0.5s,transform 1s 0.5s;flex:1 1 400px;}
+#section2 .intro h2,#section2 .intro p{margin-bottom:10px;}
+#section3 .text-list{max-width:586px;margin-bottom:40px;width:100%;}
+#section3 .text-list ul{list-style:disc inside;font-size:min(16px,3.6vw);line-height:1.6;}
+.se4_con{flex-direction:row;display:flex;align-items:center;flex-wrap:wrap;justify-content:center;}
+#section4 .team-img,#section4 .team-text{opacity:0;transform:translateY(20px);transition:opacity 1s,transform 1s;}
+.team-img{flex:1 1 300px;max-width:min(500px,76vw);width:50%;}
+.team-text{text-align:left;flex:1 1 400px;padding:20px;font-size:min(16px,3.6vw);line-height:1.6;}
+.Purpose_p{font-family:"Cal Sans",sans-serif;text-align:center;font-size:min(40px,10vw);margin-bottom:20px;font-weight:bold;}
+.slider-wrapper{position:relative;width:100%;max-width:1200px;overflow:hidden;margin-bottom:40px;}
+.slider-wrapper::before,.slider-wrapper::after{content:'';position:absolute;top:0;bottom:0;width:80px;pointer-events:none;z-index:10;}
+.slider-wrapper::before{left:0;background:linear-gradient(to right,#000310,rgba(255,255,255,0));}
+.slider-wrapper::after{right:0;background:linear-gradient(to left,#000310,rgba(255,255,255,0));}
+.swiper-container{width:100%;}
+.swiper-wrapper{align-items:center;}
+.swiper-slide{display:flex;align-items:center;width:300px;height:169px;border-radius:8px;overflow:hidden;}
+.swiper-slide img{width:100%;border-radius:8px;}
+footer{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;padding:20px;text-align:center;color:#fff;scroll-snap-align:start;z-index:1;}
+.footer_member_warpper{margin-top:20px;display:flex;flex-wrap:wrap;flex-direction:row;align-items:center;justify-content:center;gap:30px;}
+.footer_member .p_role{font-size:.8em;}
+.footer_member .p_name{letter-spacing:2.4px;font-family:"Cal Sans",sans-serif;font-size:1.2em;font-weight:bold;margin-bottom:6px;}
+#language-select{position:fixed;bottom:10px;right:10px;z-index:1001;background:rgba(0,0,0,0.7);box-shadow:0px 0px 14px #ffffff91;color:#fff;border:none;padding:5px 10px;border-radius:5px;font-size:0.9rem;cursor:pointer;}
+@media screen and (max-width:675px){.wave{align-items:center;}}
+@media (max-width:768px){#section2 .logo,#section2 .intro,#section4 .content{flex-direction:column;text-align:center;}#section2 .intro h2{font-size:min(24px,5vw);}#section2 .intro p{font-size:min(16px,3.6vw);}#slogan{font-size:1.5rem;}#logo1{font-size:2rem;}.swiper-slide{width:80%;}}
+#starfield{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-2;pointer-events:none;}
+.shooting-star{position:fixed;width:120px;height:4px;background:linear-gradient(to left,white,rgba(255,255,255,0));opacity:0.8;pointer-events:none;transform-origin:0 0;animation:shoot 1s ease-out forwards;}
+@keyframes shoot{to{transform:rotate(45deg) translate(600px,0) scale(0.5);opacity:0;}}
   </style>
 </head>
 <body ondragstart="return false" ondrop="return false" onselectstart="return false">

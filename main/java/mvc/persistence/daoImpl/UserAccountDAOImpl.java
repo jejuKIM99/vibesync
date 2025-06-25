@@ -14,6 +14,52 @@ public class UserAccountDAOImpl implements UserAccountDAO {
     public UserAccountDAOImpl(Connection conn) {
         this.conn = conn;
     }
+    
+    @Override
+    public UserDetailVO getUserByKakaoId(long kakaoId) throws SQLException {
+        String sql = "SELECT * FROM userAccount WHERE kakao_auth_id = ?";
+        UserDetailVO user = null;
+        
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, kakaoId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    user = UserDetailVO.builder()
+                            .ac_idx(rs.getInt("ac_idx"))
+                            .email(rs.getString("email"))
+                            .pw(rs.getString("pw"))
+                            .salt(rs.getString("salt"))
+                            .nickname(rs.getString("nickname"))
+                            .img(rs.getString("img"))
+                            .name(rs.getString("name"))
+                            .created_at(rs.getTimestamp("created_at"))
+                            .category_idx(rs.getInt("category_idx"))
+                            .kakao_auth_id(rs.getLong("kakao_auth_id"))
+                            .build();
+                }
+            }
+        }
+        return user;
+    }
+
+    @Override
+    public void linkKakaoAccount(int acIdx, long kakaoId) throws SQLException {
+        String sql = "UPDATE userAccount SET kakao_auth_id = ? WHERE ac_idx = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, kakaoId);
+            pstmt.setInt(2, acIdx);
+            pstmt.executeUpdate();
+        }
+    }
+
+    @Override
+    public void unlinkKakaoAccount(int acIdx) throws SQLException {
+        String sql = "UPDATE userAccount SET kakao_auth_id = NULL WHERE ac_idx = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, acIdx);
+            pstmt.executeUpdate();
+        }
+    }
 
     @Override
     public UserDetailVO getUserAccountById(int acIdx) throws SQLException {
@@ -34,6 +80,7 @@ public class UserAccountDAOImpl implements UserAccountDAO {
                             .name(rs.getString("name"))
                             .created_at(rs.getTimestamp("created_at"))
                             .category_idx(rs.getInt("category_idx"))
+                            .kakao_auth_id(rs.getLong("kakao_auth_id"))
                             .build();
                 }
             }

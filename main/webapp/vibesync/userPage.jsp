@@ -5,7 +5,6 @@
 <% String contextPath = request.getContextPath() + "/vibesync"; %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
 <!DOCTYPE html>
 <jsp:include page="/vibesync/includes/header.jsp" />
 <head>
@@ -18,68 +17,77 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script defer src="./js/script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        h3 { margin: 0; }
-        #left-wrapper {display: flex; height: 100%; gap: 20px; justify-content: center; align-items: center;}
-      .wp_btn {background: linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%);}
-        .wp_btn img{width: 24px; height: 25px; margin-right: 6px;}
-        #settingBtn { background: #6c757d; color: white; border: none; font-weight: 700; cursor: pointer; transition: background-color 0.18s; }
-        #settingBtn img {width: 26px; height: 26px;}
-        #settingBtn:hover { background: #5a6268; }
-        .name_function button { border-radius: 5px; }
-        #pageCreateBtn { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #8ac4ff; color: #fff; font-size: 24px; z-index: 1000; border: none; cursor: pointer; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        #modalWrapper { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-        .modal-content { display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; background: var(--background-color); padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; min-height: 14rem; position: relative; }
-        #pageSelect { width: 100%; height: 2rem; text-align: center; border-radius: 10px; font-weight: bold; text-transform: uppercase; }
-        #btn_wrapper { display: flex; gap: 2rem; }
-        .btn_deco { background: #8ac4ff; border: none; color: white; padding: 4px 12px; border-radius: 6px; }
-        .btn_deco:hover { background: #4da3f9; }
-        #pageCreateForm { display: flex; flex-direction: column; }
-        .modal-close { position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 18px; border: none; background: none; color: var(--font-color); }
-    </style>
-    
-    <style> /* Message */
-        #up_msg_btn { background-color: #fe4f4f; color: #fff; border: none; padding: 11px 32px 11px 23px; font-weight: 700; font-size: 1.06rem; display: flex; align-items: center; gap: 13px; letter-spacing: 0.3px; cursor: pointer; outline: none; transition: background-color 0.18s ease-in-out, transform 0.12s; }
-        #up_msg_btn i { filter: invert(0) !important; font-size: 1.18em; color: #fff; }
-        #up_msg_btn:hover { background: #fe1717; color: #fff; }
-        .modal-msglist { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(2.5px); justify-content: center; align-items: center; }
-        .modal-msg { position: relative; background: var(--background-color); border-radius: 20px; width: 92%; max-width: 415px; min-width: 330px; min-height: 390px; max-height: 78vh; display: flex; flex-direction: column; padding-bottom: 13px; border: none; animation: zoomIn 0.21s;  }
-        @keyframes zoomIn { from { transform: scale(0.97); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        #msgRoomTitle { font-size: 18px; font-weight: 700; color: var(--font-size); padding: 18px 0 12px 0; border-bottom: 2px solid var(--border-color); background: transparent; margin: 0 0 6px 0; text-align: center; letter-spacing: 0.02em; }
-        #msgRoomTitle i { margin-right: 9px; color: var(--font-color); font-size: 20px; }
-        .close-modal { position: absolute; top: 13px; right: 17px; color: #bcb8ad; font-size: 26px; font-weight: 400; cursor: pointer; background: none; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; transition: background 0.13s, color 0.12s; }
-        .close-modal:hover, .close-modal:focus { font-weight: bold; color: var(--font-color); text-decoration: none; }
-        #msgList { padding: 13px 25px 10px 25px; overflow-y: auto; flex-grow: 1; flex-direction: column; min-height: 150px; display: flex; align-items: stretch; justify-content: flex-start; background: transparent; }
-        .no-message-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #888; text-align: center; padding: 20px; }
-        .no-message-placeholder i { font-size: 48px; margin-bottom: 16px; color: #e0e0e0; }
-        .no-message-placeholder p { margin: 0; font-size: 1rem; font-weight: 500; }
-        .msg_item { display: flex; align-items: flex-start; gap: 15px; width: 100%; background: var(--card-back); padding: 19px 18px 17px 15px; border-radius: 11px; animation: fadeInUp 0.26s; border: 2px solid var(--border-color); margin-bottom: 18px; transition: background-color 0.14s ease-in-out;  } 
-        .msg_item:last-child { margin-bottom: 0; }
-        .msg_item:hover { background-color: var(--hover-color); cursor: pointer; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
-        .msg_profile img { width: 44px; height: 44px; object-fit: cover; border-radius: 50%; aspect-ratio: 1/1; margin-left: 8px; margin-right: 5px; border: 1.5px solid lightgrey; background: #faf9f6; display: block; background-image:linear-gradient(var(--card-back), var(--card-back)), linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%); background-origin: border-box; background-clip: content-box, border-box; border: solid 2px transparent; }
-        .msg_text_area { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
-        .msg_sender_row { display: flex; align-items: center; gap: 7px; margin-bottom: 1px; }
-        .msg_sender { font-weight: 700; font-size: 17px; color: var(--font-color); margin-bottom: 1px; }
-        .msg_preview { font-size: 14px; font-weight: 450; color: var(--msg-sub-font); margin: 2px 0 0 0; word-break: break-all; opacity: 0.93; text-overflow: ellipsis; }
-        .msg_time { font-size: 12px; color: var(--msg-date-font); margin-top: 5px; white-space: nowrap; }
-        .unread-badge { display: flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; background: #45607d; color: #fff; font-size: 12px; font-weight: 700; border-radius: 50%; box-shadow: 0 1px 3px rgba(175,175,160,0.10); margin-left: 5px; user-select: none; }
-    </style>
-    
-    <style> /* Setting Modal */
-        .modal-setting-container { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); backdrop-filter: blur(3px); justify-content: center; align-items: center; }
-        .setting-modal-content { color: #333; background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 420px; text-align: center; position: relative; animation: zoomIn 0.2s; }
-        .setting-modal-content h4 { margin-top: 0; margin-bottom: 20px; font-size: 1.2rem; }
-        .setting-modal-content h5 { margin-top: 25px; margin-bottom: 15px; border-top: 1px solid #eee; padding-top: 25px; }
-        #passwordCheckForm input[type="password"], #changePasswordForm input[type="password"] { width: calc(100% - 22px); padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
-        #passwordCheckForm button, #profileImageForm button, #changePasswordForm button { width: 100%; padding: 10px; border: none; background: #007bff; color: white; border-radius: 5px; cursor: pointer; font-size: 1rem; margin-top: 10px; }
-        .setting-modal-close { position: absolute; top: 10px; right: 15px; font-size: 24px; border: none; background: none; cursor: pointer; color: #888; }
-        .setting-error-msg { color: red; font-size: 0.9em; margin-bottom: 10px; height: 1em; }
-        #profileImagePreview { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd; margin-bottom: 15px; }
-        #profileImageInput { margin: 10px 0; }
-        #btnDeleteAccount { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; width: 100%; padding: 12px; margin-top: 25px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-    </style>
+<style>
+h3 { margin: 0; }
+#left-wrapper {display: flex; height: 100%; gap: 20px; justify-content: center; align-items: center;}
+.wp_btn {background: linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%);}
+.wp_btn img{width: 1.8em; height: 25px; margin-right: 6px;}
+#settingBtn { background: #6c757d; color: white; border: none; font-weight: 700; cursor: pointer; transition: background-color 0.18s; }
+#settingBtn img {width: 1.8em; height: 26px;}
+#settingBtn:hover { background: #5a6268; }
+.name_function button { border-radius: 5px; }
+#pageCreateBtn { position: fixed; bottom: 20px; right: 20px; width: min(50px, 8vw); height: min(50px, 8vw); border-radius: 50%; background: #8ac4ff; color: #fff; font-size: min(24px,4vw); font-weight: bold; z-index: 1000; border: none; cursor: pointer; }.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000; }
+#modalWrapper { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+.modal-content { display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; background: var(--background-color); padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; min-height: 14rem; position: relative; }
+#pageSelect { width: 100%; height: 2rem; text-align: center; border-radius: 10px; font-weight: bold; text-transform: uppercase; }
+#btn_wrapper { display: flex; gap: 2rem; }
+.btn_deco { background: #8ac4ff; border: none; color: white; padding: 4px 12px; border-radius: 6px; }
+.btn_deco:hover { background: #4da3f9; }
+#pageCreateForm { display: flex; flex-direction: column; }
+.modal-close { position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 18px; border: none; background: none; color: var(--font-color); }
+</style>
+<style> /* Message */
+#up_msg_btn { background-color: #fe4f4f; color: #fff; border: none; font-weight: 700;  display: flex; align-items: center; gap: 13px; letter-spacing: 0.3px; cursor: pointer; outline: none; transition: background-color 0.18s ease-in-out, transform 0.12s; }
+#up_msg_btn i { filter: invert(0) !important; font-size: 1.18em; color: #fff; }
+#up_msg_btn:hover { background: #fe1717; color: #fff; }
+.modal-msglist { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(2.5px); justify-content: center; align-items: center; }
+.modal-msg { position: relative; background: var(--background-color); border-radius: 20px; width: 92%; max-width: 415px; min-width: 330px; min-height: 390px; max-height: 78vh; display: flex; flex-direction: column; padding-bottom: 13px; border: none; animation: zoomIn 0.21s;  }
+@keyframes zoomIn { from { transform: scale(0.97); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#msgRoomTitle { font-size: 18px; font-weight: 700; color: var(--font-size); padding: 18px 0 12px 0; border-bottom: 2px solid var(--border-color); background: transparent; margin: 0 0 6px 0; text-align: center; letter-spacing: 0.02em; }
+#msgRoomTitle i { margin-right: 9px; color: var(--font-color); font-size: 20px; }
+.close-modal { position: absolute; top: 13px; right: 17px; color: #bcb8ad; font-size: 26px; font-weight: 400; cursor: pointer; background: none; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; transition: background 0.13s, color 0.12s; }
+.close-modal:hover, .close-modal:focus { font-weight: bold; color: var(--font-color); text-decoration: none; }
+#msgList { padding: 13px 25px 10px 25px; overflow-y:scroll; flex-grow: 1; flex-direction: column; min-height: 150px; display: flex; align-items: stretch; justify-content: flex-start; background: transparent; }
+#msgList::-webkit-scrollbar{width: 10px;}
+#msgList::-webkit-scrollbar-thumb{background-image:linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%);background-origin: border-box;background-clip: content-box, border-box;;border-radius: 10px;}
+#msgList::-webkit-scrollbar-track{background-color: rgba(0,0,0,0);}
+.no-message-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #888; text-align: center; padding: 20px; }
+.no-message-placeholder i { font-size: 48px; margin-bottom: 16px; color: #e0e0e0; }
+.no-message-placeholder p { margin: 0; font-size: 1rem; font-weight: 500; }
+.msg_item { display: flex; align-items: flex-start; gap: 15px; width: 100%; background: var(--card-back); padding: 19px 18px 17px 15px; border-radius: 11px; animation: fadeInUp 0.26s; border: 2px solid var(--border-color); margin-bottom: 18px; transition: background-color 0.14s ease-in-out;  } 
+.msg_item:last-child { margin-bottom: 0; }
+.msg_item:hover { background-color: var(--hover-color); cursor: pointer; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
+.msg_profile img { width: 44px; height: 44px; object-fit: cover; border-radius: 50%; aspect-ratio: 1/1; margin-left: 8px; margin-right: 5px; border: 1.5px solid lightgrey; background: #faf9f6; display: block; background-image:linear-gradient(var(--card-back), var(--card-back)), linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%); background-origin: border-box; background-clip: content-box, border-box; border: solid 2px transparent; }
+.msg_text_area { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+.msg_sender_row { display: flex; align-items: center; gap: 7px; margin-bottom: 1px; }
+.msg_sender { font-weight: 700; font-size: 17px; color: var(--font-color); margin-bottom: 1px; }
+.msg_preview { font-size: 14px; font-weight: 450; color: var(--msg-sub-font); margin: 2px 0 0 0; word-break: break-all; opacity: 0.93; text-overflow: ellipsis; }
+.msg_time { font-size: 12px; color: var(--msg-date-font); margin-top: 5px; white-space: nowrap; }
+.unread-badge { display: flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; background: #45607d; color: #fff; font-size: 12px; font-weight: 700; border-radius: 50%; box-shadow: 0 1px 3px rgba(175,175,160,0.10); margin-left: 5px; user-select: none; }
+</style>
+<style> /* Setting Modal */
+.modal-setting-container { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); backdrop-filter: blur(3px); justify-content: center; align-items: center; }
+.setting-modal-content { color: #333; background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 420px; text-align: center; position: relative; animation: zoomIn 0.2s; }
+.setting-modal-content h4 { margin-top: 0; margin-bottom: 20px; font-size: 1.2rem; }
+.setting-modal-content h5 { margin-top: 25px; margin-bottom: 15px; border-top: 1px solid #eee; padding-top: 25px; }
+#passwordCheckForm input[type="password"], #changePasswordForm input[type="password"] { width: calc(100% - 22px); padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
+#passwordCheckForm button, #profileImageForm button, #changePasswordForm button { width: 100%; padding: 10px; border: none; background: #007bff; color: white; border-radius: 5px; cursor: pointer; font-size: 1rem; margin-top: 10px; }
+.setting-modal-close { position: absolute; top: 10px; right: 15px; font-size: 24px; border: none; background: none; cursor: pointer; color: #888; }
+.setting-error-msg { color: red; font-size: 0.9em; margin-bottom: 10px; height: 1em; }
+#profileImagePreview { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd; margin-bottom: 15px; }
+#profileImageInput { margin: 10px 0; }
+#btnDeleteAccount { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; width: 100%; padding: 12px; margin-top: 25px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+@media (max-width: 516px) {#settingBtn {position: absolute;top: 10px;right: 10px;width: min(50px,10vw);height: min(40px,8vw) !important;display: flex;justify-content: center;}}
+
+/* kakao Login */
+#social-login-container { display: flex; justify-content: center; align-items: center; margin-top: 20px;}
+#kakaoLinkContainer {height: 40px; width: 52%; display: flex; justify-content: center; align-items: center; gap: 20px; filter: drop-shadow(2px 2px 2px #c7c7c7d9); border-radius: 10px; background: #ffe812;}
+#kakaoLinkContainer:hover {	filter: drop-shadow(0 0 4px #9f9000d9);}
+#btnKakaoUnlink, .modal-btn-kakao-link { display: flex; justify-content: center; align-items: center; gap: 10px;background: none; border: none; }
+#kakao_img { height: 30px; }
+
+</style>
 </head>
 <body>
     <div id="notion-app">
@@ -191,6 +199,13 @@
     <div id="modal-setting-container" class="modal-setting-container">
         <div class="setting-modal-content">
             <button class="setting-modal-close">&times;</button>
+            <c:if test="${not empty sessionScope.linkError}">
+		        <div class="setting-error-msg" style="display:block; color: red; margin-bottom: 15px; border: 1px solid red; padding: 10px; border-radius: 5px;">
+		            ${sessionScope.linkError}
+		        </div>
+		        <%-- 메시지를 한 번만 보여주기 위해 세션에서 제거 --%>
+		        <c:remove var="linkError" scope="session" />
+		    </c:if>
             <div id="settingContent"></div>
         </div>
     </div>
@@ -288,7 +303,7 @@
                                 $('#profileFollowerCount').text(response.newFollowerCount);
                             }
                             updateFollowingCount();
-                        	updateFollowerCount();
+                            updateFollowerCount();
                         } else {
                             alert('오류: ' + (response.message || '팔로우 처리에 실패했습니다.'));
                         }
@@ -421,6 +436,7 @@
                     success: function(response) {
                         if (response.success) {
                             currentUserData = response.userData;
+                            console.log("currentUserData : " + currentUserData)
                             showCombinedSettingsView();
                         } else {
                             $('#passwordCheckForm .setting-error-msg').text(response.message || '인증에 실패했습니다.');
@@ -689,11 +705,40 @@
                 <input type="password" name="confirmPassword" placeholder="새 비밀번호 확인" required autocomplete="new-password">
                 <button type="submit">비밀번호 변경</button>
             </form>
+            
+            <h5>카카오 계정 연동</h5>
+            <div id="social-login-container">
+			    <div id="kakaoLinkContainer">
+	            </div>
+			</div>
 
             <button id="btnDeleteAccount">회원 탈퇴</button>
         `;
         $('#settingContent').html(combinedHtml);
+        
+        const isKakaoLinked = currentUserData && currentUserData.kakao_auth_id && currentUserData.kakao_auth_id > 0;
+        const kakaoContextPath = '${pageContext.request.contextPath}/vibesync';
+
+        if (isKakaoLinked) {
+            $('#kakaoLinkContainer').html('<button id="btnKakaoUnlink" class="modal-btn-kakao-unlink"><img id="kakao_img" src="<%=request.getContextPath()%>/vibesync/sources/icons/KakaoTalk_logo.svg" alt="카카오 로그인"><span>카카오 연결 해제</span></button>');
+        } else {
+            $('#kakaoLinkContainer').html('<a style="font-size:12px;" href="' + kakaoContextPath + '/auth/kakao/link.do" class="modal-btn-kakao-link"><img id="kakao_img" src="<%=request.getContextPath()%>/vibesync/sources/icons/KakaoTalk_logo.svg" alt="카카오 로그인"><span>카카오 계정 연결</span></a>');
+        }
     }
+    
+    $('#modal-setting-container').on('click', '#btnKakaoUnlink', function() {
+        if (confirm('카카오 계정 연동을 해제하시겠습니까? \n카카오를 통한 로그인이 불가능해집니다.')) {
+            $.post('${pageContext.request.contextPath}/vibesync/auth/kakao/unlink.do', function(response) {
+                if(response.success){
+                    alert('카카오 연동이 해제되었습니다.');
+                    currentUserData.kakao_auth_id = null; // 전역 변수 업데이트
+                    showCombinedSettingsView(); // 설정 화면 다시 그리기
+                } else {
+                    alert('연동 해제에 실패했습니다: ' + response.message);
+                }
+            });
+        }
+    });
     
     </script>
 </body>

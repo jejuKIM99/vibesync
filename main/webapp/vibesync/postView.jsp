@@ -140,9 +140,9 @@ function goBackSmartly() {
 const isLoggedIn = ${not empty user}; 
 
 function requireLogin() {
-	
-	const ctx = "${pageContext.request.contextPath}";
-	
+   
+   const ctx = "${pageContext.request.contextPath}";
+   
     if (confirm('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?')) {
         // 1. 현재 페이지의 전체 주소를 가져옵니다. (예: .../postView.do?nidx=26)
         const currentUrl = window.location.href; 

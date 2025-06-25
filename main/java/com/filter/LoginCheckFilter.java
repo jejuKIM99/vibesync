@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 						"*.do" 
 				})
 public class LoginCheckFilter extends HttpFilter implements Filter {
-       
+        
     public LoginCheckFilter() {
         super();
     }
@@ -52,7 +52,8 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 	    
 		
 		// 1. 공개적으로 접근 가능한 '허용된 경로(Whitelist)' 목록 정의
-	    List<String> publicPaths = Arrays.asList("/user.do", "/postView.do", "/comment.do", "/sidebar.do");
+		// [수정된 부분] 카카오 로그인 콜백 경로를 허용 목록에 추가
+	    List<String> publicPaths = Arrays.asList("/user.do", "/auth/kakao/callback.do", "/postView.do", "/comment.do", "/sidebar.do");
 	    
 	    boolean isPublicPath = false;
 	    for (String path : publicPaths) {
@@ -80,9 +81,9 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 		        chain.doFilter(request, response);
 		        return;
 		    }
-		 
+		
 		 System.out.println("[LoginCheckFilter] 접근 거부! 로그인 페이지로 리다이렉트합니다. 요청 URI: " + requestURI);
-		 
+		
 		 HttpSession newSession = request.getSession(); 
 		 newSession.setAttribute("referer", requestURI);
 		    

@@ -37,7 +37,7 @@ public class CheckPasswordHandler implements CommandHandler {
         try {
             Map<String, Object> result = settingService.checkUserPasswordAndGetData(loginUser.getAc_idx(), inputPassword);
             String jsonResponse = new Gson().toJson(result);
-            
+            System.out.println("-----------jsonResponse : " + jsonResponse);
             PrintWriter out = response.getWriter();
             out.print(jsonResponse);
             out.flush();
