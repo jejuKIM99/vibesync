@@ -336,60 +336,7 @@ INSERT INTO notification (notifi_idx, time, text, chk, ac_idx, setting_idx) VALU
 INSERT INTO notification (notifi_idx, time, text, chk, ac_idx, setting_idx) VALUES (29, TO_TIMESTAMP('2024-06-06 14:30:00','YYYY-MM-DD HH24:MI:SS'), '새싹개발자15(박현우)님이 회원님의 코딩 꿀팁 대방출! ✨ 노트를 북마크했습니다.', 1, 17, 17);
 INSERT INTO notification (notifi_idx, time, text, chk, ac_idx, setting_idx) VALUES (30, TO_TIMESTAMP('2024-06-06 17:00:00','YYYY-MM-DD HH24:MI:SS'), '게임스트리머19(최민식)님이 새로운 워치파티 신작 게임 함께 달려요! 🔥를 생성했습니다.', 0, 11, 11);
 
--- 12. bookmark 테이블 데이터 삽입 (bkmark_idx: 301 ~ 350)
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (1, 1, 3, TO_TIMESTAMP('2024-06-01 09:00:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (2, 2, 1, TO_TIMESTAMP('2024-06-01 09:05:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (3, 3, 5, TO_TIMESTAMP('2024-06-01 09:10:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (4, 4, 2, TO_TIMESTAMP('2024-06-01 09:15:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (5, 5, 4, TO_TIMESTAMP('2024-06-01 09:20:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (6, 6, 6, TO_TIMESTAMP('2024-06-01 09:25:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (7, 7, 8, TO_TIMESTAMP('2024-06-01 09:30:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (8, 8, 7, TO_TIMESTAMP('2024-06-01 09:35:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (9, 9, 9, TO_TIMESTAMP('2024-06-01 09:40:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (10, 10, 10, TO_TIMESTAMP('2024-06-01 09:45:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (11, 11, 01, TO_TIMESTAMP('2024-06-02 10:00:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (12, 12, 04, TO_TIMESTAMP('2024-06-02 10:05:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (13, 13, 06, TO_TIMESTAMP('2024-06-02 10:10:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (14, 14, 08, TO_TIMESTAMP('2024-06-02 10:15:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (15, 15, 10, TO_TIMESTAMP('2024-06-02 10:20:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (16, 16, 11, TO_TIMESTAMP('2024-06-02 10:25:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (17, 17, 13, TO_TIMESTAMP('2024-06-02 10:30:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (18, 8, 15, TO_TIMESTAMP('2024-06-02 10:35:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (19, 19, 17, TO_TIMESTAMP('2024-06-02 10:40:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (20, 20, 19, TO_TIMESTAMP('2024-06-02 10:45:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (21, 21, 21, TO_TIMESTAMP('2024-06-03 11:00:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (22, 22, 23, TO_TIMESTAMP('2024-06-03 11:05:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (23, 23, 25, TO_TIMESTAMP('2024-06-03 11:10:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (24, 24, 2, TO_TIMESTAMP('2024-06-03 11:15:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (25, 25, 5, TO_TIMESTAMP('2024-06-03 11:20:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (26, 26, 7, TO_TIMESTAMP('2024-06-03 11:25:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (27, 27, 9, TO_TIMESTAMP('2024-06-03 11:30:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (28, 1, 12, TO_TIMESTAMP('2024-06-03 11:35:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (29, 2, 14, TO_TIMESTAMP('2024-06-03 11:40:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (30, 3, 16, TO_TIMESTAMP('2024-06-03 11:45:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (31, 4, 18, TO_TIMESTAMP('2024-06-04 12:00:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (32, 5, 20, TO_TIMESTAMP('2024-06-04 12:05:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (33, 6, 22, TO_TIMESTAMP('2024-06-04 12:10:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (34, 7, 24, TO_TIMESTAMP('2024-06-04 12:15:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (35, 8, 1, TO_TIMESTAMP('2024-06-04 12:20:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (36, 9, 3, TO_TIMESTAMP('2024-06-04 12:25:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (37, 10, 5, TO_TIMESTAMP('2024-06-04 12:30:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (38, 11, 7, TO_TIMESTAMP('2024-06-04 12:35:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (39, 12, 9, TO_TIMESTAMP('2024-06-04 12:40:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (40, 13, 11, TO_TIMESTAMP('2024-06-04 12:45:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (41, 14, 13, TO_TIMESTAMP('2024-06-05 13:00:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (42, 15, 15, TO_TIMESTAMP('2024-06-05 13:05:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (43, 16, 17, TO_TIMESTAMP('2024-06-05 13:10:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (44, 17, 19, TO_TIMESTAMP('2024-06-05 13:15:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (45, 18, 21, TO_TIMESTAMP('2024-06-05 13:20:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (46, 19, 23, TO_TIMESTAMP('2024-06-05 13:25:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (47, 20, 25, TO_TIMESTAMP('2024-06-05 13:30:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (48, 21, 2, TO_TIMESTAMP('2024-06-05 13:35:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (49, 22, 4, TO_TIMESTAMP('2024-06-05 13:40:00', 'YYYY-MM-DD HH24:MI:SS'));
-INSERT INTO bookmark (bkmark_idx, userPg_idx, ac_idx, created_at) VALUES (50, 23, 6, TO_TIMESTAMP('2024-06-05 13:45:00', 'YYYY-MM-DD HH24:MI:SS'));
-
-
--- 13. likes 테이블 데이터 삽입
+-- 12. likes 테이블 데이터 삽입
 INSERT INTO likes (likes_idx, created_at, note_idx, ac_idx) VALUES  (1, TO_TIMESTAMP('2024-05-20 10:05:00', 'YYYY-MM-DD HH24:MI:SS'), 1, 2);
 INSERT INTO likes (likes_idx, created_at, note_idx, ac_idx) VALUES  (2, TO_TIMESTAMP('2024-05-20 14:05:00', 'YYYY-MM-DD HH24:MI:SS'), 2, 1);
 INSERT INTO likes (likes_idx, created_at, note_idx, ac_idx) VALUES  (3, TO_TIMESTAMP('2024-05-21 09:35:00', 'YYYY-MM-DD HH24:MI:SS'), 3, 4);
@@ -441,40 +388,7 @@ INSERT INTO likes (likes_idx, created_at, note_idx, ac_idx) VALUES  (48, TO_TIME
 INSERT INTO likes (likes_idx, created_at, note_idx, ac_idx) VALUES  (49, TO_TIMESTAMP('2024-04-02 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 4, 9);
 INSERT INTO likes (likes_idx, created_at, note_idx, ac_idx) VALUES  (50, TO_TIMESTAMP('2024-04-03 21:10:00', 'YYYY-MM-DD HH24:MI:SS'), 5, 2);
 
--- 14. noteAccess 테이블 데이터 삽입
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (1, 'R', TO_TIMESTAMP('2024-06-01 09:00:00', 'YYYY-MM-DD HH24:MI:SS'), 1, 1);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (2, 'RW', TO_TIMESTAMP('2024-06-01 09:05:00', 'YYYY-MM-DD HH24:MI:SS'), 1, 2);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (3, 'R', TO_TIMESTAMP('2024-06-01 09:10:00', 'YYYY-MM-DD HH24:MI:SS'), 2, 3);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (4, 'RWX', TO_TIMESTAMP('2024-06-01 09:15:00', 'YYYY-MM-DD HH24:MI:SS'), 2, 4);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (5, 'R', TO_TIMESTAMP('2024-06-01 09:20:00', 'YYYY-MM-DD HH24:MI:SS'), 3, 5);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (6, 'RW', TO_TIMESTAMP('2024-06-01 09:25:00', 'YYYY-MM-DD HH24:MI:SS'), 3, 6);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (7, 'RWX', TO_TIMESTAMP('2024-06-01 09:30:00', 'YYYY-MM-DD HH24:MI:SS'), 4, 7);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (8, 'R', TO_TIMESTAMP('2024-06-01 09:35:00', 'YYYY-MM-DD HH24:MI:SS'), 4, 8);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (9, 'RW', TO_TIMESTAMP('2024-06-01 09:40:00', 'YYYY-MM-DD HH24:MI:SS'), 5, 9);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (10, 'R', TO_TIMESTAMP('2024-06-01 09:45:00', 'YYYY-MM-DD HH24:MI:SS'), 5, 10);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (11, 'RWX', TO_TIMESTAMP('2024-06-02 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 6, 1);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (12, 'R', TO_TIMESTAMP('2024-06-02 10:05:00', 'YYYY-MM-DD HH24:MI:SS'), 6, 2);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (13, 'RW', TO_TIMESTAMP('2024-06-02 10:10:00', 'YYYY-MM-DD HH24:MI:SS'), 7, 3);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (14, 'RWX', TO_TIMESTAMP('2024-06-02 10:15:00', 'YYYY-MM-DD HH24:MI:SS'), 7, 4);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (15, 'R', TO_TIMESTAMP('2024-06-02 10:20:00', 'YYYY-MM-DD HH24:MI:SS'), 8, 5);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (16, 'RW', TO_TIMESTAMP('2024-06-02 10:25:00', 'YYYY-MM-DD HH24:MI:SS'), 8, 6);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (17, 'RWX', TO_TIMESTAMP('2024-06-02 10:30:00', 'YYYY-MM-DD HH24:MI:SS'), 9, 7);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (18, 'R', TO_TIMESTAMP('2024-06-02 10:35:00', 'YYYY-MM-DD HH24:MI:SS'), 9, 8);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (19, 'RW', TO_TIMESTAMP('2024-06-02 10:40:00', 'YYYY-MM-DD HH24:MI:SS'), 10, 9);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (20, 'RWX', TO_TIMESTAMP('2024-06-02 10:45:00', 'YYYY-MM-DD HH24:MI:SS'), 10, 10);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (21, 'R', TO_TIMESTAMP('2024-06-03 11:00:00', 'YYYY-MM-DD HH24:MI:SS'), 11, 11);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (22, 'RW', TO_TIMESTAMP('2024-06-03 11:05:00', 'YYYY-MM-DD HH24:MI:SS'), 11, 12);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (23, 'RWX', TO_TIMESTAMP('2024-06-03 11:10:00', 'YYYY-MM-DD HH24:MI:SS'), 12, 13);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (24, 'R', TO_TIMESTAMP('2024-06-03 11:15:00', 'YYYY-MM-DD HH24:MI:SS'), 12, 14);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (25, 'RW', TO_TIMESTAMP('2024-06-03 11:20:00', 'YYYY-MM-DD HH24:MI:SS'), 13, 15);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (26, 'RWX', TO_TIMESTAMP('2024-06-03 11:25:00', 'YYYY-MM-DD HH24:MI:SS'), 13, 16);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (27, 'R', TO_TIMESTAMP('2024-06-03 11:30:00', 'YYYY-MM-DD HH24:MI:SS'), 14, 17);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (28, 'RW', TO_TIMESTAMP('2024-06-03 11:35:00', 'YYYY-MM-DD HH24:MI:SS'), 14, 18);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (29, 'RWX', TO_TIMESTAMP('2024-06-03 11:40:00', 'YYYY-MM-DD HH24:MI:SS'), 15, 19);
-INSERT INTO noteAccess (ntGrant_idx, ntGrant, created_at, note_idx, ac_idx) VALUES  (30, 'R', TO_TIMESTAMP('2024-06-03 11:45:00', 'YYYY-MM-DD HH24:MI:SS'), 15, 20);
-
-
--- 15. commentlist 테이블 데이터 삽입
+-- 13. commentlist 테이블 데이터 삽입
 INSERT INTO commentlist (commentlist_idx, text, like_count, create_at, re_commentlist_idx, note_idx, ac_idx) VALUES (1, '이 영화 정말 최고예요! 👍 N차 관람 각입니다!', 25, TO_TIMESTAMP('2024-05-25 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), NULL, 1, 8);
 INSERT INTO commentlist (commentlist_idx, text, like_count, create_at, re_commentlist_idx, note_idx, ac_idx) VALUES (2, '저도 그렇게 생각해요! 특히 마지막 장면이 인상 깊었어요.', 15, TO_TIMESTAMP('2024-05-25 10:05:00', 'YYYY-MM-DD HH24:MI:SS'), 1, 1, 6);
 INSERT INTO commentlist (commentlist_idx, text, like_count, create_at, re_commentlist_idx, note_idx, ac_idx) VALUES (3, '이 드라마 완전 내 스타일! 주인공 너무 멋있다 ㅠㅠ🥰', 30, TO_TIMESTAMP('2024-05-25 11:00:00', 'YYYY-MM-DD HH24:MI:SS'), NULL, 2, 4);

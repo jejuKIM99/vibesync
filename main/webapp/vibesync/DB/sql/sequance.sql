@@ -111,23 +111,9 @@ CREATE SEQUENCE notification_seq
   NOCACHE
   NOCYCLE;
 
--- 13. bookmark
-CREATE SEQUENCE bookmark_seq
-  START WITH 51      -- 이후 실제 MAX(bkmark_idx)+1 로 조정
-  INCREMENT BY 1
-  NOCACHE
-  NOCYCLE;
-
 -- 14. likes
 CREATE SEQUENCE likes_seq
   START WITH 51      -- 이후 실제 MAX(likes_idx)+1 로 조정
-  INCREMENT BY 1
-  NOCACHE
-  NOCYCLE;
-
--- 15. noteAccess
-CREATE SEQUENCE noteAccess_seq
-  START WITH 31      -- 이후 실제 MAX(ntGrant_idx)+1 로 조정
   INCREMENT BY 1
   NOCACHE
   NOCYCLE;
@@ -301,30 +287,12 @@ BEGIN
 END;
 /
 
--- bookmark
-CREATE OR REPLACE TRIGGER trg_bookmark_bi
-BEFORE INSERT ON bookmark
-FOR EACH ROW
-BEGIN
-  SELECT bookmark_seq.NEXTVAL INTO :NEW.bkmark_idx FROM dual;
-END;
-/
-
 -- likes
 CREATE OR REPLACE TRIGGER trg_likes_bi
 BEFORE INSERT ON likes
 FOR EACH ROW
 BEGIN
   SELECT likes_seq.NEXTVAL INTO :NEW.likes_idx FROM dual;
-END;
-/
-
--- noteAccess
-CREATE OR REPLACE TRIGGER trg_noteAccess_bi
-BEFORE INSERT ON noteAccess
-FOR EACH ROW
-BEGIN
-  SELECT noteAccess_seq.NEXTVAL INTO :NEW.ntGrant_idx FROM dual;
 END;
 /
 

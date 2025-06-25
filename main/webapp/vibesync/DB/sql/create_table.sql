@@ -172,19 +172,7 @@ CREATE TABLE notification (
 );
 
 --------------------------------------------------------------------------------
--- 13. bookmark (북마크)
---------------------------------------------------------------------------------
-CREATE TABLE bookmark (
-    bkmark_idx INT PRIMARY KEY,
-    userPg_idx INT NOT NULL,
-    ac_idx INT NOT NULL,
-    created_at TIMESTAMP,
-    CONSTRAINT FK_bookmark_TO_userPage FOREIGN KEY (userPg_idx) REFERENCES userPage(userPg_idx) ON DELETE CASCADE,
-    CONSTRAINT FK_bookmark_TO_userAccount FOREIGN KEY (ac_idx) REFERENCES userAccount(ac_idx) ON DELETE CASCADE
-);
-
---------------------------------------------------------------------------------
--- 14. likes (좋아요)
+-- 13. likes (좋아요)
 --------------------------------------------------------------------------------
 CREATE TABLE likes (
     likes_idx INT PRIMARY KEY,
@@ -195,21 +183,8 @@ CREATE TABLE likes (
     CONSTRAINT FK_likes_TO_userAccount FOREIGN KEY (ac_idx) REFERENCES userAccount(ac_idx) ON DELETE CASCADE
 );
 
---------------------------------------------------------------------------------
--- 15. noteAccess (노트 권한 리스트)
---------------------------------------------------------------------------------
-CREATE TABLE noteAccess (
-    ntGrant_idx INT PRIMARY KEY,
-    ntGrant CHAR(3),
-    created_at TIMESTAMP,
-    note_idx INT NOT NULL,
-    ac_idx INT NOT NULL,
-    CONSTRAINT FK_noteAccess_TO_note FOREIGN KEY (note_idx) REFERENCES note(note_idx) ON DELETE CASCADE,
-    CONSTRAINT FK_noteAccess_TO_userAccount FOREIGN KEY (ac_idx) REFERENCES userAccount(ac_idx) ON DELETE CASCADE
-);
-
---------------------------------------------------------------------------------
--- 16. commentlist (댓글)
+-----------------------------------------------------------------------------
+-- 14. commentlist (댓글)
 --------------------------------------------------------------------------------
 CREATE TABLE commentlist (
     commentlist_idx INT PRIMARY KEY,
@@ -226,7 +201,7 @@ CREATE TABLE commentlist (
 );
 
 --------------------------------------------------------------------------------
--- 7. watchParty (워치파티)
+-- 15. watchParty (워치파티)
 --------------------------------------------------------------------------------
 CREATE TABLE watchParty (
     watchParty_idx INT PRIMARY KEY,
@@ -255,7 +230,7 @@ CREATE TABLE wa_comment (
     CONSTRAINT FK_cw FOREIGN KEY (watchParty_idx) REFERENCES watchParty(watchParty_idx) ON DELETE CASCADE
 );
 --------------------------------------------------------------------------------
--- (추가) schedule (일정 관리) 테이블
+-- 16. schedule (일정 관리) 테이블
 --------------------------------------------------------------------------------
 CREATE TABLE schedule (
     schedule_idx    INT             PRIMARY KEY,
