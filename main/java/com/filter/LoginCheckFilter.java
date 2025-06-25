@@ -53,7 +53,7 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 		
 		// 1. 공개적으로 접근 가능한 '허용된 경로(Whitelist)' 목록 정의
 		// [수정된 부분] 카카오 로그인 콜백 경로를 허용 목록에 추가
-	    List<String> publicPaths = Arrays.asList("/user.do", "/auth/kakao/callback.do", "/postView.do", "/comment.do", "/sidebar.do");
+	    List<String> publicPaths = Arrays.asList("/user.do", "/auth/kakao/callback.do", "/postView.do", "/comment.do", "/sidebar.do","/auth/google/callback.do", "/member/extraInfo.do","/member/completeSignUp.do");
 	    
 	    boolean isPublicPath = false;
 	    for (String path : publicPaths) {

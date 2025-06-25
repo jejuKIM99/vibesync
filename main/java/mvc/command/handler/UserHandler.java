@@ -74,87 +74,14 @@ public class UserHandler implements CommandHandler {
                 }
             }
         }
-
-        // 모든 조건에 해당하지 않으면 로그인 페이지 표시
-        return "login.jsp";
-    }
-
-    /**
-     * POST 요청을 처리하는 메소드
-     */
-    private String handlePost(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String accessType = request.getParameter("accessType");
-        if (accessType == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "AccessType is required.");
-            return null;
-        }
-
-        switch (accessType) {
-            case "login":
-                return processManualLogin(request, response);
-            case "signUp":
-                return processSignUp(request, response);
-            case "logout":
-                return processLogout(request, response);
-            case "requestPasswordReset":
-                return processRequestPasswordReset(request, response);
-            case "performPasswordReset":
-                return processPerformPasswordReset(request, response);
-            default:
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid AccessType.");
-                return null;
-        }
-    }
-
-    /**
-     * 수동 로그인을 처리하는 메소드
-     */
-    private String processManualLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String emailParam = request.getParameter("userId");
-        String pwParam = request.getParameter("userPw");
-        LoginDTO loginDTO = new LoginDTO(emailParam, pwParam);
-        UserVO userInfo = loginService.login(loginDTO);
-
-        if (userInfo != null) {
-            // 로그인 성공 시, 공통 로그인 처리 메소드 호출
-            return processSuccessfulLogin(request, response, userInfo);
-        } else {
-            // 로그인 실패
-            request.setAttribute("loginErrorForDisplay", "아이디 또는 비밀번호가 일치하지 않습니다.");
-            return "login.jsp";
-        }
-    }
-    
-    /**
-     * 로그인 성공 시 모든 공통 작업을 처리하는 핵심 메소드 
-     */
-    private String processSuccessfulLogin(HttpServletRequest request, HttpServletResponse response, UserVO userInfo) throws IOException {
-        HttpSession session = request.getSession();
-        String userEmail = userInfo.getEmail();
-
-        // 1. 중복 로그인 방지 로직
-        if (DuplicateLoginPreventer.loginUsers.containsKey(userEmail)) {
-            HttpSession oldSession = DuplicateLoginPreventer.loginUsers.get(userEmail);
-            if (oldSession != null && !oldSession.getId().equals(session.getId())) {
-                System.out.println("[UserHandler] 중복 로그인 감지! 기존 세션 강제 종료: " + userEmail);
-                oldSession.invalidate(); // 기존 세션을 무효화 -> Listener가 맵에서 자동으로 제거
-            }
-        }
-        // 현재 로그인한 사용자 정보를 전역 목록에 추가
-        DuplicateLoginPreventer.loginUsers.put(userEmail, session);
-
-        // 2. '이메일 기억하기', '자동 로그인' 쿠키 처리
-        handleLoginCookies(request, response, userEmail);
-
-        // 3. 사용자 정보를 세션에 저장
-        session.setAttribute("userInfo", userInfo);
         
-     // [추가] JSP에서 사용할 수 있도록 request에 클라이언트 ID를 설정
+        //[추가] JSP에서 사용할 수 있도록 request에 클라이언트 ID를 설정
         request.setAttribute("googleClientId", Config.getGoogleClientId());
 
         // 모든 조건에 해당하지 않으면 로그인 페이지 표시
         return "login.jsp";
     }
+    
 
     /**
      * POST 요청을 처리하는 메소드

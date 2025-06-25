@@ -37,12 +37,16 @@ public class GoogleCallbackHandler implements CommandHandler {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		
-		if (authResult == null) {
-			response.getWriter().write("{\"status\":\"error\", \"message\" : \"인증에 실패했습니다.\"}");
-			return null;
-		}
 		
 		JsonObject jsonResponse = new JsonObject();
+		
+		if (authResult == null) {
+			System.err.println("[GoogleCallbackHandler] 오류: GoogleAuthService가 null을 반환했습니다.");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500 Server Error
+			jsonResponse.addProperty("status", "error");
+			jsonResponse.addProperty("message", "Authentication service failed.");
+			response.getWriter().write(jsonResponse.toString());
+		}
 		
 		// 3. 로그인 성공 시 세션에 저장
 		switch (authResult.getStatus()) {

@@ -59,16 +59,16 @@ a { text-decoration: none; }
 }
 #social-login-container a {
 	height: 40px;
-    width: 52%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
-    filter: drop-shadow(2px 2px 2px #c7c7c7d9);
     border-radius: 10px;
     background: #ffe812;
 }
+
 #social-login-container a:hover {
-	filter: drop-shadow(0 0 4px #9f9000d9);
-}
+	background-color: #fada0a;
+} 
 #kakao_img { height: 30px; }
