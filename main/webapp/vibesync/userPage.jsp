@@ -5,7 +5,6 @@
 <% String contextPath = request.getContextPath() + "/vibesync"; %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
 <!DOCTYPE html>
 <jsp:include page="/vibesync/includes/header.jsp" />
 <head>
@@ -80,6 +79,14 @@ h3 { margin: 0; }
 #profileImageInput { margin: 10px 0; }
 #btnDeleteAccount { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; width: 100%; padding: 12px; margin-top: 25px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 @media (max-width: 516px) {#settingBtn {position: absolute;top: 10px;right: 10px;width: min(50px,10vw);height: min(40px,8vw) !important;display: flex;justify-content: center;}}
+
+/* kakao Login */
+#social-login-container { display: flex; justify-content: center; align-items: center; margin-top: 20px;}
+#kakaoLinkContainer {height: 40px; width: 52%; display: flex; justify-content: center; align-items: center; gap: 20px; filter: drop-shadow(2px 2px 2px #c7c7c7d9); border-radius: 10px; background: #ffe812;}
+#kakaoLinkContainer:hover {	filter: drop-shadow(0 0 4px #9f9000d9);}
+#btnKakaoUnlink, .modal-btn-kakao-link { display: flex; justify-content: center; align-items: center; gap: 10px;background: none; border: none; }
+#kakao_img { height: 30px; }
+
 </style>
 </head>
 <body>
@@ -192,6 +199,13 @@ h3 { margin: 0; }
     <div id="modal-setting-container" class="modal-setting-container">
         <div class="setting-modal-content">
             <button class="setting-modal-close">&times;</button>
+            <c:if test="${not empty sessionScope.linkError}">
+		        <div class="setting-error-msg" style="display:block; color: red; margin-bottom: 15px; border: 1px solid red; padding: 10px; border-radius: 5px;">
+		            ${sessionScope.linkError}
+		        </div>
+		        <%-- 메시지를 한 번만 보여주기 위해 세션에서 제거 --%>
+		        <c:remove var="linkError" scope="session" />
+		    </c:if>
             <div id="settingContent"></div>
         </div>
     </div>
@@ -422,6 +436,7 @@ h3 { margin: 0; }
                     success: function(response) {
                         if (response.success) {
                             currentUserData = response.userData;
+                            console.log("currentUserData : " + currentUserData)
                             showCombinedSettingsView();
                         } else {
                             $('#passwordCheckForm .setting-error-msg').text(response.message || '인증에 실패했습니다.');
@@ -690,11 +705,40 @@ h3 { margin: 0; }
                 <input type="password" name="confirmPassword" placeholder="새 비밀번호 확인" required autocomplete="new-password">
                 <button type="submit">비밀번호 변경</button>
             </form>
+            
+            <h5>카카오 계정 연동</h5>
+            <div id="social-login-container">
+			    <div id="kakaoLinkContainer">
+	            </div>
+			</div>
 
             <button id="btnDeleteAccount">회원 탈퇴</button>
         `;
         $('#settingContent').html(combinedHtml);
+        
+        const isKakaoLinked = currentUserData && currentUserData.kakao_auth_id && currentUserData.kakao_auth_id > 0;
+        const kakaoContextPath = '${pageContext.request.contextPath}/vibesync';
+
+        if (isKakaoLinked) {
+            $('#kakaoLinkContainer').html('<button id="btnKakaoUnlink" class="modal-btn-kakao-unlink"><img id="kakao_img" src="<%=request.getContextPath()%>/vibesync/sources/icons/KakaoTalk_logo.svg" alt="카카오 로그인"><span>카카오 연결 해제</span></button>');
+        } else {
+            $('#kakaoLinkContainer').html('<a style="font-size:12px;" href="' + kakaoContextPath + '/auth/kakao/link.do" class="modal-btn-kakao-link"><img id="kakao_img" src="<%=request.getContextPath()%>/vibesync/sources/icons/KakaoTalk_logo.svg" alt="카카오 로그인"><span>카카오 계정 연결</span></a>');
+        }
     }
+    
+    $('#modal-setting-container').on('click', '#btnKakaoUnlink', function() {
+        if (confirm('카카오 계정 연동을 해제하시겠습니까? \n카카오를 통한 로그인이 불가능해집니다.')) {
+            $.post('${pageContext.request.contextPath}/vibesync/auth/kakao/unlink.do', function(response) {
+                if(response.success){
+                    alert('카카오 연동이 해제되었습니다.');
+                    currentUserData.kakao_auth_id = null; // 전역 변수 업데이트
+                    showCombinedSettingsView(); // 설정 화면 다시 그리기
+                } else {
+                    alert('연동 해제에 실패했습니다: ' + response.message);
+                }
+            });
+        }
+    });
     
     </script>
 </body>

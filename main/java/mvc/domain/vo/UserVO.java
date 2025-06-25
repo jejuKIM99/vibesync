@@ -1,3 +1,4 @@
+// UserVO.java 전체 코드
 package mvc.domain.vo;
 
 import java.sql.Timestamp;
@@ -15,10 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class UserVO { // 세션에 담을 최소한의 사용자 정보
-	// 로그인 성공 시 세션에 저장되는 객체
-	// UI에 표시하거나 권한 판단 등에 필요한 정보만 포함
-	// 절대 비밀번호나 민감한 데이터는 포함하지 않음
+public class UserVO {
 
 	private int ac_idx;
 	private String email;
@@ -28,4 +26,6 @@ public class UserVO { // 세션에 담을 최소한의 사용자 정보
 	private Timestamp created_at;
 	private int category_idx;
 	
+	// [추가된 필드]
+	private Long kakao_auth_id; 
 }

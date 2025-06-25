@@ -24,4 +24,7 @@ public class UserDetailVO {
     private String name;
     private Timestamp created_at;
     private int category_idx;
+
+    // [추가된 필드]
+    private Long kakao_auth_id; 
 }
