@@ -24,122 +24,33 @@
 <link rel="stylesheet" href="./css/style.css"> 
 <link rel="stylesheet" href="./css/sidebar.css">
   
-    <style> /* 추가 블록 */
-        .block-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .block-header h4 { margin: 0; }
-        .block-actions button { background: none; border: none; cursor: pointer; color: #888; font-size: 14px; margin-left: 5px; }
-        .block-actions button:hover { color: #000; }
-        .chart-toggles { margin-bottom: 10px; }
-        .chart-toggles label { margin-right: 15px; font-size: 13px; cursor: pointer; display: none; }
-        .loading-spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
-    
-    <style> /* 추가 블록 편집 모드 */
-		.workspace-controls {
-		    display: flex;
-		    justify-content: space-between;
-		    align-items: center;
-		    padding: 10px 20px;
-		    margin-bottom: 10px;
-		}
-		
-		.workspace-controls h3 {
-		    margin: 0;
-		    font-size: 1.5em;
-		    color: var(--font-color);
-		}
-		
-		.control-btn {
-		    background-color: var(--sidebar-color);
-		    color: var(--font-color);
-		    border: 1px solid var(--border-color);
-		    padding: 8px 15px;
-		    border-radius: 5px;
-		    cursor: pointer;
-		    margin-left: 10px;
-		    transition: background-color 0.2s, color 0.2s;
-		}
-		
-		.control-btn:hover {
-		    background-color: var(--point-color);
-		    color: white;
-		}
-		
-		/* 편집 모드일 때 생성된 블록에 적용될 스타일 */
-		#contents_grid.edit-mode .generated_block {
-		    position: relative; /* 화살표 버튼의 기준점 */
-		    border: 2px dashed var(--point-color);
-		    box-shadow: 0 0 10px rgba(var(--point-color-rgb), 0.5);
-		    gap: 0px, 20px;
-    		transition: padding 0.2s ease-in-out;
-		}
-		
-		#contents_grid.edit-mode .generated_block:hover {
-		    z-index: 15;
-		}
-		
-		/* 블록 이동 화살표 버튼 */
-		.move-block-btn {
-		    position: absolute;
-		    top: 50%;
-		    transform: translateY(-50%);
-		    width: 30px;
-		    height: 30px;
-		    background-color: rgba(0, 0, 0, 0.6);
-		    color: white;
-		    border: none;
-		    border-radius: 50%;
-		    font-size: 16px;
-		    cursor: pointer;
-		    display: flex;
-		    align-items: center;
-		    justify-content: center;
-		    z-index: 10;
-		    opacity: 0.7;
-		    transition: opacity 0.2s;
-		}
-		
-		.move-block-btn:hover {
-		    opacity: 1;
-		}
-		
-		.move-left-btn {
-		    left: 5px;
-		}
-		
-		.move-right-btn {
-		    right: 5px;
-		}
-    </style>
-    
-    <style> /* 통계 기간 변경 */
-		.stats-controls {
-		    display: flex;
-		    justify-content: center;
-		    align-items: center;
-		    margin-bottom: 15px;
-		    flex-wrap: wrap; /* 창이 좁을 때 줄바꿈 */
-		}
-		
-		.period-selector button {
-		    background: #eee;
-		    border: 1px solid #ddd;
-		    border-radius: 4px;
-		    padding: 4px 8px;
-		    font-size: 12px;
-		    cursor: pointer;
-		    margin-left: 5px;
-		}
-		
-		.period-selector button.active {
-		    background-color: var(--point-color);
-		    color: white;
-		    border-color: var(--point-color);
-		    font-weight: bold;
-		}
-    </style>
-  
+<style> /* 추가 블록 */
+.block-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.block-header h4 { margin: 0; }
+.block-actions button { background: none; border: none; cursor: pointer; color: #888; font-size: 14px; margin-left: 5px; }
+.block-actions button:hover { color: #000; }
+.chart-toggles { margin-bottom: 10px; }
+.chart-toggles label { margin-right: 15px; font-size: 13px; cursor: pointer; display: none; }
+.loading-spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+<style> /* 추가 블록 편집 모드 */
+.workspace-controls {display: flex;justify-content: space-between;align-items: center;padding: 10px 20px;margin-bottom: 10px;}
+.workspace-controls h3 {margin: 0;font-size: 1.5em;color: var(--font-color);}
+.control-btn {background-color: var(--sidebar-color);color: var(--font-color);border: 1px solid var(--border-color);padding: 8px 15px;border-radius: 5px;cursor: pointer;margin-left: 10px;transition: background-color 0.2s, color 0.2s;}
+.control-btn:hover {background-color: var(--point-color);color: white;}
+#contents_grid.edit-mode .generated_block {position: relative;border: 2px dashed var(--point-color);box-shadow: 0 0 10px rgba(var(--point-color-rgb), 0.5);gap: 0px, 20px;transition: padding 0.2s ease-in-out;}
+#contents_grid.edit-mode .generated_block:hover {z-index: 15;}
+.move-block-btn {position: absolute;top: 50%;transform: translateY(-50%);width: 30px;height: 30px;background-color: rgba(0, 0, 0, 0.6);color: white;border: none;border-radius: 50%;font-size: 16px;cursor: pointer;display: flex;align-items: center;justify-content: center;z-index: 10;opacity: 0.7;transition: opacity 0.2s;}
+.move-block-btn:hover {opacity: 1;}
+.move-left-btn {left: 5px;}
+.move-right-btn {right: 5px;}
+</style>
+<style> /* 통계 기간 변경 */
+.stats-controls {display: flex;justify-content: center;align-items: center;margin-bottom: 15px;flex-wrap: wrap;}
+.period-selector button {background: #eee;border: 1px solid #ddd;border-radius: 4px;padding: 4px 8px;font-size: 12px;cursor: pointer;margin-left: 5px;}
+.period-selector button.active {background-color: var(--point-color);color: white;border-color: var(--point-color);font-weight: bold;}
+</style>
 </head>
 <body>
 	<div id="notion-app">

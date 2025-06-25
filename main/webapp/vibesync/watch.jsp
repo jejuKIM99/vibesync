@@ -26,25 +26,25 @@ if (user != null) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Watch Party - <%= wp.getTitle() %></title>
     <link rel="icon" href="./sources/favicon.ico" />
-    <style>
-        body { background: #000; color: #fff; font-family: Arial, sans-serif; width: 100%; height: 98vh; margin: 0;}
-        h1 {margin: 0; height: 6%; font-size: min(28px, 4vw);}
-        section.container {height: 94%; display: flex; justify-content: center; align-items: center;}
-       @media (max-width: 768px) { section.container { flex-direction: column; height: 84%; align-items: normal; } .videowrapper { flex: 5 !important; } .chatting-wrapper { margin-top: 14px; flex: 3 !important; } }
-        .videowrapper {flex: 7; height: 100%; display: flex; flex-direction: column;}
-        .chatting-wrapper {flex: 2; height: 100%;}
-        #video-container { text-align: center; width: 100%; height: 94%;}
-        iframe {width: 100%; height: 100%;}
-        #chat-container { -ms-overflow-style: none; border: 1px solid #ccc; height: 92%; overflow-y: scroll; padding: 0.5rem; word-break: break-all; }
-        #chat-container::-webkit-scrollbar { display:none; }
-        #chat-input { color: #fff; border: solid 2px #fff; width: 100%; padding: 10px 0.5rem; background-color: transparent; border-top: none; outline: none; }
-        #sync-wrapper { display: flex; justify-content: space-between; padding-inline: 12px; margin-top: 16px; }
-        #send-btn { padding: 0; border: solid 2px #fff; background-color: transparent; border-left: none; border-top: none; height: 37px; color: #fff; font-size: 10px; }
-        #status { margin-top: 0.5rem; font-size: 0.9rem; color: gray; }
-        #sync-button { padding: 0.5rem 1rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        #sync-status-message { font-size: min(16px, 3.2vw); margin-top: 0.5rem; color: #d9534f; }
-        .host-chat { color: red; text-align: center; }
-    </style>
+ <style>
+ body { background: #000; color: #fff; font-family: Arial, sans-serif; width: 100%; height: 98vh; margin: 0;}
+ h1 {margin: 0; height: 6%; font-size: min(28px, 4vw);}
+ section.container {height: 94%; display: flex; justify-content: center; align-items: center;}
+@media (max-width: 768px) { section.container { flex-direction: column; height: 84%; align-items: normal; } .videowrapper { flex: 5 !important; } .chatting-wrapper { margin-top: 14px; flex: 3 !important; } }
+ .videowrapper {flex: 7; height: 100%; display: flex; flex-direction: column;}
+ .chatting-wrapper {flex: 2; height: 100%;}
+ #video-container { text-align: center; width: 100%; height: 94%;}
+ iframe {width: 100%; height: 100%;}
+ #chat-container { -ms-overflow-style: none; border: 1px solid #ccc; height: 92%; overflow-y: scroll; padding: 0.5rem; word-break: break-all; }
+ #chat-container::-webkit-scrollbar { display:none; }
+ #chat-input { color: #fff; border: solid 2px #fff; width: 100%; padding: 10px 0.5rem; background-color: transparent; border-top: none; outline: none; }
+ #sync-wrapper { display: flex; justify-content: space-between; padding-inline: 12px; margin-top: 16px; }
+ #send-btn { padding: 0; border: solid 2px #fff; background-color: transparent; border-left: none; border-top: none; height: 37px; color: #fff; font-size: 10px; }
+ #status { margin-top: 0.5rem; font-size: 0.9rem; color: gray; }
+ #sync-button { padding: 0.5rem 1rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+ #sync-status-message { font-size: min(16px, 3.2vw); margin-top: 0.5rem; color: #d9534f; }
+ .host-chat { color: red; text-align: center; }
+</style>
 </head>
 <body>
     <h1><%= wp.getTitle() %></h1>

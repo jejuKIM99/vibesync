@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+<c:set var="formToShow" value="${not empty formToShow ? formToShow : 'login' }"></c:set>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,15 +12,37 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
 	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
 	crossorigin="anonymous"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <link
 	href="https://fonts.googleapis.com/css2?family=National+Park:wght@200..800&display=swap"
 	rel="stylesheet">
 <link
 	href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap"
 	rel="stylesheet">
-<link rel="icon" href="./sources/favicon.ico">
+<link rel="icon" href="${pageContext.request.contextPath}/vibesync/sources/favicon.ico">
 <title>VibeSync Login</title>
-<link rel="stylesheet" href="./css/login.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/vibesync/css/login.css">
+<style>
+.welcome-message {
+	font-family: 'Cal Sans', sans-serif;
+	font-size: 1.5em;
+	color: #fff;
+	text-align: left;
+	margin-bottom: 0.5em;
+}
+
+.form-notice p {
+	margin: 0.2em 0;
+}
+
+.form-notice .text-container {
+        text-align: left; /* 텍스트 가운데 정렬 */
+    }
+    
+    .form-notice .text-container p {
+        color: #555; /* 텍스트 색상 통일 */
+    }
+</style>
 </head>
 
 <body ondragstart="return false" ondrop="return false"
@@ -27,12 +51,12 @@
 
 	<div class="container">
 		<div id="logo">
-			<img src="./sources/logo1.png" alt="VibeSync 로고" width="30%">
+			<img src="${pageContext.request.contextPath}/vibesync/sources/logo1.png" alt="VibeSync 로고" width="30%">
 		</div>
 
 		<div id="login">
 			<div id="inner_logo">
-				<img src="./sources/login/footer_logo.png" alt="VibeSync 로고"
+				<img src="${pageContext.request.contextPath}/vibesync/sources/login/footer_logo.png" alt="VibeSync 로고"
 					style="width: 150px; filter: drop-shadow(-1px 0px 0px #000) drop-shadow(-1px 0px 0px #000) drop-shadow(-1px 0px 0px #000) drop-shadow(1px 0px 0px #000) drop-shadow(0px 1px 0px #000);">
 			</div>
 			<div class="login-wrapper">
@@ -43,27 +67,28 @@
 
 				<!-- <div id="loginFormContainer"> -->
 				<div id="loginFormContainer"
-					style="${formToShow eq 'signUp' ? 'display:none;' : 'display:flex;'}">
+					style="${formToShow eq 'login' ? 'display:flex;' : 'display:none;'}">
 					<form action="<%=request.getContextPath()%>/vibesync/user.do"
 						method="post" id="loginForm">
 						<%-- action을 login.jsp 또는 현재 페이지로 명시 --%>
 						<%-- POST 요청 시 login/signup 구분 --%>
 						<input type="hidden" name="accessType" value="login">
-						
+
 						<%-- 비밀번호 재설정 요청 메시지 --%>
-				        <c:if test="${ loginMessage != null && !loginMessage.isEmpty() }">
-				            <div class="form-notice"> <%-- 기본 파란색 스타일 --%>
-				                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-				                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-				                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-				                    class="notice-icon">
+						<c:if test="${ loginMessage != null && !loginMessage.isEmpty() }">
+							<div class="form-notice">
+								<%-- 기본 파란색 스타일 --%>
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+									viewBox="0 0 24 24" fill="none" stroke="currentColor"
+									stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+									class="notice-icon">
 				                    <circle cx="12" cy="12" r="10"></circle>
 				                    <line x1="12" y1="16" x2="12" y2="12"></line>
 				                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
 				                </svg>
-				                <p>${ loginMessage }</p>
-				            </div>
-				        </c:if>
+								<p>${ loginMessage }</p>
+							</div>
+						</c:if>
 
 						<%-- 회원가입 성공 메시지 --%>
 						<c:if
@@ -87,15 +112,20 @@
 							id="userPw" name="userPw" placeholder="Password" required>
 
 						<%-- 로그인 에러 메시지 --%>
-						<c:if test="${ loginErrorForDisplay != null && !loginErrorForDisplay.isEmpty() }">
-						    <div class="form-notice form-notice-error">
-						        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="notice-icon">
-						            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+						<c:if
+							test="${ loginErrorForDisplay != null && !loginErrorForDisplay.isEmpty() }">
+							<div class="form-notice form-notice-error">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+									viewBox="0 0 24 24" fill="none" stroke="currentColor"
+									stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+									class="notice-icon">
+						            <path
+										d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
 						            <line x1="12" y1="9" x2="12" y2="13"></line>
 						            <line x1="12" y1="17" x2="12.01" y2="17"></line>
 						        </svg>
-						        <p>${ loginErrorForDisplay }</p>
-						    </div>
+								<p>${ loginErrorForDisplay }</p>
+							</div>
 						</c:if>
 
 						<div class="checkbox-group">
@@ -116,6 +146,16 @@
 						Forget your Password? <a href="#">Reset Password</a>
 					</div>
 				</div>
+				<!-- 구글 소셜 로그인 -->
+				<div
+					style="${formToShow eq 'login' ? 'display:block;' : 'display:none;'}">
+					<div id="g_id_onload"
+						data-client_id="${googleClientId}"
+						data-callback="handleCredentialResponse"></div>
+					<div class="g_id_signin" data-type="standard" data-size="large"
+						data-theme="outline" data-text="sign_in_with"
+						data-shape="rectangular" data-logo_alignment="left"></div>
+				</div>
 
 				<!-- <div id="signupFormContainer" style="display: none;"> -->
 				<div id="signupFormContainer"
@@ -125,15 +165,20 @@
 						<input type="hidden" name="accessType" value="signUp">
 
 						<%-- 회원가입 에러 메시지 --%>
-						<c:if test="${ signupErrorForDisplay != null && !signupErrorForDisplay.isEmpty() }">
-						    <div class="form-notice form-notice-error">
-						        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="notice-icon">
-						            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+						<c:if
+							test="${ signupErrorForDisplay != null && !signupErrorForDisplay.isEmpty() }">
+							<div class="form-notice form-notice-error">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+									viewBox="0 0 24 24" fill="none" stroke="currentColor"
+									stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+									class="notice-icon">
+						            <path
+										d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
 						            <line x1="12" y1="9" x2="12" y2="13"></line>
 						            <line x1="12" y1="17" x2="12.01" y2="17"></line>
 						        </svg>
-						        <p>${ signupErrorForDisplay }</p>
-						    </div>
+								<p>${ signupErrorForDisplay }</p>
+							</div>
 						</c:if>
 
 						<label for="signupName" class="sr-only">이름</label> <input
@@ -173,6 +218,59 @@
 							Login</a>
 					</div>
 				</div>
+
+				<%-- [추가된 부분] 구글 신규 사용자 추가 정보 입력 폼 --%>
+				<div id="googleExtraInfoContainer"
+					style="${formToShow eq 'googleExtraInfo' ? 'display:flex;' : 'display:none;'}">
+					<form
+						action="${pageContext.request.contextPath}/member/completeSignUp.do"
+						method="post" id="googleExtraInfoForm">
+						<input type="hidden" name="accessType"
+							value="completeGoogleSignUp">
+						<div class="form-notice">
+							<%-- 세션에 저장된 임시 구글 유저의 이름을 보여줍니다. --%>
+							<div class="text-container">
+							<p class="welcome-message">Welcome,
+								${sessionScope.newGoogleUser.name}!</p>
+							<p>Please provide a bit more information to complete your
+								sign-up.</p>
+							</div>
+						</div>
+
+						<%-- 에러 메시지 표시 (닉네임 중복 등) --%>
+						<c:if
+							test="${ signupErrorForDisplay != null && !signupErrorForDisplay.isEmpty() }">
+							<div class="form-notice form-notice-error">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+									viewBox="0 0 24 24" fill="none" stroke="currentColor"
+									stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+									class="notice-icon">
+						            <path
+										d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+						            <line x1="12" y1="9" x2="12" y2="13"></line>
+						            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+						        </svg>
+								<p>${ signupErrorForDisplay }</p>
+							</div>
+						</c:if>
+
+						<label for="googleSignupNickname" class="sr-only">닉네임</label> 
+						<input
+							type="text" id="googleSignupNickname" name="nickname"
+							placeholder="NickName" required> 
+						<label for="googleCategory" class="sr-only">관심 카테고리</label> 
+						<select id="googleCategory" name="category_idx" required>
+							<option value="" disabled selected>Choose your favorite
+								category</option>
+							<c:forEach items="${applicationScope.categoryVOList}" var="categoryVO">
+								<option value="${categoryVO.category_idx}">${categoryVO.c_name}</option>
+							</c:forEach>
+						</select>
+
+						<button type="submit" id="googleSignupBtn">Join VibeSync</button>
+					</form>
+				</div>
+
 				<div id="resetPasswordContainer" style="display: none;">
 					<form action="<%=request.getContextPath()%>/vibesync/user.do"
 						method="post" id="resetPasswordForm">
@@ -200,7 +298,7 @@
 
 				<!-- <div class="links switch-form-link" > -->
 				<div class="links switch-form-link"
-					style="${formToShow eq 'signUp' ? 'display:none;' : 'display:block;'}">
+					style="${formToShow eq 'login' ? 'display:block;' : 'display:none;'}">
 					Not a member yet?<a href="#" id="switchToSignupLink">Sign Up</a>
 				</div>
 			</div>
@@ -208,7 +306,7 @@
 		</div>
 	</div>
 
-	<script src="./js/login.js"></script>
+	<script src="${pageContext.request.contextPath}/vibesync/js/login.js"></script>
 
 </body>
 </html>

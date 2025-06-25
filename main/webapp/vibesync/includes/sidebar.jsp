@@ -10,783 +10,105 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
-.notion-sidebar {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  width: 100%;
-}
-
-.notion-sidebar .menu_content {
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  flex-direction: column;
-  gap: 40px;
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 10px;
-  margin-block: 60px;
-}
-.notion-sidebar .menu_content .nickname {
-  text-decoration: none;
-  text-transform: uppercase;
-  color: var(--font-color);
-}
-
-.search {
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-  cursor: pointer;
-}
-
-/* 입력창 숨김 상태 */
-.search-input {
-  width: 100px;
-  height: 22px;
-  background: none;
-  border: none;
-  border-bottom: var(--border-color) 2px solid;
-  color: var(--font-color);
-}
-
-input:focus {
-  outline: none;
-}
-
-#follow {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  flex-direction: column;
-  padding: 0;
-  height: auto;
-  overflow: hidden;
-}
-
-/* 레이블 스타일 */
-.follow_list label {
-  text-decoration: none;
-  color: var(--font-color);
-  cursor: pointer;
-}
-
-/* 체크박스 숨김 */
-#follow_toggle {
-  display: none;
-}
-
-.follow_items {
-  list-style: none;
-  padding: 0;
-  margin: 20px 0 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-out;
-}
-.follow_items.show {
-  max-height: 500px;
-  transition: max-height 0.3s ease-in;
-}
-
-.follow_items li {
-  margin: 4px 0;
-}
-
-.icon_wrap {
-  display: flex;
-  gap: 10px;
-}
-
-.nickname-container {
-  width: 100%;
-  position: relative;
-  display: inline-block;
-}
-
-.profile img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 50%;
-  aspect-ratio: 1/1;
-  margin-bottom: 13px;
-  border: 4px solid transparent;
-  display: block;
-  background-image: linear-gradient(var(--card-back), var(--card-back)), linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%);
-  background-origin: border-box;
-  background-clip: content-box, border-box;
-}
-
-.nickname {
-  display: inline-block;
-  max-width: 150px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  padding: 2px 4px;
-}
-
-#following-btn, #follower-btn {
-	border: 0;
-	background: none;
-	margin: 0;
-	padding: 0;
-	gap: 0;
-}
-
-.accountDataLabel {
-  font-weight: 400;
-  font-size: medium;
-  color: grey !important;
-}
-
-.accountDataValue {
-  font-weight: 500;
-  font-size: medium;
-}
-
-.modal-sidebar {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: var(--card-back);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    white-space: nowrap;
-    width: 210px;
-    height: auto;
-    padding: 15px;
-    box-sizing: border-box;
-}
-
-.modal-nickname {
-  display: block;
-  text-decoration: none;
-  color: var(--modal-font);
-  padding: 4px 10px;
-  margin-bottom: 10px;
-}
-
-.modal-nickname:hover {
-  text-decoration: underline;
-}
-
-#nickname-modal-2 {
-    display: none;
-}
-#nickname-modal-2 .theme-selector-container {
-    width: 100%;
-    padding: 0;
-    border: none;
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.modal-btn{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-align: center;
-  
-  background: #f8f8fa;
-  color: #222;
-  font-weight: 700;
-  font-size: 17px;
-  height: 38px;
-  border-radius: 12px;
-  border: 1.8px solid #e1e4ea;
-  margin-bottom: 7px;
-  transition: background 0.18s, box-shadow 0.18s;
-  box-shadow: 0 1.5px 6px rgba(180,180,200,0.05);
-  letter-spacing: 0.2px;
-  outline: none;
-  cursor: pointer;
-}
-.modal-btn i {
-  font-size: 18px;
-  margin-right: 2px;
-  color: var(--font-color);
-}
-.modal-btn img {
-   max-height: 22px;
-   max-width: 22px;
-}
-
-/* 
-#logout form > button {
-  border-color: #ffb7c5;
-  color: #e35a6d;
-}
-#logout form > button:hover {
-  background: #fff1f4;
-}
-
-#setting button {
-  border-color: #8cd9c9;
-  color: #2b8c7e;
-}
-#setting button:hover {
-  background: #e6f7f2;
-}
- */
-
-#setting .modal-btn:hover {
-  background: #e6f0fa;
-  color: #1a81d6;
-  border-color: #b9d3ec;
-}
-#logout .modal-btn:hover {
-  background: #f3e7ea;
-  color: #ed5e68;
-  border-color: #eabec9;
-}
-
-</style>
-
-<style> /* 설정 모드 */
-  /* 전체 테마 선택 영역 컨테이너 */
-  .theme-selector-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 220px; /* 너비 조절 */
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-family: sans-serif;
-  }
-
-  /* 각 옵션을 감싸는 label. 이제 div가 아니라 label입니다. */
-  .theme-option-label {
-    display: flex;
-    align-items: center;
-    padding: 6px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    border: 1px solid transparent;
-    position: relative;
-  }
-
-  .theme-option-label:hover {
-    background-color: var(--hover-color);
-  }
-  
-  /* 기본 라디오 버튼 숨기기 */
-  .theme-option-label input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  /* 직접 디자인한 동그라미 (커스텀 라디오 버튼) */
-  .custom-radio {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #ccc;
-    border-radius: 50%; /* 완벽한 원으로 만들기 */
-    margin-right: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.2s;
-  }
-
-  /* 선택되었을 때의 내부 원 */
-  .custom-radio .inner-circle {
-    width: 10px;
-    height: 10px;
-    background-color: #3498db;
-    border-radius: 50%;
-    transform: scale(0); /* 평소에는 안 보이게 축소 */
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  /* --- 핵심 로직 --- */
-  /* 숨겨진 라디오 버튼이 체크되면(:checked), 바로 다음에 오는(.custom-radio) 요소의 스타일을 변경 */
-  .theme-option-label input[type="radio"]:checked + .custom-radio {
-    border-color: #3498db;
-    background-color: #ddeafd;
-  }
-
-  /* 체크되면 내부 원을 다시 보이게 확대 */
-  .theme-option-label input[type="radio"]:checked + .custom-radio .inner-circle {
-    transform: scale(1);
-  }
-
-  /* 'Light', 'Dark' 텍스트 레이블 */
-  .theme-label-text {
-    font-weight: 500;
-    font-size: 14px;
-    margin-left: 10px;
-  }
-
-  /* 우측의 SVG 아이콘 컨테이너 */
-  .theme-icon-svg {
-    margin-left: auto; /* 왼쪽의 모든 요소를 밀어내고 오른쪽 끝으로 이동 */
-  }
-
-  .theme-icon-svg img {
-    width: 50px;
-    height: auto;
-    display: block;
-  }
-  
-  #nickname-modal-2 #back-btn {
-    margin-bottom: 10px;
-  }
-  
-  .sidebar-profile img {
-	min-width: 30px;
-    max-width: 30px;
-    height: 30px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-right: 10px;
-    border: 2px solid transparent;
-    display: block;
-    background-image: linear-gradient(var(--card-back), var(--card-back)), linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%);
-    background-origin: border-box;
-    background-clip: content-box, border-box;
-  }
-</style>
-<style> /* 팔로잉/팔로워/메시지목록 모달창 */
-    .modal-overlay-follow {
-    	display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-		width: 100vw; height: 100vh;
-        background: rgba(0,0,0,0.6);
-        justify-content: center;
-        align-items: center;
-        z-index: 2000;
-        backdrop-filter: blur(2.5px);
-    }
-
-    .modal-follow-content {
-        background: #f5f8fb;
-        border-radius: 20px;
-        box-shadow: 0 4px 32px 0 rgba(80,110,150,0.10), 0 0 0 1.5px #c7d3e8;
-        width: 92%; max-width: 415px; min-width: 330px;
-        min-height: 390px; max-height: 78vh;
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 13px;
-        border: none;
-        animation: zoomIn 0.21s;
-        position: relative;
-    }
-
-    .modal-follow-header {
-        display: flex;
-        justify-content: space-around;
-        border-bottom: 2px solid var(--border-color);
-        padding: 18px 0 12px 0;
-        flex-shrink: 0;
-        
-        color: var(--font-size);
-        font-size: 18px;
-        font-weight: 700;
-        background: transparent;
-        text-align: center;
-        letter-spacing: 0.02em;
-    }
-
-    .modal-follow-tab-btn {
-        background: none;
-        border: none;
-        font-size: 18px;
-        font-weight: 700;
-        color: #888;
-        cursor: pointer;
-        padding: 5px 10px;
-        transition: color 0.2s;
-    }
-
-    .modal-follow-tab-btn.active {
-        color: var(--font-color); /* 활성화된 탭 색상 */
-        border-bottom: 2px solid #3498db; /* 활성화된 탭 밑줄 */
-    }
-
-    .modal-follow-list-container {
-        flex-grow: 1;
-        overflow-y: auto;
-        padding: 13px 25px 10px 25px;
-        min-height: 150px;
-        display: flex;
-        flex-direction: column;
-        gap: 15px; /* 각 항목 간의 간격 */
-        align-items: stretch;
-        justify-content: flex-start;
-        background: transparent;
-    }
-    
-    /* 팔로잉/팔로워 목록 아이템 스타일 */
-    .follow-list-item {
-        display: flex;
-        align-items: center;
-        padding: 10px 15px;
-        background: var(--card-back);
-        border-radius: 11px;
-        border: 2px solid var(--border-color);
-        transition: background-color 0.14s ease-in-out;
-    }
-    .follow-list-item:hover {
-        background-color: #f0f0f0; /* 호버 시 배경색 */
-    }
-    .follow-list-item img {
-        width: 44px;
-        height: 44px;
-        object-fit: cover;
-        border-radius: 50%;
-        margin-right: 15px;
-        border: 1.5px solid lightgrey;
-    }
-    .follow-list-item .user-info {
-        flex-grow: 1;
-    }
-    .follow-list-item .user-info .nickname {
-        font-weight: 700;
-        font-size: 17px;
-        color: #2d3440;
-        margin-bottom: 2px;
-        cursor: pointer; /* 닉네임 클릭 가능 */
-        text-decoration: none; /* 링크 기본 스타일 제거 */
-    }
-    .follow-list-item .user-info .nickname:hover {
-        text-decoration: underline;
-    }
-    .follow-list-item .action-buttons {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-    }
-    .follow-list-item .action-buttons .follow-toggle-btn {
-        background: #4CAF50; /* FOLLOW */
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 8px 12px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: background-color 0.2s;
-    }
-    .follow-list-item .action-buttons .follow-toggle-btn.unfollow {
-        background: #f44336; /* UNFOLLOW */
-    }
-    .follow-list-item .action-buttons .follow-toggle-btn:hover {
-        opacity: 0.9;
-    }
-    .follow-list-item .action-buttons .message-btn {
-        background: #2196F3; /* MESSAGE */
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 8px 10px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background-color 0.2s;
-    }
-    .follow-list-item .action-buttons .message-btn i {
-        font-size: 16px;
-    }
-    .follow-list-item .action-buttons .message-btn:hover {
-        opacity: 0.9;
-    }
-</style>
-
-<style> /* 메시지 목록 */
-    
-    @keyframes zoomIn {
-        from { transform: scale(0.97); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
-    }
-    
-    #messageRoomTitle i {
-        margin-right: 9px;
-        color: var(--font-color);
-        font-size: 20px;
-    }
-    
-    /* 닫기 버튼 */
-    .close-modal {
-        position: absolute;
-        top: 13px; right: 17px;
-        color: #bcb8ad;
-        font-size: 26px;
-        font-weight: 400;
-        cursor: pointer;
-        background: none;
-        border: none;
-        border-radius: 50%;
-        width: 32px; height: 32px;
-        display: flex; align-items: center; justify-content: center;
-        transition: background 0.13s, color 0.12s;
-    }
-    .close-modal:hover,
-    .close-modal:focus {
-        font-weight: bold;
-        color: var(--font-color);
-        text-decoration: none;
-    }
-    
-    /* "메시지 내역이 없습니다" 문구 스타일 */
-    .no-message-placeholder {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: #888;
-        text-align: center;
-        padding: 20px;
-    }
-    .no-message-placeholder i {
-        font-size: 48px;
-        margin-bottom: 16px;
-        color: #e0e0e0;
-    }
-    .no-message-placeholder p {
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 500;
-    }
-    
-    .message_item {
-        display: flex;
-        align-items: flex-start;
-        gap: 15px;
-        width: 100%;
-        background: var(--card-back);
-        padding: 19px 18px 17px 15px;
-        border-radius: 11px;
-        animation: fadeInUp 0.26s;
-        border: 2px solid var(--border-color);
-        margin-bottom: 18px;
-        transition: background-color 0.14s ease-in-out;
-    }  
-    .message_item:last-child {
-        margin-bottom: 0;
-    }
-    
-    .message_item:hover {
-        background-color: #a7ffa193;
-        cursor: pointer;
-    }
-    
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px);}
-        to { opacity: 1; transform: translateY(0);}
-    }
-    
-    .message_profile img {
-        width: 44px;
-        height: 44px;
-        object-fit: cover;
-        border-radius: 50%;
-        aspect-ratio: 1/1;
-        margin-left: 8px;
-        margin-right: 5px;
-        border: 1.5px solid lightgrey;
-        background: #faf9f6;
-        display: block;
-    }
-        
-    .message_text_area {
-        flex: 1 1 auto;
-        min-width: 0;
-        max-width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .message_sender_row {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        margin-bottom: 1px;
-        max-width: 100%;
-        min-width: 0;
-    }
-    .message_sender {
-        font-weight: 700;
-        font-size: 17px;
-        color: #2d3440;
-        margin-bottom: 1px;
-    }
-    .message_preview {
-        font-size: 14px;
-        font-weight: 450;
-        color: black;
-        margin: 2px 0 0 0;
-        opacity: 0.93;
-        width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .message_time {
-        font-size: 12px;
-        color: #7890a2;
-        margin-top: 5px;
-        white-space: nowrap;
-    }
-        
-    /* 읽지 않은 뱃지 */
-    .unread-badge {
-        display: flex;
-        align-items: center; justify-content: center;
-        min-width: 20px; height: 20px;
-        padding: 0 5px;
-        background: #45607d;
-        color: #fff;
-        font-size: 12px;
-        font-weight: 700;
-        border-radius: 50%;
-        box-shadow: 0 1px 3px rgba(175,175,160,0.10);
-        margin-left: 5px;
-        user-select: none;
-    }
-    
-</style>
-
-<style> /* 채팅방 */
-    .chatRoom-modal-super-container .modal-overlay-follow {
-        background: rgba(0,0,0,0.6);
-        backdrop-filter: blur(4px);
-    }
-    
-    .modal-follow-content .chatRoom-modal-content {
-        background-color: #f5f8fb;
-        color: #223355;
-        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
-        animation: fadeInUp 0.3s ease-out;
-        display: flex;
-        flex-direction: column;
-        max-height: 85vh;
-    }
-
-    #chatRoomTitle {
-        padding: 18px 24px 16px 24px;
-        margin: 0;
-        text-align: center;
-        border-bottom: 1.5px solid #e3ecf6;
-        flex-shrink: 0;
-        font-size: 17px;
-        font-weight: 700;
-    }
-    
-    #chatRoomHistory {
-        padding: 10px;
-        overflow-y: auto;
-        flex-grow: 1;
-    }
-    .chatRoom-container {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-    .chatRoom-bubble {
-        max-width: 70%;
-        padding: 10px 14px;
-        border-radius: 18px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        text-align: left;
-        word-break: keep-all;
-        overflow-wrap: break-word;
-        white-space: normal;
-    }
-    .bubble-me {
-        align-self: flex-end;
-        background-color: #FFFBE7;
-        border: 1px solid #FFEAC4;
-        border-bottom-right-radius: 4px;
-    }
-    .bubble-other {
-        align-self: flex-start;
-        background-color: #fff;
-        border: 1px solid #eef1f5;
-        border-bottom-left-radius: 4px;
-    }
-    .bubble-text {
-        font-size: 14px;
-        color: #000;
-        margin: 0 0 4px 0;
-        padding: 0;
-    }
-    .bubble-time {
-        font-size: 11px;
-        color: #999;
-        text-align: right;
-    }
-    .chatRoom-input-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 12px;
-        background: #fff;
-        border-radius: 12px;
-        border: 1.5px solid #e2e5ea;
-        padding: 7px 12px;
-        box-shadow: 0 1px 4px rgba(80,110,140,0.08);
-        flex-shrink: 0;
-    }
-    #chatRoomInput {
-        flex: 1;
-        border: none;
-        font-size: 15px;
-        color: #23272f;
-        outline: none;
-        padding: 8px 0;
-        height: 38px;
-        background: none;
-    }
-    #chatRoomInput::placeholder {
-        color: #b7b8bd;
-        font-size: 14px;
-    }
-    #sendMessageBtn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 38px;
-        height: 38px;
-        background: #7fa6c9;
-        border: none;
-        border-radius: 50%;
-        transition: background 0.16s;
-        cursor: pointer;
-        padding: 0;
-    }
-    #sendMessageBtn:hover {
-        background: #45607d;
-    }
-    .chatRoom-date-separator {
-        display: inline-block;
-        padding: 4px 12px;
-        margin: 16px auto;
-        font-size: 12px;
-        color: #666;
-        background: #e9ecef;
-        border-radius: 12px;
-        text-align: center;
-    }
+.notion-sidebar{position:relative;display:flex;flex-direction:column;justify-content:space-between;height:100%;width:100%;}
+.notion-sidebar .menu_content{display:flex;justify-content:center;align-items:start;flex-direction:column;gap:40px;font-size:20px;font-weight:bold;margin-left:10px;margin-block:60px;}
+.notion-sidebar .menu_content .nickname{text-decoration:none;color:var(--font-color);}
+.search{display:inline-flex;align-items:center;position:relative;cursor:pointer;}
+.search-input{width:100px;height:22px;background:none;border:none;border-bottom:var(--border-color) 2px solid;color:var(--font-color);}
+input:focus{outline:none;}
+#follow{display:flex;justify-content:start;align-items:center;flex-direction:column;padding:0;height:auto;overflow:hidden;}
+.follow_list label{text-decoration:none;color:var(--font-color);cursor:pointer;}
+#follow_toggle{display:none;}
+.follow_items{list-style:none;padding:0;margin:20px 0 0;max-height:0;overflow:hidden;transition:max-height 0.3s ease-out;}
+.follow_items.show{max-height:500px;transition:max-height 0.3s ease-in;overflow-y:scroll;-ms-overflow-style:none;}
+.follow_items.show::-webkit-scrollbar{display:none;}
+.follow_items li{margin:4px 0;}
+.icon_wrap{display:flex;gap:10px;}
+.nickname-container{width:100%;position:relative;display:inline-block;}
+.profile img{width:min(100px,22vw);height:min(100px,22vw);object-fit:cover;border-radius:50%;aspect-ratio:1/1;margin-bottom:13px;border:4px solid transparent;display:block;background-image:linear-gradient(var(--card-back),var(--card-back)),linear-gradient(90deg,rgba(138,196,255,1) 0%,rgba(227,176,255,1) 50%,rgba(165,250,120,1) 100%);background-origin:border-box;background-clip:content-box,border-box;}
+.nickname{display:inline-block;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;padding:2px 4px;}
+#following-btn,#follower-btn{border:0;background:none;margin:0;padding:0;gap:0;}
+.accountDataLabel{font-weight:400;font-size:medium;color:var(--font-color) !important;margin-right:4px;}
+.accountDataValue{font-size:medium;font-weight:bold;background:linear-gradient(90deg,#9b58b6,#3498db,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-right:4px;}
+.modal-sidebar{display:none;position:absolute;top:100%;left:0;background-color:var(--card-back);border:1px solid var(--border-color);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:1000;white-space:nowrap;width:min(210px,54vw);height:auto;padding:15px;box-sizing:border-box;}
+.modal-nickname{display:block;text-decoration:none;color:var(--modal-font);padding:4px 10px;margin-bottom:10px;font-size:16px;}
+.modal-nickname:hover{text-decoration:underline;}
+#nickname-modal-2{display:none;}
+#nickname-modal-2 .theme-selector-container{width:100%;padding:0;border:none;margin-top:10px;display:flex;flex-direction:column;gap:5px;}
+.modal-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;background:#f8f8fa;color:#222;font-weight:700;font-size:min(17px,4vw);height:38px;border-radius:12px;border:1.8px solid #e1e4ea;margin-bottom:7px;transition:background 0.18s,box-shadow 0.18s;box-shadow:0 1.5px 6px rgba(180,180,200,0.05);letter-spacing:0.2px;outline:none;cursor:pointer;}
+.modal-btn i{font-size:18px;margin-right:2px;color:var(--font-color);}
+.modal-btn img{max-height:22px;max-width:22px;}
+#setting .modal-btn:hover{background:#e6f0fa;color:#1a81d6;border-color:#b9d3ec;}
+#logout .modal-btn:hover{background:#f3e7ea;color:#ed5e68;border-color:#eabec9;}
+.sidebar-follow-span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.theme-selector-container{display:flex;flex-direction:column;gap:10px;width:220px;padding:20px;border:1px solid #ccc;border-radius:8px;font-family:sans-serif;}
+.theme-option-label{display:flex;align-items:center;padding:6px 10px;border-radius:4px;cursor:pointer;transition:background-color 0.2s;border:1px solid transparent;position:relative;}
+.theme-option-label:hover{background-color:var(--hover-color);}
+.theme-option-label input[type="radio"]{position:absolute;opacity:0;width:0;height:0;}
+.custom-radio{width:20px;height:20px;border:2px solid #ccc;border-radius:50%;margin-right:12px;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s;}
+.custom-radio .inner-circle{width:10px;height:10px;background-color:#3498db;border-radius:50%;transform:scale(0);transition:transform 0.2s ease-in-out;}
+.theme-option-label input[type="radio"]:checked + .custom-radio{border-color:#3498db;background-color:#ddeafd;}
+.theme-option-label input[type="radio"]:checked + .custom-radio .inner-circle{transform:scale(1);}
+.theme-label-text{font-weight:500;font-size:14px;margin-left:10px;}
+.theme-icon-svg{margin-left:auto;}
+.theme-icon-svg img{width:50px;height:auto;display:block;}
+#nickname-modal-2 #back-btn{margin-bottom:10px;}
+.sidebar-profile img{min-width:30px;max-width:30px;height:30px;object-fit:cover;border-radius:50%;margin-right:10px;border:2px solid transparent;display:block;background-image:linear-gradient(var(--card-back),var(--card-back)),linear-gradient(90deg,rgba(138,196,255,1) 0%,rgba(227,176,255,1) 50%,rgba(165,250,120,1) 100%);background-origin:border-box;background-clip:content-box,border-box;}
+.modal-overlay-follow{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:2000;backdrop-filter:blur(2.5px);}
+.modal-follow-content{background:var(--card-back);border-radius:20px;box-shadow:0 4px 32px 0 rgba(80,110,150,0.10),0 0 0 1.5px #c7d3e8;width:92%;max-width:415px;min-width:310px;min-height:310px;max-height:78vh;display:flex;flex-direction:column;padding-bottom:13px;border:none;animation:zoomIn 0.21s;position:relative;}
+.modal-follow-header{display:flex;justify-content:space-around;border-bottom:2px solid var(--border-color);padding:18px 0 12px 0;flex-shrink:0;color:var(--font-size);font-size:18px;font-weight:700;background:transparent;text-align:center;letter-spacing:0.02em;}
+.modal-follow-tab-btn{background:none;border:none;font-size:18px;font-weight:700;color:#888;cursor:pointer;padding:5px 10px;transition:color 0.2s;}
+.modal-follow-tab-btn.active{color:var(--font-color);border-bottom:2px solid #3498db;}
+.modal-follow-list-container{flex-grow:1;overflow-y:scroll;padding:13px 25px 10px 25px;min-height:150px;display:flex;flex-direction:column;gap:15px;align-items:stretch;justify-content:flex-start;background:transparent;}
+.modal-follow-list-container::-webkit-scrollbar{width: 10px;}
+.modal-follow-list-container::-webkit-scrollbar-thumb{background-image:linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%);background-origin: border-box;background-clip: content-box, border-box;;border-radius: 10px;}
+.modal-follow-list-container::-webkit-scrollbar-track{background-color: rgba(0,0,0,0);}
+.follow-list-item{display:flex;align-items:center;padding:10px 15px;background:var(--card-back);border-radius:11px;border:2px solid var(--border-color);transition:background-color 0.14s ease-in-out;}
+.follow-list-item:hover{background-color:var(--hover-color);}
+.follow-list-item img{width:min(44px,10vw);height:min(44px,10vw);object-fit:cover;border-radius:50%;margin-right:min(15px,2vw);border:solid 2px transparent;background-image:linear-gradient(var(--card-back),var(--card-back)),linear-gradient(90deg,rgba(138,196,255,1) 0%,rgba(227,176,255,1) 50%,rgba(165,250,120,1) 100%);background-origin:border-box;background-clip:content-box,border-box;}
+.follow-list-item .user-info{flex-grow:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.follow-list-item .user-info .nickname{width:100%;font-weight:700;font-size:17px;color:#2d3440;margin-bottom:2px;cursor:pointer;text-decoration:none;}
+.follow-list-item .action-buttons{display:flex;gap:8px;align-items:center;}
+.follow-list-item .action-buttons .follow-toggle-btn{font-size:min(14px,3.4vw);background:#4CAF50;color:white;border:none;border-radius:5px;padding:min(8px,2vw) min(12px,2.4vw);cursor:pointer;font-weight:600;transition:background-color 0.2s;}
+.follow-list-item .action-buttons .follow-toggle-btn.unfollow{background:#f44336;}
+.follow-list-item .action-buttons .follow-toggle-btn:hover{opacity:0.9;}
+.follow-list-item .action-buttons .message-btn{background:#2196F3;color:white;border:none;border-radius:5px;padding:min(11px,2.48vw) min(14px,2.76vw);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background-color 0.2s;}
+.follow-list-item .action-buttons .message-btn i{font-size:14px;filter:invert(0) !important;}
+.follow-list-item .action-buttons .message-btn:hover{opacity:0.9;}
+@keyframes zoomIn{from{transform:scale(0.97);opacity:0;}to{transform:scale(1);opacity:1;}}
+#messageRoomTitle i{margin-right:9px;color:var(--font-color);font-size:20px;}
+.close-modal{position:absolute;top:6px;right:6px;color:#bcb8ad;font-size:20px;font-weight:400;cursor:pointer;background:none;border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;transition:background 0.13s,color 0.12s;}
+.close-modal:hover,.close-modal:focus{font-weight:bold;color:var(--font-color);text-decoration:none;}
+.no-message-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#888;text-align:center;padding:20px;}
+.no-message-placeholder i{font-size:48px;margin-bottom:16px;color:#e0e0e0;}
+.no-message-placeholder p{margin:0;font-size:1rem;font-weight:500;}
+.message_item{display:flex;align-items:flex-start;gap:15px;width:100%;background:var(--card-back);padding:19px 18px 17px 15px;border-radius:11px;animation:fadeInUp 0.26s;border:2px solid var(--border-color);margin-bottom:18px;transition:background-color 0.14s ease-in-out;}
+.message_item:last-child{margin-bottom:0;}
+.message_item:hover{background-color:var(--hover-color);cursor:pointer;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.message_profile img{width:44px;height:44px;object-fit:cover;border-radius:50%;aspect-ratio:1/1;margin-left:8px;margin-right:5px;border:2px solid transparent;background:#faf9f6;display:block;background-image:linear-gradient(var(--card-back),var(--card-back)),linear-gradient(90deg,rgba(138,196,255,1) 0%,rgba(227,176,255,1) 50%,rgba(165,250,120,1) 100%);background-origin:border-box;background-clip:content-box,border-box;}
+.message_text_area{flex:1 1 auto;min-width:0;max-width:100%;display:flex;flex-direction:column;align-items:flex-start;}
+.message_sender_row{display:flex;align-items:center;gap:7px;margin-bottom:1px;max-width:100%;min-width:0;}
+.message_sender{font-weight:700;font-size:17px;color:var(--font-color);margin-bottom:1px;}
+.message_preview{font-size:14px;font-weight:450;color:var(--msg-sub-font);margin:2px 0 0 0;opacity:0.93;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.message_time{font-size:12px;color:var(--msg-date-font);margin-top:5px;white-space:nowrap;}
+.unread-badge{display:flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;background:#45607d;color:#fff;font-size:12px;font-weight:700;border-radius:50%;box-shadow:0 1px 3px rgba(175,175,160,0.10);margin-left:5px;user-select:none;}
+.chatRoom-modal-super-container .modal-overlay-follow{background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);}
+.modal-follow-content .chatRoom-modal-content{background-color:#f5f8fb;color:#223355;box-shadow:0 6px 30px rgba(0,0,0,0.3);animation:fadeInUp 0.3s ease-out;display:flex;flex-direction:column;max-height:85vh;}
+#chatRoomTitle{padding:18px 24px 16px 24px;margin:0;text-align:center;border-bottom:1.5px solid #e3ecf6;flex-shrink:0;font-size:17px;font-weight:700;}
+#chatRoomHistory{padding:10px;overflow-y:auto;flex-grow:1;}
+.chatRoom-container{display:flex;flex-direction:column;gap:12px;}
+.chatRoom-bubble{max-width:70%;padding:10px 14px;border-radius:18px;box-shadow:0 1px 3px rgba(0,0,0,0.08);text-align:left;word-break:keep-all;overflow-wrap:break-word;white-space:normal;}
+.bubble-me{align-self:flex-end;background-color:#FFFBE7;border:1px solid #FFEAC4;border-bottom-right-radius:4px;}
+.bubble-other{align-self:flex-start;background-color:#fff;border:1px solid #eef1f5;border-bottom-left-radius:4px;}
+.bubble-text{font-size:14px;color:#000;margin:0 0 4px 0;padding:0;}
+.bubble-time{font-size:11px;color:#999;text-align:right;}
+.chatRoom-input-row{display:flex;align-items:center;gap:8px;margin:12px;background:#fff;border-radius:12px;border:1.5px solid #e2e5ea;padding:7px 12px;box-shadow:0 1px 4px rgba(80,110,140,0.08);flex-shrink:0;}
+#chatRoomInput{flex:1;border:none;font-size:15px;color:#23272f;outline:none;padding:8px 0;height:38px;background:none;}
+#chatRoomInput::placeholder{color:#b7b8bd;font-size:14px;}
+#sendMessageBtn{display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:#7fa6c9;border:none;border-radius:50%;transition:background 0.16s;cursor:pointer;padding:0;}
+#sendMessageBtn:hover{background:#45607d;}
+.chatRoom-date-separator{display:inline-block;padding:4px 12px;margin:16px auto;font-size:12px;color:#666;background:#e9ecef;border-radius:12px;text-align:center;}
 </style>
 
 <button id="toggle-btn">☰</button>
@@ -811,10 +133,10 @@ input:focus {
         </span>
         <div class="accountData" id="accountData-display">
         	<button type="button" id="following-btn" class="modal-follow-message">
-            	<span class="accountDataValue"></span> <span class="accountDataLabel">팔로잉</span>
+               <span class="accountDataLabel">팔로잉</span><span class="accountDataValue"></span>
             </button>
             <button type="button" id="follower-btn" class="modal-follow-message">
-            	<span class="accountDataValue"></span> <span class="accountDataLabel">팔로워</span>
+				<span class="accountDataLabel">팔로워</span><span class="accountDataValue"></span>
 			</button>
         </div>
         <div id="nickname-modal" class="modal-sidebar">
@@ -983,7 +305,7 @@ $(document).ready(function() {
                             + '<li class="sidebar-profile">'
                             +   '<a href="userPage.do?acIdx=' + user.ac_idx + '">' 
                             +     '<img src="'+ profileImg +'" alt="profileImg">'
-                            +     user.nickname 
+                            +     '<span class="sidebar-follow-span">'+ user.nickname +'</span>' 
                             +   '</a>'
                             + '</li>';
                         $ul.append(liHtml);
@@ -1059,12 +381,12 @@ $(document).ready(function() {
                 authorId: targetAcIdx
             },
             dataType: 'json',
-            success: function(response) {
-                if (response.success) {
+           success: function(response) {
+            if (response.success) {
                     if (response.following) { // 서버 응답에 따라 상태 변경
-                        $button.removeClass('unfollow').text('팔로잉');
+                        $button.removeClass('unfollow').text('팔로잉').css('background','#f44336');
                     } else {
-                        $button.addClass('unfollow').text('팔로우');
+                        $button.addClass('unfollow').text('팔로우').css('background', '#4CAF50');
                     }
                     // 사이드바의 팔로워/팔로잉 카운트 업데이트
                     updateFollowCount();
@@ -1163,7 +485,7 @@ function loadFollowListData(tabType) {
     const listContainer = $('#followListContent');
     listContainer.empty().html('<p style="text-align:center; padding: 20px;">로딩 중...</p>'); // 로딩 스피너
 
-    const basePath = '<%= contextPath %>/sources/';
+    const basePath = '<%= contextPath %>/';
 
     let apiUrl;
     let requestData;
@@ -1196,7 +518,7 @@ function loadFollowListData(tabType) {
                     return;
                 }
                 list.forEach(user => {
-                    const profileImg = user.profile_img ? `<%= request.getContextPath() %>/\${user.profile_img}` : `\${basePath}default/default_user.jpg`;
+                	const profileImg = user.profile_img ? `<%= request.getContextPath() %>/vibesync/\${user.profile_img}` : `\${basePath}sources/default/default_user.jpg`;
                     const isFollowing = user.followedByCurrentUser;
                     const followButtonText = isFollowing ? '팔로잉' : '팔로우';
                     const followButtonClass = isFollowing ? 'follow-toggle-btn unfollow' : 'follow-toggle-btn';
@@ -1233,8 +555,8 @@ function loadFollowListData(tabType) {
                 }
                 messageList.forEach(message => {
                     let profileImgHtml = message.other.profile_img ?
-                        `<img src="<%= request.getContextPath() %>/\${message.other.profile_img}" alt="profile">` :
-                        `<img src="\${basePath}default/default_user.jpg" alt="기본 프로필">`;
+                    	`<img src="<%= request.getContextPath() %>/vibesync/\${message.other.profile_img}" alt="profile">` :
+                    	`<img src="\${basePath}sources/default/default_user.jpg" alt="기본 프로필">`;
 
                     let unreadBadgeHtml = '';
                     if (message.numOfUnreadMessages > 0) {
@@ -1369,6 +691,13 @@ function reloadchatRoomHistory() {
     }
 }
 
-
+$(document).ready(function() {
+    $("#chatRoomInput").on("keydown", function(event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            sendchatRoomMessage();
+        }
+    });
+});
 </script>
 <script src="<%= request.getContextPath() %>/vibesync/js/theme.js"></script>

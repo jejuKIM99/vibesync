@@ -6,7 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.listener.DuplicateLoginPreventer; 
+import com.listener.DuplicateLoginPreventer;
+import com.util.Config;
 
 import mvc.command.service.LoginService;
 import mvc.command.service.PasswordResetService;
@@ -56,7 +57,7 @@ public class UserHandler implements CommandHandler {
         if (session.getAttribute("userInfo") != null) {
             response.sendRedirect(request.getContextPath() + "/vibesync/main.do");
             return null;
-        }        
+        }
                 
         // 자동 로그인 쿠키 확인
         Cookie[] cookies = request.getCookies();
@@ -73,6 +74,9 @@ public class UserHandler implements CommandHandler {
                 }
             }
         }
+        
+     // [추가] JSP에서 사용할 수 있도록 request에 클라이언트 ID를 설정
+        request.setAttribute("googleClientId", Config.getGoogleClientId());
 
         // 모든 조건에 해당하지 않으면 로그인 페이지 표시
         return "login.jsp";
@@ -93,6 +97,8 @@ public class UserHandler implements CommandHandler {
                 return processManualLogin(request, response);
             case "signUp":
                 return processSignUp(request, response);
+            case "completeGoogleSignUp":
+            	return processCompleteGoogleSignUp(request, response);
             case "logout":
                 return processLogout(request, response);
             case "requestPasswordReset":
@@ -105,7 +111,47 @@ public class UserHandler implements CommandHandler {
         }
     }
 
-    /**
+    private String processCompleteGoogleSignUp(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		
+		SignUpDTO newGoogleUser = (session != null) ? (SignUpDTO) session.getAttribute("newGoogleUser") : null;
+		
+		// 비정상적인 접근 차단
+		if (newGoogleUser == null) {
+			request.setAttribute("loginErrorForDisplay", "인증 정보가 만료되었습니다. 다시 시도해주세요.");
+			return "login.jsp";
+		}
+		
+		//2. 추가 정보 받기
+		String nickname = request.getParameter("nickname");
+		int categoryIdx = Integer.parseInt(request.getParameter("category_idx"));
+		
+		newGoogleUser.setNickname(nickname);
+		newGoogleUser.setCategory_idx(categoryIdx);
+		
+		try {
+			signUpService.register(newGoogleUser);
+			session.removeAttribute("newGoogleUser");
+			// 가입 성공 후, 즉시 로그인 처리를 위해 DB에서 방금 가입한 사용자 정보 조회
+			UserVO newUserInfo = loginService.getUserByEmail(newGoogleUser.getEmail());
+			
+			if (newUserInfo != null) {
+				System.out.println("Google 신규 회원 가입 성공, 즉시 로그인");
+				return processSuccessfulLogin(request, response, newUserInfo);
+			} else {
+				request.setAttribute("loginErrorForDisplay", "가입 처리 중 오류가 발생했습니다. 다시 로그인해주세요.");
+				return "login.jsp";
+			}
+		} catch (Exception e) {
+			// 회원가입 중 예외 발생 시 (예: 닉네임 중복)
+            request.setAttribute("formToShow", "googleExtraInfo"); // 다시 추가 정보 입력 폼을 보여줌
+            request.setAttribute("signupErrorForDisplay", e.getMessage()); // 에러 메시지 표시
+            return "login.jsp";
+		}
+		
+	}
+
+	/**
      * 수동 로그인을 처리하는 메소드
      */
     private String processManualLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {

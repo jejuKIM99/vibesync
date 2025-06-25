@@ -40,7 +40,7 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 		
 		
 		// 현재 요청이 로그인 페이지로 향하는지 확인하고, returnUrl 파라미터가 있는지 검사합니다.
-	    if (requestURI.endsWith("/user.do")) {
+	    if (requestURI.endsWith("/user.do")||requestURI.endsWith("/auth/google/callback.do")) {
 	        String returnUrl = request.getParameter("returnUrl");
 	        if (returnUrl != null && !returnUrl.isEmpty()) {
 	            // returnUrl을 세션에 저장해야 하므로, 세션이 없다면 새로 생성합니다.
@@ -52,7 +52,7 @@ public class LoginCheckFilter extends HttpFilter implements Filter {
 	    
 		
 		// 1. 공개적으로 접근 가능한 '허용된 경로(Whitelist)' 목록 정의
-	    List<String> publicPaths = Arrays.asList("/user.do", "/postView.do", "/comment.do", "/sidebar.do");
+	    List<String> publicPaths = Arrays.asList("/user.do", "/postView.do", "/comment.do", "/sidebar.do", "");
 	    
 	    boolean isPublicPath = false;
 	    for (String path : publicPaths) {

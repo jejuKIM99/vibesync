@@ -25,55 +25,38 @@
   <link rel="icon" href="./sources/favicon.ico" />
   <script src="https://www.youtube.com/iframe_api"></script>
   <script defer src="./js/watchparty.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cal+Sans&family=National+Park:wght@200..800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Kulim+Park:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600;1,700&display=swap');
-
-      /* 최소한의 스타일 */
-      body { font-family: "National Park", sans-serif; background: #000; color: #fff; width: 100%; margin: 0; }
-      #content-wrapper {padding: 40px; max-width: 1200px; margin: 0 auto;}
-      .waList-header {display: flex; justify-content: space-between; align-items: center;}
-      .tab-buttons { display: flex; gap: 20px; }
-      .tab-buttons button { 
-        padding: 8px 16px;
-        border: 2px solid #fff;
-        cursor: pointer;
-        border-radius: 9px;
-        color: #fff;
-        background: #000; 
-      }
-      .tab-buttons button.active { background-color: #5087ffe8; }
-      .tab-buttons button:hover { background-color: #82a5f1e8; }
-      #list-container{ height: 300px; }
-      #list-container, #host-container {
-        border: 1px solid #ccc;
-        padding: 1rem;
-        max-height: 80vh;
-        overflow-y: auto;
-      }
-      ul { list-style: none; padding: 0; }
-      li { display: flex; justify-content: space-between; align-items: center;padding: 0.5rem; border-bottom: 1px solid #ddd; cursor: pointer; }
-      li:hover { background: linear-gradient(90deg, rgb(63 98 133) 0%, rgb(96 21 159 / 64%) 50%, rgb(52 12 65 / 56%) 100%); }
-      li img {width: 30px; height: 30px; object-fit: cover; border: 4px solid transparent; border-radius: 50%;
-background-image: linear-gradient(#000, #000), linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%);
-    background-origin: border-box;
-    background-clip: content-box, border-box;}
-      li div { display: flex; align-items: center; gap: 20px; }
-      #btn-add-video { position: absolute; top: 1rem; right: 1rem; font-size: 1.2rem; background: #28a745; color: white; border: none; border-radius: 4px;
-          width: 32px;  height: 32px; line-height: 32px; text-align: center; cursor: pointer; display: none;}
-      /* [추가] 호스트 채팅 관련 스타일 */
-      #host-container thead { background: black; }
-      #chat-wrapper {width: 400px; margin: 0 auto;}
-      .host-chat-log { height: 66vh; width: 97%;  overflow-y: auto; border: 1px solid #eee;  margin-bottom: 5px; padding: 5px; font-size: 14px; word-break:break-all; }
-      .host-chat-log p { margin: 2px 0; }
-      .host-chat { font-weight: bold; color: #ed3030; }
-      .chat-input-wrapper input { width: calc(100% - 60px); }
-      .chat-input-wrapper button { width: 50px; }
-      .chat-input-submit { display: flex; }
-      #wp_delete { position: fixed; width: 40px; height: 40px; bottom: 20px; right: 20px; background: #ed3030; border-radius: 50%; border-color: #fff; }
-      #wp_delete a img {width: 80%; height: 80%; margin: 0 auto;}
-  </style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cal+Sans&family=National+Park:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kulim+Park:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600;1,700&display=swap');
+/* 최소한의 스타일 */
+body { font-family: "National Park", sans-serif; background: #000; color: #fff; width: 100%; margin: 0; }
+#content-wrapper {padding: 40px; max-width: 1200px; margin: 0 auto;}
+.waList-header {display: flex; justify-content: space-between; align-items: center;}
+.tab-buttons { display: flex; gap: 20px; }
+.tab-buttons button {padding: 8px 16px;border: 2px solid #fff;cursor: pointer;border-radius: 9px;color: #fff;background: #000;}
+.tab-buttons button.active { background-color: #5087ffe8; }
+.tab-buttons button:hover { background-color: #82a5f1e8; }
+#list-container{ height: 300px; }
+#list-container, #host-container {border: 1px solid #ccc;padding: 1rem;max-height: 80vh;overflow-y: auto;}
+ul { list-style: none; padding: 0; }
+li { display: flex; justify-content: space-between; align-items: center;padding: 0.5rem; border-bottom: 1px solid #ddd; cursor: pointer; }
+li:hover { background: linear-gradient(90deg, rgb(63 98 133) 0%, rgb(96 21 159 / 64%) 50%, rgb(52 12 65 / 56%) 100%); }
+li img {width: 30px; height: 30px; object-fit: cover; border: 4px solid transparent; border-radius: 50%;background-image: linear-gradient(#000, #000), linear-gradient(90deg, rgba(138, 196, 255, 1) 0%, rgba(227, 176, 255, 1) 50%, rgba(165, 250, 120, 1) 100%);background-origin: border-box;background-clip: content-box, border-box;}
+li div { display: flex; align-items: center; gap: 20px; }
+#btn-add-video { position: absolute; top: 1rem; right: 1rem; font-size: 1.2rem; background: #28a745; color: white; border: none; border-radius: 4px;width: 32px;  height: 32px; line-height: 32px; text-align: center; cursor: pointer; display: none;}
+/* [추가] 호스트 채팅 관련 스타일 */
+#host-container thead { background: black; }
+#chat-wrapper {width: 400px; margin: 0 auto;}
+.host-chat-log { height: 66vh; width: 97%;  overflow-y: auto; border: 1px solid #eee;  margin-bottom: 5px; padding: 5px; font-size: 14px; word-break:break-all; }
+.host-chat-log p { margin: 2px 0; }
+.host-chat { font-weight: bold; color: #ed3030; }
+.chat-input-wrapper input { width: calc(100% - 60px); }
+.chat-input-wrapper button { width: 50px; }
+.chat-input-submit { display: flex; }
+#wp_delete { position: fixed; width: 40px; height: 40px; bottom: 20px; right: 20px; background: #ed3030; border-radius: 50%; border-color: #fff; }
+#wp_delete a img {width: 80%; height: 80%; margin: 0 auto;}
+</style>
 </head>
 <body>
   <section id="content-wrapper">

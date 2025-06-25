@@ -41,78 +41,16 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
    
   <style>
-  #searchForm {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.2rem;
-  }
-  
-  .searchInput {
-    background: none;
-    border: none;
-    border-bottom: 1px solid var(--border-color);
-    color: var(--font-color);
-    font-weight: bold;
-  }
-
-  .searchInput option {
-    background: var(--card-back);
-    color: var(--font-color);
-  }
-
-  .searchBtn {
-    background: none;
-    border: none;
-    border-bottom: 1px solid var(--border-color);
-    color: var(--font-color);
-    border-radius: 5px;
-    padding-block: 2px;
-    padding-inline: 8px;
-    font-weight: bold;
-  }
-
-  .searchBtn:hover {
-    color: var(--card-back);
-    background: rgba(256, 256, 256, 0.88) !important;
-  }
-
-  /* [수정] 버튼들을 감싸는 컨테이너 스타일 추가 */
-  .page-action-buttons {
-     display: flex;
-     gap: 10px;
-  }
-
-  #add_note_btn , #delete_page_btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #8ac4ff;
-    border: none;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  /* 공통부분 통합 */
-  #delete_page_btn {
-    background: #ff8a8a; /* 삭제를 의미하는 붉은 계열 색상 */
-  }
-
-  #add_note_btn a {
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-  }
-  
-  
-  #delete_page_btn a {
-     color: white;
-     font-weight: bold;
-     text-decoration: none;
-  }
-  
+#searchForm{display:flex;justify-content:center;align-items:center;gap:0.2rem;}
+.searchInput{background:none;border:none;border-bottom:1px solid var(--border-color);color:var(--font-color);font-weight:bold;}
+.searchInput option{background:var(--card-back);color:var(--font-color);}
+.searchBtn{background:none;border:none;border-bottom:1px solid var(--border-color);color:var(--font-color);border-radius:5px;padding-block:2px;padding-inline:8px;font-weight:bold;}
+.searchBtn:hover{color:var(--card-back);background:rgba(256,256,256,0.88) !important;}
+.page-action-buttons{display:flex;gap:10px;}
+#add_note_btn,#delete_page_btn{width:40px;height:40px;border-radius:50%;background:#8ac4ff;border:none;font-size:20px;display:flex;align-items:center;justify-content:center;}
+#delete_page_btn{background:#ff8a8a;}
+#add_note_btn a{color:white;font-weight:bold;text-decoration:none;}
+#delete_page_btn a{color:white;font-weight:bold;text-decoration:none;}
   </style>
   
 </head>
