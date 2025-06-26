@@ -20,6 +20,7 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap"
 	rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 <link rel="icon"
 	href="${pageContext.request.contextPath}/vibesync/sources/favicon.ico">
 <title>VibeSync Login</title>
@@ -161,7 +162,7 @@
 								href="https://kauth.kakao.com/oauth/authorize?client_id=5552b4df7e716e5ec496a4a58b2cf809&redirect_uri=http://localhost:8081/vibesync/auth/kakao/callback.do&response_type=code&prompt=login"
 								class="kakao-login-btn"> <img id="kakao_img"
 								src="<%=request.getContextPath()%>/vibesync/sources/icons/KakaoTalk_logo.svg"
-								alt="카카오 로그인" /> <span>KAKAO LOGIN</span>
+								alt="카카오 로그인" /> <span style="">KAKAO LOGIN</span>
 							</a>
 						</div>
 						<div>
@@ -176,6 +177,7 @@
 							Not a member yet?<a href="#" id="switchToSignupLink">Sign Up</a>
 						</div>
 					</div>
+					</div>
 
 
 					<!-- <div id="signupFormContainer" style="display: none;"> -->
@@ -184,11 +186,10 @@
 						<form action="user.do" method="post" id="signupForm">
 							<%-- POST 요청 시 login/signup 구분 --%>
 							<input type="hidden" name="accessType" value="signUp">
-							<div id="social-signup-container-google">
 								<div class="g_id_signin" data-type="standard" data-size="large"
 									data-theme="outline" data-text="sign_up_with"
-									data-shape="rectangular" data-logo_alignment="left"></div>
-							</div>
+									data-shape="rectangular" data-logo_alignment="left" style="width: 100%;"></div>
+						
 							<div
 								style="width: 100%; text-align: center; border-bottom: 1px solid #444; line-height: 0.1em; margin: 20px 0;">
 								<span style="background: #1a1a1a; padding: 0 10px; color: #888;">OR</span>

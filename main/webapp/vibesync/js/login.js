@@ -106,7 +106,6 @@ $(function() {
 	function handleCredentialResponse(response){
 		// response.credential : 구글이 암호화해서 전달해준 사용자의 ID 정보(JWT)
 		const id_token = response.credential;
-		console.log("Encoded JWT ID token: " + id_token);
 		$.ajax({
 			type: 'POST',
 			url: '/vibesync/auth/google/callback.do',
