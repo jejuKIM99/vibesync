@@ -261,5 +261,9 @@ CREATE TABLE passwordResetTokens (
     expiryDate TIMESTAMP NOT NULL -- 토큰 만료 시간
 );
 
+-- 소셜 로그인 칼럼 추가
+ALTER TABLE userAccount ADD kakao_auth_id int NULL UNIQUE;
+ALTER TABLE userAccount ADD google_id  int NULL UNIQUE;
+
 SELECT COUNT(*)
 FROM USER_TABLES;

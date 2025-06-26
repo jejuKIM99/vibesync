@@ -102,6 +102,32 @@ $(function() {
     });
 });
 
+	/*구글 로그인*/
+	function handleCredentialResponse(response){
+		// response.credential : 구글이 암호화해서 전달해준 사용자의 ID 정보(JWT)
+		const id_token = response.credential;
+		$.ajax({
+			type: 'POST',
+			url: '/vibesync/auth/google/callback.do',
+            data: {id_token: id_token},
+            dataType: 'json',
+            success: function(res) {
+	console.log("서버 응답:", res);
+				if(res.status ==="success"){
+					console.log("구글 로그인 성공");
+					location.href = '/vibesync/vibesync/main.do';
+				}else if(res.status ==="extra_info_required") {
+					console.log("추가 정보 입력이 필요합니다.");
+					location.href = '/vibesync/member/extraInfo.do';
+            	}else{
+                alert(res.message || "로그인에 실패했습니다.");
+                }
+			},
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', error);
+            }
+		})
+	}
 
     const starCanvas = document.getElementById('starfield');
     const starCtx    = starCanvas.getContext('2d');

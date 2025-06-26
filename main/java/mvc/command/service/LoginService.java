@@ -58,4 +58,25 @@ public class LoginService {
 		
         return userVO;
     }
+	
+	// 소셜 로그인 가입 후, 즉시 로그인 처리를 위해 추가
+	public UserVO getUserByEmail(String email) {
+		UserVO userVO = null;
+		Connection conn = null;
+		
+		try {
+    		conn = ConnectionProvider.getConnection();
+            UserDAO userDAO = new UserDAOImpl(conn);
+            
+            // 이메일로 로그인
+            userVO = userDAO.findByEmail(email);
+            
+		} catch (Exception e) {
+        	e.printStackTrace();
+		} finally {
+			if (conn != null) JdbcUtil.close(conn);
+		}
+		
+        return userVO;
+	}
 }

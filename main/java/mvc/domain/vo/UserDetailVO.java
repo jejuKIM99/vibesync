@@ -1,4 +1,3 @@
-// UserDetailVO.java 전체 코드
 package mvc.domain.vo;
 
 import java.sql.Timestamp;

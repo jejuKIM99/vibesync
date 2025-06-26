@@ -21,5 +21,6 @@ public class SignUpDTO {
     private String password;
     private String confirmPassword;
     private int category_idx;
+    private String loginType;
 	
 }
