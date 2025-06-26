@@ -127,7 +127,6 @@
 function goBackSmartly() {
     // 이전 페이지의 URL을 확인합니다.
     const referrer = document.referrer;
-	alert("referrer : " + referrer)
     // 이전 페이지 URL에 'noteedit.do'가 포함되어 있으면 두 페이지 뒤로 이동합니다.
     if (referrer && referrer.includes('noteedit.do')) {
         history.go(-2);

@@ -15,6 +15,17 @@ function applyTheme(theme) {
 
 // 문서가 준비되면 실행
 $(function() {
+    $.ajax({
+      url: `${contextPath}/setting.do`,
+      type: 'GET',
+      success: function() {
+                console.log('테마를 성공적으로 불러왔습니다.');
+            },
+        error: function() {
+                console.error('테마 불러오기를 실패했습니다.');
+        }
+   });
+    
     const currentTheme = document.documentElement.getAttribute('color-theme') || 'light';
     $(`input[name="theme"][value="${currentTheme}"]`).closest('.theme-option-label').addClass('selected');
     

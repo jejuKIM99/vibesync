@@ -9,16 +9,16 @@ import javax.naming.NamingException;
 import com.util.ConnectionProvider;
 import com.util.JdbcUtil;
 
+import mvc.domain.dto.MorePostsDTO;
 import mvc.domain.dto.NoteSummaryDTO;
 import mvc.domain.dto.UserPageDataDTO;
 import mvc.domain.dto.UserPageInfoDTO;
 import mvc.domain.vo.UserSummaryVO;
-import mvc.domain.vo.UserVO;
-import mvc.persistence.dao.FollowDAO; // 실제 경로로
-import mvc.persistence.dao.NoteDAO;   // 실제 경로로
+import mvc.persistence.dao.FollowDAO; 
+import mvc.persistence.dao.NoteDAO;   
 import mvc.persistence.dao.UserDAO;
-import mvc.persistence.daoImpl.FollowDAOImpl; // 실제 경로로
-import mvc.persistence.daoImpl.NoteDAOImpl;   // 실제 경로로
+import mvc.persistence.daoImpl.FollowDAOImpl; 
+import mvc.persistence.daoImpl.NoteDAOImpl;   
 import mvc.persistence.daoImpl.UserDAOImpl;
 
 public class UserPageService {
@@ -90,21 +90,32 @@ public class UserPageService {
         }
         return pageData;
     }
-
-    // 무한 스크롤로 추가 게시글 로드 시 사용될 수 있는 메소드
-    public List<NoteSummaryDTO> getMorePosts(int profileUserAcIdx, int pageNumber) throws SQLException {
+    
+    public MorePostsDTO getMorePostsWithStatus(int profileUserAcIdx, int pageNumber) throws SQLException {
         Connection conn = null;
-        List<NoteSummaryDTO> posts = null;
         try {
             conn = ConnectionProvider.getConnection();
             NoteDAO noteDAO = new NoteDAOImpl(conn);
+            UserDAO userDAO = new UserDAOImpl(conn);
+
+            // 1. 요청한 페이지의 게시글 목록 조회 
             int offset = (pageNumber - 1) * PAGE_SIZE;
-            posts = noteDAO.getPostsByUser(profileUserAcIdx, offset, PAGE_SIZE);
+            List<NoteSummaryDTO> posts = noteDAO.getPostsByUser(profileUserAcIdx, offset, PAGE_SIZE);
+
+            // 2. 'hasMore'를 계산하기 위해 전체 게시물 수를 조회
+            int totalPosts = userDAO.getPostCount(profileUserAcIdx);
+
+            // 3. 더 불러올 게시물이 있는지 정확하게 계산
+            boolean hasMore = (offset + posts.size()) < totalPosts;
+            
+            // 4. 새로 만든 DTO에 담아서 반환
+            return new MorePostsDTO(posts, hasMore, pageNumber + 1);
+
         } catch (NamingException e) {
 			e.printStackTrace();
 		} finally {
-            if (conn != null) JdbcUtil.close(conn);
+            JdbcUtil.close(conn);
         }
-        return posts;
+		return null;
     }
 }

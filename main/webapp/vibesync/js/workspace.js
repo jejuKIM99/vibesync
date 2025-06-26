@@ -106,18 +106,19 @@ function loadTodoList() {
                 $.each(todos, function(index, todo) {
                     let isChecked = todo.status === 1 ? "checked" : "";
                     let textClass = todo.status === 1 ? "completed" : "";
+                    
                     // 1. 색상 코드를 RGB 객체로 변환
 				    let rgb = hexToRgb(todo.color);
 				
 				    // 2. li 태그에 CSS 변수로 RGB 값을 전달하고, 체크박스 구조 변경
 				    todoListHtml += `<li data-id="${todo.todo_idx}" style="--todo-r: ${rgb.r}; --todo-g: ${rgb.g}; --todo-b: ${rgb.b};">
-				                        <label class="custom-checkbox-label">
-				                            <input type="checkbox" class="todo-checkbox" ${isChecked}>
-				                            <span class="custom-checkbox-span"></span>
-				                        </label>
-				                        <span class="todo-text \${textClass}">${todo.text}</span>
-				                        <button class="todo-delete-btn">&times;</button>
-				                    </li>`;
+                            			<label class="custom-checkbox-label">
+                                		<input type="checkbox" class="todo-checkbox" ${isChecked}>
+                                		<span class="custom-checkbox-span"></span>
+                            			</label>
+                           				 <span class="todo-text ${textClass}">${todo.text}</span>
+                            			<button class="todo-delete-btn">&times;</button>
+                        			</li>`;
 				    todosById[todo.todo_idx] = todo;
                 });
             } else {
@@ -544,7 +545,7 @@ $(document).ready(function() {
                 todo_group: $('#todo-group').val(),
                 color: $('#todo-color').val()
             };
-            if (isUpdating) { todoData.todo_idx = todoId; }
+            if (isUpdating) { todoData.todoIdx = todoId; }
             const alertMessage = isUpdating ? "수정" : "추가";
             $.ajax({
                 url: contextPath +'/todoList.do',
