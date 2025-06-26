@@ -2,11 +2,13 @@ package mvc.command.handler;
 
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import mvc.command.service.KakaoAuthService;
+import mvc.command.service.SettingService;
 import mvc.command.service.UserAuthService;
 import mvc.domain.vo.UserDetailVO;
 import mvc.domain.vo.UserVO;
@@ -80,6 +82,14 @@ public class KakaoCallbackHandler implements CommandHandler {
                     .category_idx(user.getCategory_idx())
                     .kakao_auth_id(user.getKakao_auth_id())
                     .build();
+            
+            SettingService settingService = new SettingService();
+            session.setAttribute("theme", settingService.getTheme(userVO.getAc_idx()));
+            
+            Cookie userIdxCookie = new Cookie("login_user_idx", userVO.getAc_idx() + "");
+    	                    userIdxCookie.setMaxAge(60 * 60 * 24 * 7);
+    	                    userIdxCookie.setPath("/");
+    	                    response.addCookie(userIdxCookie);
 
             session.setAttribute("userInfo", userVO);
             session.setAttribute("kakaoAccessToken", accessToken); // 로그아웃을 위해 토큰 저장
