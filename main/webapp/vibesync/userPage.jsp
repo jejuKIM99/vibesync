@@ -243,7 +243,7 @@ h3 { margin: 0; }
                         var postsHtml = '';
                         var contextPath = '${pageContext.request.contextPath}';
                         $.each(response.posts, function(index, post) {
-                            var thumbnailUrl = post.thumbnail_img ? contextPath + post.thumbnail_img : contextPath + 'vibesync/sources/default/default_thumbnail.png';
+                            var thumbnailUrl = post.thumbnail_img ? contextPath+"/" + post.thumbnail_img : contextPath + 'vibesync/sources/default/default_thumbnail.png';
                             postsHtml += '<a href="' + contextPath + '/vibesync/postView.do?nidx=' + post.note_idx + '">';
                             postsHtml += '    <div class="con_item">';
                             postsHtml += '        <img src="' + thumbnailUrl + '" alt="' + post.title + ' 썸네일">';

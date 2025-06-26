@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------
 -- 시퀀스 삭제
 --------------------------------------------------------------------------------
@@ -148,9 +147,9 @@ CREATE SEQUENCE seq_wa_comment
   
 -- 19. schedule 시퀀스
 CREATE SEQUENCE schedule_seq 
-	START WITH 31
+   START WITH 31
     INCREMENT BY 1
-	NOCACHE
+   NOCACHE
     NOCYCLE;
  
 -- workspace_blocks
@@ -184,6 +183,7 @@ DROP TRIGGER trg_category_bi;
 DROP TRIGGER trg_watchParty_pk;
 DROP TRIGGER trg_wa_sync_pk;
 DROP TRIGGER trg_wa_comment_pk;
+DROP TRIGGER trg_userAccount_ai;
 
 --------------------------------------------------------------------------------
 -- 트리거 생성
@@ -349,6 +349,16 @@ BEGIN
     SELECT schedule_seq.NEXTVAL 
       INTO :NEW.schedule_idx 
       FROM dual;
+END;
+/
+
+-- userAccount에 새로운 회원 가입 시 setting에 자동으로 insert되는 트리거
+CREATE OR REPLACE TRIGGER trg_userAccount_ai
+  AFTER INSERT ON userAccount
+  FOR EACH ROW
+BEGIN
+    INSERT INTO setting (setting_idx, font, theme, noti, ac_idx)
+    VALUES (setting_seq.NEXTVAL, 'Arial', 'light', '시스템기본', :NEW.ac_idx);
 END;
 /
 

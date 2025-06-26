@@ -32,9 +32,6 @@ public interface NoteDAO {
     
     // 포스트 뷰 출력
  	NoteDetailDTO printNote(int noteIdx);
-
- 	// 조회수 증가 **********안쓰면 확인 후 삭제
- 	void increaseViewCount(int noteIdx) throws SQLException; 
  	
  	// 특정 사용자가 작성한 게시글 목록을 페이징 처리하여 조회. (최신순 정렬)
     List<NoteSummaryDTO> getPostsByUser(int userAcIdx, int offset, int limit) throws SQLException;

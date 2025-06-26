@@ -7,9 +7,6 @@ from userpage
 where ac_idx=26;
 
 
-
--- note_idx를 위한 시퀀스가 있다면 VALUES 절의 첫 번째 값을 note_seq.NEXTVAL 등으로 바꿔주세요.
-
 -- 1. 기술 관련 글
 INSERT INTO note (note_idx, title, text, img, create_at, edit_at, view_count, content_idx, genre_idx, category_idx, userPg_idx)
 VALUES (101, '자바스크립트 비동기 처리 마스터하기', 'Promise와 async/await에 대한 심층 분석 및 실전 예제입니다.', NULL, SYSDATE - 10, NULL, 152, 1, 1, 1, 28);
@@ -205,35 +202,6 @@ INSERT INTO message (text, time, chk, ac_receiver, ac_sender) VALUES ('면접 �
 INSERT INTO message (text, time, chk, ac_receiver, ac_sender) VALUES ('네, 답장 감사합니다. 그럼 주말에 뵙겠습니다.', SYSTIMESTAMP - INTERVAL '20' HOUR, 0, 26, 27); -- 26에게 보낸 답장
 INSERT INTO message (text, time, chk, ac_receiver, ac_sender) VALUES ('자세한 얘기는 만나서 해요!', SYSTIMESTAMP - INTERVAL '19' HOUR, 1, 26, 27); -- 26에게 보낸 아직 안읽은 메시지
 
-commit;
-
--- =================================================================
--- wa_sync 테이블 더미 데이터 (총 20개)
--- =================================================================
-
--- ac_idx=26 사용자의 워치파티(watchParty_idx: 1-10)에 대한 동기화 데이터 10개
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (120.500, 'play', 1);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (300.000, 'pause', 1);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (310.250, 'play', 1);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (650.000, 'play', 2);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (980.110, 'seek', 3);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (995.000, 'play', 3);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (1500.000, 'pause', 4);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (1825.800, 'play', 5);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (3600.000, 'pause', 8);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (4200.000, 'play', 10);
-
--- ac_idx=27 사용자의 워치파티(watchParty_idx: 11-20)에 대한 동기화 데이터 10개
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (50.000, 'play', 11);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (900.750, 'pause', 11);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (910.000, 'play', 11);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (1234.567, 'seek', 12);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (1240.000, 'play', 12);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (2400.000, 'pause', 13);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (3100.000, 'play', 15);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (5000.000, 'pause', 17);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (5010.500, 'play', 17);
-INSERT INTO wa_sync (timeline, play, watchParty_idx) VALUES (600.000, 'play', 20);
 commit;
 
 

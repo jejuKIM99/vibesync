@@ -489,28 +489,6 @@ public class NoteDAOImpl implements NoteDAO {
       return dto; 
   }
 
-	// 조회수 증가 메서드
-	@Override
-	public void increaseViewCount(int noteIdx) throws SQLException {
-		    String sql = "UPDATE note SET view_count = view_count + 1 WHERE note_idx = ?";
-		    PreparedStatement pstmt = null;
-
-		    try {
-		        pstmt = conn.prepareStatement(sql);
-		        pstmt.setInt(1, noteIdx);
-		        pstmt.executeUpdate();
-		    } catch (SQLException e) {
-		        e.printStackTrace(); 
-		        throw e; 
-		    } finally {
-		        try {
-		            if (pstmt != null) pstmt.close();
-		        } catch (SQLException e) {
-		            e.printStackTrace();
-		        }
-		    }
-		}
-	
 	@Override
 	public List<NoteSummaryDTO> getPostsByUser(int userAcIdx, int offset, int limit) throws SQLException {
 	      List<NoteSummaryDTO> posts = new ArrayList<>();
